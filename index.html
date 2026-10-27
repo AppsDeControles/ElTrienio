@@ -48,6 +48,19 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 #hud .mes{margin-left:auto;text-align:right;line-height:1.1}
 #hud .mes b{font-size:14px} #hud .mes small{display:block;font-size:11px;color:var(--tenue)}
 #btnMenu{width:38px;min-height:34px;padding:0}
+#hud .hb{min-height:32px;padding:0 10px;font-size:13px;flex:none}
+#hud .stat.clic{cursor:pointer;border-bottom:2px dotted var(--borde)}
+.chips .opc{cursor:pointer;text-align:left;font-family:var(--f-body);color:var(--crema)} .chips .opc[aria-pressed="true"]{border-color:var(--sol);background:#4A3A1E;color:var(--sol)} .chips .opc:disabled{opacity:.45;cursor:not-allowed}
+.regidores{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.reg{display:flex;gap:8px;align-items:flex-start;background:var(--panel2);border:2px solid var(--borde);padding:5px}
+.reg.si{border-color:#2F5A2A} .reg.no{border-color:#6A3424}
+.reg img{width:46px;height:46px;object-fit:cover;flex:none;background:var(--hondo)}
+.reg .q{display:flex;flex-direction:column;gap:3px;min-width:0} .reg b{font-size:13px} .reg small{font-size:11.5px;color:var(--tenue)} .reg.si small{color:var(--bien)}
+.reg .chip{font-size:11.5px;padding:3px 6px}
+.tabla{display:grid;grid-template-columns:1fr auto auto auto;gap:2px 12px;font-size:13px;max-height:220px;overflow:auto}
+.tabla .h{color:var(--tenue);font-size:12px;position:sticky;top:0;background:var(--suelo)} .tabla .pos{color:var(--bien)} .tabla .neg{color:var(--mal)} .tabla small{color:var(--tenue)}
+details.desg summary{cursor:pointer;color:var(--sol);font-size:14px;font-weight:600}
+details.desg[open]{display:flex;flex-direction:column;gap:6px}
 
 /* panel derecho */
 #panel{position:absolute;right:0;top:calc(47px + env(safe-area-inset-top,0px));bottom:0;width:232px;background:var(--suelo);border-left:3px solid var(--hondo);display:flex;flex-direction:column;z-index:4;
@@ -83,7 +96,17 @@ body.panel-cerrado #pasar{right:max(12px,env(safe-area-inset-right,0px))}
 #ficha h4{margin:0;font-family:var(--f-display);font-weight:800;font-size:13px;line-height:1.3;letter-spacing:.3px;color:var(--sol)}
 #ficha dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0;font-size:13px}
 #ficha dt{color:var(--tenue)} #ficha dd{margin:0;font-variant-numeric:tabular-nums}
-#ficha .acc{display:flex;gap:6px;margin-top:4px}
+#ficha .acc{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+#ficha{max-height:calc(100% - 140px);overflow:auto}
+#ficha .titf{display:flex;align-items:center;gap:6px} #ficha .titf h4{flex:1;min-width:0}
+#ficha .titf input{flex:1;min-width:0;font:700 14px var(--f-body);color:var(--crema);background:var(--hondo);border:2px solid var(--sol);padding:5px 6px}
+#ficha .mini2{min-height:30px;min-width:32px;padding:0 6px;font-size:14px}
+#ficha .tipo{color:var(--tenue);font-size:12px;margin-top:-4px}
+#ficha .mejoras{display:flex;flex-direction:column;gap:5px;border-top:2px solid var(--borde);padding-top:6px}
+#ficha .mejoras .t{font-size:12px;color:var(--tenue)}
+#ficha .mejoras button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:5px 8px;min-height:0;gap:1px}
+#ficha .mejoras button b{font-size:13px} #ficha .mejoras button span{font-size:11.5px;color:var(--tenue);font-weight:500}
+#ficha .mejoras button:disabled{opacity:.5}
 
 /* modales */
 .velo{position:absolute;inset:0;background:rgba(11,9,6,.72);z-index:20;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
@@ -116,6 +139,27 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
 #portada .acciones button{height:46px;text-align:left;padding:0 16px;font-family:var(--f-display);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center}
 #portada .acciones button span{font-family:var(--f-body);font-size:13px;font-weight:600}
 #carga{font-size:13px;color:var(--tenue)}
+#modal{z-index:35} #aviso{z-index:36}
+#pPerfil{display:flex;align-items:center;gap:10px;background:rgba(30,26,22,.88);border:2px solid var(--borde);padding:6px 8px 6px 6px;width:280px;box-sizing:border-box}
+#pPerfil img{width:48px;height:48px;object-fit:cover;background:var(--hondo)}
+#pPerfil .q{min-width:0} #pPerfil b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} #pPerfil small{display:block;color:var(--tenue);font-size:12px}
+#pPerfil button{margin-left:auto;min-height:34px;font-size:13px;padding:0 10px;flex:none}
+#hAva{width:30px;height:30px;object-fit:cover;background:var(--hondo);border:2px solid var(--borde);flex:none}
+.alcaldes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.alcaldes button{background:var(--panel2);border:2px solid var(--borde);padding:3px 3px 4px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.alcaldes span{font-size:11px;font-weight:700;color:var(--tenue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.alcaldes button[aria-pressed="true"]{border-color:var(--sol);background:#4A3A1E;box-shadow:inset 0 0 0 2px var(--sol)}
+.alcaldes img{width:100%;aspect-ratio:1;object-fit:cover;max-height:92px;background:var(--hondo)}
+@media (max-height:420px){.alcaldes img{max-height:64px}}
+.campo{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--tenue)}
+.campo input{font:600 16px var(--f-body);color:var(--crema);background:var(--hondo);border:2px solid var(--borde);padding:8px 10px;outline:none}
+.campo input:focus{border-color:var(--sol)}
+.perfiles{display:flex;flex-direction:column;gap:6px}
+.perfiles .pf{display:flex;align-items:center;gap:10px;background:var(--panel2);border:2px solid var(--borde);padding:5px 8px;text-align:left}
+.perfiles .pf[aria-current="true"]{border-color:var(--sol)}
+.perfiles .pf img{width:44px;height:44px;object-fit:cover;background:var(--hondo)}
+.perfiles .pf .q{flex:1;min-width:0} .perfiles .pf b{font-size:15px} .perfiles .pf small{display:block;color:var(--tenue);font-size:12px}
+.perfiles .pf .borrar{min-height:32px;font-size:12px;padding:0 8px}
 
 #girar{position:absolute;inset:0;z-index:50;background:var(--suelo);display:none;align-items:center;justify-content:center;text-align:center;padding:24px}
 @media (orientation:portrait) and (max-width:700px){#girar{display:flex}}
@@ -159,11 +203,12 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
   <canvas id="mapa" aria-label="Mapa del municipio"></canvas>
 
   <header id="hud" aria-label="Recursos">
-    <span class="logo">EL TRIENIO</span>
-    <span class="stat" title="Dinero en caja"><small class="et">Caja</small><b id="hDin">$0</b><small id="hBal"></small></span>
+    <img id="hAva" alt="" hidden><span class="logo">EL TRIENIO</span>
+    <span class="stat clic" id="sCaja" role="button" tabindex="0" title="Ver finanzas"><small class="et">Caja</small><b id="hDin">$0</b><small id="hBal"></small></span>
     <span class="stat" title="Habitantes / capacidad de vivienda"><small class="et">Habitantes</small><b id="hPob">0</b><small id="hCap"></small></span>
     <span class="stat" title="Empleos ocupados / disponibles"><small class="et">Empleo</small><b id="hEmp">0%</b></span>
     <span class="stat"><small class="et">Aprob.</small><span class="barra"><i id="hAprBar"></i></span><b id="hApr">50%</b></span>
+    <button class="btn hb" id="bCredito">Crédito</button><button class="btn hb" id="bComercio">Comercio</button>
     <span class="mes"><b id="hMes">Enero · Año 1</b><small id="hTurno">Mes 1 de 36</small></span>
     <button class="btn" id="btnMenu" aria-label="Menú">≡</button>
   </header>
@@ -203,6 +248,7 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
       <h1><img src="logo/letras.png" alt="El Trienio"></h1>
       <div class="sub">GOBIERNA TU PUEBLO</div>
       <p style="margin:0;color:#D9CBAE;line-height:1.35;max-width:380px">Tienes 36 meses para hacer crecer tu municipio sinaloense y llegar a la elección con el pueblo de tu lado.</p>
+      <div id="pPerfil" hidden></div>
       <div class="acciones">
         <button class="btn-sol" id="pCont" hidden>CONTINUAR <span id="pContDet"></span></button>
         <button class="btn" id="pNueva">NUEVA PARTIDA</button>
@@ -248,7 +294,7 @@ const DEF={
  estadio:{nom:'Estadio El Diamante',cat:'servicios',spr:'edif-estadio-a',A:6,B:6,costo:550,mant:8,empleos:20,ingreso:6,serv:'diversion',radio:30,unico:true},
  bodega:{nom:'Bodega de granos',cat:'produccion',spr:'edif-bodega-a',A:2,B:4,costo:180,mant:2,empleos:15,ingreso:8,campo:true,lote:'ind'},
  empacadora:{nom:'Empacadora',cat:'produccion',spr:'edif-empacadora-a',A:7,B:2,costo:420,mant:4,empleos:80,ingreso:22,campo:true,lote:'ind'},
- presa:{nom:'Presa',cat:'produccion',spr:'edif-presa-a',A:3,B:5,costo:750,mant:6,empleos:10,unico:true,presa:true,desc:'Convierte la tierra de temporal cercana en riego.'},
+ presa:{nom:'Presa',cat:'produccion',spr:'edif-presa-a',A:5,B:3,costo:750,mant:6,empleos:10,unico:true,presa:true,desc:'Convierte la tierra de temporal cercana en riego.'},
  engorda:{nom:'Corral de engorda',cat:'produccion',spr:'edif-engorda-a',A:6,B:6,costo:260,mant:2,empleos:20,ingreso:14,contamina:6,lote:'tierra'},
  rastro:{nom:'Rastro municipal',cat:'produccion',spr:'edif-rastro-a',A:4,B:3,costo:230,mant:3,empleos:25,ingreso:12,necesita:'engorda',contamina:4,lote:'ind'},
  veterinaria:{nom:'Veterinaria',cat:'produccion',spr:'edif-veterinaria-a',A:3,B:3,costo:110,mant:1,empleos:6,ingreso:3},
@@ -272,7 +318,30 @@ const CULT={
  mango:{cnom:'Mango',costo:120,empleos:8,ingreso:20,mant:1,riego:true,madura:6,temp:[5,6,7,8],alta:1.8,baja:.5,info:'Tarda 6 meses en dar fruto. Necesita riego; cosecha de mayo a agosto.'}
 };
 const DC={}; for(const k in CULT) DC[k]=Object.assign({},null,{...CULT[k]});
-function D(o){ if(o&&o.t==='parcela'){ const c=o.cult||'maiz'; if(!DC[c].nom) Object.assign(DC[c],DEF.parcela,CULT[c],{nom:'Parcela de '+CULT[c].cnom.toLowerCase(),spr:'cult-'+c}); return DC[c]; } return DEF[o.t]; }
+// mejoras por edificio: modifican sus números
+const MEJORAS={
+ aire:{nom:'Aire acondicionado',txt:'+20% predial, la gente vive más a gusto',pct:.35,min:10},
+ turno:{nom:'Segundo turno',txt:'+60% empleos y +50% ingreso; más nómina',pct:.4,min:30},
+ solar:{nom:'Paneles solares',txt:'−40% mantenimiento y no le pega el apagón',pct:.5,min:25},
+ ampl:{nom:'Ampliación',txt:'+4 de radio de servicio; más mantenimiento',pct:.5,min:30}};
+function mejorasDe(e){const d=D0(e), m=e.mej||{}, l=[];
+  if(d.casas) l.push('aire');
+  if(d.empleos&&d.ingreso&&!d.agri) l.push('turno');
+  if((d.mant||0)>=1) l.push('solar');
+  if(d.serv) l.push('ampl');
+  return l.filter(k=>!m[k]);}
+function costoMejora(e,k){const d=D0(e); return Math.max(MEJORAS[k].min,Math.round((d.costo||100)*MEJORAS[k].pct));}
+function nombreDe(e){return e.nombre||D(e).nom;}
+const DM={};
+function D(o){ const b=D0(o); if(!o||!o.mej) return b; const ks=Object.keys(o.mej).sort(); if(!ks.length) return b;
+  const key=o.t+'.'+(o.cult||'')+'.'+ks.join(','); if(DM[key]) return DM[key];
+  const d=Object.assign({},b);
+  if(o.mej.turno){d.empleos=Math.round((d.empleos||0)*1.6); d.ingreso=(d.ingreso||0)*1.5; d.mant=(d.mant||0)*1.4+.5;}
+  if(o.mej.aire){d.predial=(d.predial||0)*1.2; d.mant=(d.mant||0)+.2; d.aire=true;}
+  if(o.mej.ampl){d.radio=(d.radio||0)+4; d.mant=(d.mant||0)*1.3;}
+  if(o.mej.solar){d.mant=(d.mant||0)*.6; d.solar=true;}
+  return DM[key]=d; }
+function D0(o){ if(o&&o.t==='parcela'){ const c=o.cult||'maiz'; if(!DC[c].nom) Object.assign(DC[c],DEF.parcela,CULT[c],{nom:'Parcela de '+CULT[c].cnom.toLowerCase(),spr:'cult-'+c}); return DC[c]; } return DEF[o.t]; }
 let selCult='maiz';
 // transporte público
 const BUS=140, PARADA=BUS*.2, LETRAS='ABCDEF', COLR=['#F2B233','#6FB0D8','#E0703A','#7FD06A','#B48CE0','#E8E0D0'];
@@ -284,6 +353,9 @@ function trazar(paradas){ if(paradas.length<2) return null; let t=[]; for(let n=
 function calcRutas(){ for(const r of S.rutas) r._c=trazar(r.paradas); }
 function calidad(r){return r._c? Math.min(1, r.buses*2/r.paradas.length):0;}
 function cubreRuta(r,c){return r.paradas.some(p=>dist([p[0]+.5,p[1]+.5],c)<=5);}
+const RECURSOS=[['agri','Agricultura'],['gana','Ganadería'],['mar','Pesca y mar'],['tur','Turismo'],['com','Comercio local'],['mad','Madera'],['otro','Otros negocios']];
+function recursoDe(e){const t=e.t; if(['parcela','agro','bodega','empacadora','presa'].includes(t)) return 'agri'; if(['engorda','rastro','veterinaria'].includes(t)) return 'gana';
+  if(['muelle','congeladora','granja'].includes(t)) return 'mar'; if(['hotel','palapa','malecon'].includes(t)) return 'tur'; if(['minisuper','cafe','sushi','mercado'].includes(t)) return 'com'; if(t==='aserradero') return 'mad'; return 'otro';}
 const SERV_NOM={salud:'Salud',educacion:'Escuela',seguridad:'Seguridad',diversion:'Diversión',abasto:'Abasto'};
 
 // ---------- estado ----------
@@ -336,7 +408,7 @@ function completarEstado(){
   if(!S.rio){ reconstruirOcc(); S.rio=trazarRio(); for(const k of S.rio) if(S.ter[k]!=='calle'&&!occ[k]) S.ter[k]='rio'; }
   marcarRio();
   if(S.deli==null) S.deli=22; if(S.mana==null) S.mana=18;
-  S.rutas=S.rutas||[];
+  S.rutas=S.rutas||[]; S.creditos=S.creditos||[]; S.embarques=S.embarques||[];
   S.mods=S.mods||{turismo:1,negocios:1,part:1}; S.efectos=S.efectos||[]; S.retos=S.retos||[]; S.mano=S.mano||[];
   if(S.bono===undefined) S.bono=null; S.callesGratis=S.callesGratis||0; S.cartas=S.cartas||0;
 }
@@ -424,6 +496,7 @@ function recalcular(){
   const cap=casas.reduce((s,e)=>s+D(e).casas,0);
   const empleos=S.eds.reduce((s,e)=>s+(D(e).empleos||0),0);
   calcRutas();
+  const aire=casas.filter(e=>D(e).aire).length/Math.max(1,casas.length);
   let trans=0; for(const h of casas){const c=centro(h); let q=0; for(const r of S.rutas) if(r._c&&cubreRuta(r,c)) q=Math.max(q,calidad(r)); trans+=q;}
   trans/=Math.max(1,casas.length);
   const fuerza=Math.round(S.pob*.5*(1+.1*trans));      // con camión la gente llega a más trabajos
@@ -442,23 +515,25 @@ function recalcular(){
   const part=(30+.6*S.pob)*S.mods.part; ing.push(['Participaciones federales',part]);
   const pred=casas.reduce((s,e)=>s+D(e).predial,0); ing.push(['Predial',pred]);
   const ef=t=>S.efectos.some(x=>x.tipo===t);
-  let neg=0; for(const e of S.eds){const d=D(e); if(!d.ingreso) continue; let f=llenado*factorDe(e)[0]*S.mods.negocios*(1+.1*trans);
+  let neg=0; const porRec={}; for(const e of S.eds) e._ing=0;
+  for(const e of S.eds){const d=D(e); if(!d.ingreso) continue; let f=llenado*factorDe(e)[0]*S.mods.negocios*(1+.1*trans);
     if(d.turismo) f*=S.mods.turismo;
-    if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=.6; if(ef('apagon')) f*=.7;
+    if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=.6; if(ef('apagon')&&!d.solar) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
     if(ef('huracan')&&(d.turismo||e.t==='muelle'||e.t==='congeladora'||e.t==='granja')) f=0;
-    neg+=d.ingreso*f;}
-  ing.push(['Negocios y producción',neg]);
+    e._ing=d.ingreso*f; neg+=e._ing; const r=recursoDe(e); porRec[r]=(porRec[r]||0)+e._ing;}
+  for(const [r,n] of RECURSOS) if(porRec[r]) ing.push([n,porRec[r]]);
   const nb=S.rutas.reduce((s,r)=>s+(r._c?r.buses:0),0); if(nb) ing.push(['Pasajes de autobús',nb*2.5*(.5+.5*trans)]);
   const mant=S.eds.reduce((s,e)=>s+(D(e).mant||0),0); gas.push(['Mantenimiento y nómina',mant]);
   const calles=S.ter.filter(t=>t==='calle').length; gas.push(['Calles',calles*DEF.calle.mant]);
   const nbt=S.rutas.reduce((s,r)=>s+r.buses,0); if(nbt) gas.push(['Autobuses (choferes y diésel)',nbt*4.5]);
+  const pc=(S.creditos||[]).reduce((s,c)=>s+c.pago,0); if(pc) gas.push(['Pago de créditos',pc]);
   const piso=neg*S.mana/100*.4; if(piso>.05) gas.push(['Cobro de piso (la maña)',piso]);
   const tIngBase=ing.reduce((s,x)=>s+x[1],0); let resto=tIngBase;
   for(const x of S.efectos.filter(x=>x.tipo==='retencion')){const m=resto*x.pct; gas.push([`Retención: ${x.nom}`,m]); resto-=m;}
   for(const x of S.efectos.filter(x=>x.tipo==='paralisis')){const m=resto*(1-x.keep); gas.push([`Paralización: ${x.nom}`,m]); resto-=m;}
   const tIng=tIngBase, tGas=gas.reduce((s,x)=>s+x[1],0);
   // aprobación objetivo
-  let obj=42+cob.salud*8+cob.educacion*8+cob.seguridad*7+cob.diversion*6+cob.abasto*5+(1-desempleo)*10-desempleo*22-olor*12+trans*7;
+  let obj=42+cob.salud*8+cob.educacion*8+cob.seguridad*7+cob.diversion*6+cob.abasto*5+(1-desempleo)*10-desempleo*22-olor*12+trans*7+aire*5;
   if(S.eds.some(e=>D(e).fe)) obj+=3;
   if(S.dinero<0) obj-=15;
   if(cap<S.pob) obj-=6;
@@ -491,7 +566,9 @@ function pasarMes(){
   // efectos que terminan
   const terminados=[];
   for(const x of S.efectos){x.meses--; if(x.meses<=0) terminados.push(x.nom);} S.efectos=S.efectos.filter(x=>x.meses>0);
-  const rep={mes:S.mes,antes,c,despues:{pob:S.pob,apr:S.apr,din:S.dinero},terminados,talas};
+  for(const cr of S.creditos||[]){cr.meses--; cr.saldo=Math.max(0,cr.saldo-cr.pago); if(cr.meses<=0) terminados.push(`Crédito de ${dinero(cr.monto)} liquidado`);} S.creditos=(S.creditos||[]).filter(cr=>cr.meses>0);
+  const embarques=resolverEmbarques();
+  const rep={mes:S.mes,antes,c,despues:{pob:S.pob,apr:S.apr,din:S.dinero},terminados,talas,embarques};
   S.mes++;
   // retos
   rep.eventos=[]; recalcular();
@@ -505,14 +582,14 @@ function pasarMes(){
 // ---------- guardado (3 ranuras rotativas) ----------
 function guardar(){
   try{
-    const slot=((+localStorage.getItem('trienio.slot')||0)+1)%3;
+    const P=pref(); const slot=((+localStorage.getItem(P+'slot')||0)+1)%3;
     const data=JSON.stringify({...S,calc:undefined,t:Date.now()},(k,v)=>k[0]==='_'?undefined:v);
-    localStorage.setItem('trienio.save.'+slot,data); localStorage.setItem('trienio.slot',String(slot));
+    localStorage.setItem(P+'save.'+slot,data); localStorage.setItem(P+'slot',String(slot));
   }catch(e){}
 }
 function cargar(){
   let mejor=null;
-  for(let k=0;k<3;k++){ try{const o=JSON.parse(localStorage.getItem('trienio.save.'+k)); if(o&&(o.v===1||o.v===2)&&o.ter&&o.ter.length===N*N&&(!mejor||o.t>mejor.t)) mejor=o;}catch(e){} }
+  const P=pref(); for(let k=0;k<3;k++){ try{const o=JSON.parse(localStorage.getItem(P+'save.'+k)); if(o&&(o.v===1||o.v===2)&&o.ter&&o.ter.length===N*N&&(!mejor||o.t>mejor.t)) mejor=o;}catch(e){} }
   return mejor;
 }
 let tGuardar=0; function guardarPronto(){clearTimeout(tGuardar);tGuardar=setTimeout(guardar,800);}
@@ -598,8 +675,7 @@ function terV(a,b){if(a<0||b<0||a>=N||b>=N) return null; const [i,j]=celW(a,b); 
 function texDe(i,j,a,b){
   const k=idx(i,j), t=S.ter[k], v=(i*7+j*13)%3;
   if(t==='calle'){let m=0; if(terV(a,b-1)==='calle')m|=1; if(terV(a+1,b)==='calle')m|=2; if(terV(a,b+1)==='calle')m|=4; if(terV(a-1,b)==='calle')m|=8;
-    let p=null; if(RIO[k]){const eo=((m&2)?1:0)+((m&8)?1:0), ns=((m&1)?1:0)+((m&4)?1:0); p=eo>=ns?'eo':'ns';}
-    return [TEX['calle'+m],0,p];}
+    return [TEX['calle'+m],0,RIO[k]?{m}:null];}
   const o=occ[k];
   if(o && (t==='mar'||t==='rio')) return [TEX[t+v],0];
   if(o && t!=='playa'){const e=S.eds.find(x=>x.id===o);
@@ -699,9 +775,13 @@ function dibujar(){
   const [a0,a1,b0,b1]=rangoVisible(); const z=cam.z;
   for(let s=a0+b0;s<=a1+b1;s++) for(let a=a0;a<=a1;a++){const b=s-a; if(b<b0||b>b1) continue;
     const [i,j]=celW(a,b); const [tx,oy,puente]=texDe(i,j,a,b); if(!tx) continue; const [x,y]=topW(a,b); const [sx,sy]=aPantalla(x-64,y-oy);
-    if(puente){const w=TEX['rio'+((i*7+j*13)%3)]; g.drawImage(w,Math.floor(sx),Math.floor(sy),Math.ceil(128*z)+1,Math.ceil(64*z)+1);
-      g.drawImage(tx,Math.floor(sx+10*z),Math.floor(sy+5*z),Math.ceil(108*z)+1,Math.ceil(54*z)+1);
-      const r=TEX['puente-'+puente]; g.drawImage(r,Math.floor(sx),Math.floor(sy-8*z),Math.ceil(128*z)+1,Math.ceil(72*z)+1);}
+    if(puente){g.drawImage(tx,Math.floor(sx),Math.floor(sy),Math.ceil(128*z)+1,Math.ceil(64*z)+1);
+      // barandal solo en las orillas que dan al agua (no donde sigue la calle)
+      const T=[sx+64*z,sy],E=[sx+128*z,sy+32*z],Sx=[sx+64*z,sy+64*z],Wx=[sx,sy+32*z];
+      for(const [a,b,bit] of [[T,E,1],[Wx,T,8],[E,Sx,2],[Sx,Wx,4]]){ if(puente.m&bit) continue;
+        const h=7*z; g.strokeStyle='#3A2A1A'; g.lineWidth=Math.max(2,5*z); g.beginPath(); g.moveTo(a[0],a[1]-h); g.lineTo(b[0],b[1]-h); g.stroke();
+        g.strokeStyle='#D9CDB2'; g.lineWidth=Math.max(1,3*z); g.beginPath(); g.moveTo(a[0],a[1]-h); g.lineTo(b[0],b[1]-h); g.stroke();
+        g.fillStyle='#8C7A60'; for(let t=0;t<=1.001;t+=.25){const x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t; g.fillRect(x-1.5*z,y-h-1*z,3*z+.5,h+1*z);} }}
     else g.drawImage(tx,Math.floor(sx),Math.floor(sy),Math.ceil(128*z)+1,Math.ceil((64+oy)*z)+1);}
   // radio del servicio que se coloca o se mira
   const rad=(modo==='construir'&&fant&&DEF[sel].radio)?{t:sel,i:fant.i,j:fant.j,f:fant.flip}:(elegido&&D(elegido).radio?elegido:null);
@@ -748,7 +828,7 @@ function reponerAgentes(){
   const ases=S.eds.filter(e=>e.t==='aserradero'); quiero.l=ases.length*2;
   const pars=S.eds.filter(e=>e.t==='parcela'); quiero.j=Math.min(16,pars.length*2);
   for(const k of ['p','c','b','l','j']){
-    let lst=agentes.filter(a=>a.k===k);
+    let lst=agentes.filter(a=>a.k===k&&!a.alc);
     while(lst.length>quiero[k]){const a=lst.pop(); agentes.splice(agentes.indexOf(a),1);}
     while(lst.length<quiero[k]){let a=null;
       if(k==='p'||k==='c') a=nuevoCaminante(k);
@@ -758,6 +838,8 @@ function reponerAgentes(){
       if(!a) break; agentes.push(a); lst.push(a);}
   }
   for(const a of agentes) if((a.k==='p'||a.k==='c')&&(!esCalle(a.i,a.j)||!esCalle(a.ni,a.nj))){const b=nuevoCaminante(a.k); if(b) Object.assign(a,b);}
+  // el alcalde (personaje del perfil) también se pasea por el pueblo
+  if(perfil&&!agentes.some(a=>a.alc)&&nCalles>3){const a=nuevoCaminante('p'); if(a){a.alc=true; a.fig=PERSONAJES[perfil.ret||1].fig; a.v=.3; agentes.push(a);}}
   // autobuses: uno por cada unidad comprada en cada ruta con servicio
   for(let q=agentes.length-1;q>=0;q--){const a=agentes[q]; if(a.k!=='bus') continue; const r=S.rutas.find(x=>x.id===a.r); if(!r||!r._c||a.n>=r.buses) agentes.splice(q,1); else a.s=Math.min(a.s,r._c.length-1);}
   for(const r of S.rutas){ if(!r._c) continue; for(let n=0;n<r.buses;n++) if(!agentes.some(a=>a.k==='bus'&&a.r===r.id&&a.n===n)){
@@ -912,7 +994,8 @@ function dibujarAgente(a){
   const z=cam.z, now=performance.now()/1000;
   if(a.k==='parada') return parada(a);
   const [px,py]=proj(a.wx,a.wy);
-  if(a.k==='p'){const [sx,sy]=aPantalla(px,py); if(sx<-30||sy<-40||sx>VW+30||sy>VH+30) return; const [va,vb]=dirV(...a.dir); figura(sx,sy,z,a.fig,now+a.lado*.3+a.fig,true,(va-vb)>0);}
+  if(a.k==='p'){const [sx,sy]=aPantalla(px,py); if(sx<-30||sy<-40||sx>VW+30||sy>VH+30) return; const [va,vb]=dirV(...a.dir); figura(sx,sy,z,a.fig,now+a.lado*.3+a.fig,true,(va-vb)>0);
+    if(a.alc){const y=sy-44*z+Math.sin(now*3)*2*z; g.fillStyle='#14202B'; g.beginPath(); g.moveTo(sx,y-7*z-1); g.lineTo(sx+6*z+1,y); g.lineTo(sx,y+7*z+1); g.lineTo(sx-6*z-1,y); g.fill(); g.fillStyle='#F2B233'; g.beginPath(); g.moveTo(sx,y-6*z); g.lineTo(sx+5*z,y); g.lineTo(sx,y+6*z); g.lineTo(sx-5*z,y); g.fill();}}
   else if(a.k==='c') camion(a);
   else if(a.k==='bus') autobus(a);
   else if(a.k==='b'){const im=IMG['veh-camaronero-a']; if(!im) return; const k=.42, bob=Math.sin(now*2+a.o)*2; const w=im.width*k*z,h=im.height*k*z; const [sx,sy]=aPantalla(px,py+bob);
@@ -1171,15 +1254,27 @@ function ficha(){
   const filas=[];
   if(d.casas) filas.push(['Vivienda',`${d.casas} habitantes`],['Predial',`${dinero(d.predial)}/mes`]);
   if(d.empleos) filas.push(['Empleos',`${Math.round(d.empleos*c.llenado)} de ${d.empleos} ocupados`]);
-  if(d.ingreso) filas.push(['Ingreso',`${dinero(d.ingreso*c.llenado*fac)}/mes`]);
+  if(d.ingreso) filas.push(['Ingreso',`${dinero(e._ing!=null?e._ing:d.ingreso*c.llenado*fac)}/mes`]);
   if(d.mant) filas.push(['Mantenimiento',`${dinero(d.mant)}/mes`]);
   if(d.serv) filas.push(['Servicio',`${SERV_NOM[d.serv]} · radio ${d.radio}`]);
   if(e.t==='parcela'){const cu=CULT[e.cult]; filas.unshift(['Cultivo',cu.cnom]); filas.push(['Temporada',cu.temp.map(m=>MESES[m-1].slice(0,3)).join(' ')]);}
   if(nota) filas.push(['Nota',nota]);
   if(d.contamina) filas.push(['Ojo','Huele: baja la aprobación de casas cercanas']);
-  f.innerHTML=`<h4>${d.nom.toUpperCase()}</h4><dl>${filas.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><div class="acc"><button class="btn" id="fCerrar">Cerrar</button>${e.t==='parcela'?'<button class="btn" id="fCult">Cambiar cultivo</button>':''}${e.t!=='palacio'?'<button class="btn" id="fDem">Demoler</button>':''}</div>`;
+  const tiene=Object.keys(e.mej||{}).map(k=>MEJORAS[k].nom);
+  if(tiene.length) filas.push(['Mejoras',tiene.join(', ')]);
+  const disp=mejorasDe(e);
+  f.innerHTML=`<div class="titf"><h4>${esc(nombreDe(e)).toUpperCase()}</h4><button class="btn mini2" id="fNom" title="Cambiar nombre" aria-label="Cambiar nombre">✎</button></div>${e.nombre?`<small class="tipo">${esc(d.nom)}</small>`:''}
+  <dl>${filas.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>
+  ${disp.length?`<div class="mejoras"><span class="t">Mejoras disponibles</span>${disp.map(k=>{const m=MEJORAS[k], cst=costoMejora(e,k); return `<button class="btn" data-mej="${k}" ${S.dinero<cst?'disabled':''}><b>${m.nom}</b><span>${m.txt} · ${dinero(cst)}</span></button>`;}).join('')}</div>`:''}
+  <div class="acc"><button class="btn" id="fCerrar">Cerrar</button>${e.t==='parcela'?'<button class="btn" id="fCult">Cambiar cultivo</button>':''}${e.t!=='palacio'?'<button class="btn" id="fDem">Demoler</button>':''}</div>`;
   f.hidden=false;
   $('fCerrar').onclick=()=>{elegido=null;f.hidden=true;pedir();};
+  $('fNom').onclick=()=>{ const t=f.querySelector('.titf'); t.innerHTML=`<input id="fNomIn" maxlength="28" value="${esc(nombreDe(e))}" aria-label="Nuevo nombre"><button class="btn mini2" id="fNomOk">✓</button>`;
+    const inp=$('fNomIn'); inp.focus(); inp.select();
+    const ok=()=>{ const v=inp.value.trim().replace(/\s+/g,' '); e.nombre=(v&&v!==d.nom)?v:undefined; guardarPronto(); ficha(); aviso(v?`Ahora se llama “${v}”`:'Se quitó el nombre'); };
+    $('fNomOk').onclick=ok; inp.onkeydown=ev=>{ if(ev.key==='Enter') ok(); if(ev.key==='Escape') ficha(); }; };
+  f.querySelectorAll('[data-mej]').forEach(b=>b.onclick=()=>{ const k=b.dataset.mej, cst=costoMejora(e,k); if(S.dinero<cst){aviso('No alcanza el dinero');return;}
+    S.dinero-=cst; e.mej=Object.assign({},e.mej,{[k]:S.mes}); recalcular(); hud(); reponerAgentes(); guardarPronto(); ficha(); aviso(`${MEJORAS[k].nom}: listo en ${nombreDe(e)}`); });
   if($('fDem')) $('fDem').onclick=()=>confirmarDemoler(e);
   if($('fCult')) $('fCult').onclick=()=>elegirCultivo(()=>{const cu=CULT[selCult]; if(selCult===e.cult){aviso('Ya tiene ese cultivo');return;}
     let rg=0; for(let a=0;a<3;a++)for(let b=0;b<3;b++) if(S.ter[idx(e.i+a,e.j+b)]==='riego') rg++;
@@ -1189,6 +1284,7 @@ function ficha(){
 }
 
 // panel plegable
+$('sCaja').onclick=()=>finanzas(); $('bCredito').onclick=()=>credito(); $('bComercio').onclick=()=>comercio();
 $('tirador').onclick=()=>{const p=$('panel');p.classList.toggle('cerrado');document.body.classList.toggle('panel-cerrado',p.classList.contains('cerrado'));$('tirador').textContent=p.classList.contains('cerrado')?'‹':'›';};
 
 // ---------- baraja de modificadores ----------
@@ -1370,6 +1466,148 @@ function usarCarta(k){
   $('bTirar').onclick=async()=>{ $('acc').innerHTML=''; const d=await tirarDado(); S.mano.splice(k,1); const t=c.ap(d); $('resu').innerHTML=`Dado: <b>${d}</b>. ${t}`;
     recalcular(); hud(); efectos(); guardar(); $('acc').innerHTML='<button class="btn-sol btn" id="bOk">Listo</button>'; $('bOk').onclick=()=>{cerrarModal();efectos();}; };
 }
+// ---------- finanzas: desglose por recurso y por edificio ----------
+function proyeccion(){
+  const m0=S.mes; S.mes=m0+1; recalcular();
+  const filas=S.eds.map(e=>{const d=D(e); return {e,ing:(e._ing||0)+(d.casas?d.predial:0),mant:d.mant||0};}).filter(r=>r.ing||r.mant);
+  const tot=S.calc.bal; S.mes=m0; recalcular(); return {filas,tot};
+}
+function tablaEdificios(){
+  const {filas,tot}=proyeccion();
+  const grupos={}; for(const r of filas){const k=r.e.nombre?('#'+r.e.id):r.e.t+(r.e.cult||''); if(!grupos[k]) grupos[k]={nom:r.e.nombre||D(r.e).nom,n:0,ing:0,mant:0}; const g_=grupos[k]; g_.n++; g_.ing+=r.ing; g_.mant+=r.mant;}
+  const l=Object.values(grupos).sort((a,b)=>(b.ing-b.mant)-(a.ing-a.mant));
+  return `<div class="tabla"><span class="h">Edificio</span><span class="h">Entra</span><span class="h">Cuesta</span><span class="h">Deja</span>
+   ${l.map(g_=>`<span>${esc(g_.nom)}${g_.n>1?` <small>×${g_.n}</small>`:''}</span><span>${dinero(g_.ing)}</span><span>${g_.mant?'−'+dinero(g_.mant):'—'}</span><span class="${g_.ing-g_.mant>=0?'pos':'neg'}">${g_.ing-g_.mant>=0?'+':''}${dinero(g_.ing-g_.mant)}</span>`).join('')}</div>
+   <p style="font-size:13px;color:var(--tenue)">Balance esperado del mes que entra (con participaciones, calles, créditos y descuentos): <b style="color:${tot>=0?'var(--bien)':'var(--mal)'}">${tot>=0?'+':''}${dinero(tot)}</b>. Los cultivos cambian según la temporada.</p>`;
+}
+function finanzas(){
+  const c=recalcular(); const fila=(n,v)=>`<span>${n}</span><span>${dinero(v)}</span>`;
+  modal(`<h2>FINANZAS DEL MUNICIPIO</h2>
+   <div class="cols"><div class="cuenta"><span class="t">Entradas de este mes, por recurso</span>${c.ing.map(x=>fila(...x)).join('')}</div>
+   <div class="cuenta"><span class="t">Salidas</span>${c.gas.map(x=>fila(x[0],-x[1])).join('')}<span class="tot">Balance</span><span class="tot" style="color:${c.bal>=0?'var(--bien)':'var(--mal)'}">${c.bal>=0?'+':''}${dinero(c.bal)}</span></div></div>
+   <div class="cuenta"><span class="t">Lo que se espera de cada edificio el mes que entra</span></div>${tablaEdificios()}
+   <div class="fila"><button class="btn" id="fiCred">Pedir crédito</button><button class="btn" id="fiCom">Comercio</button><button class="btn-sol btn" id="mCerrar">Cerrar</button></div>`);
+  $('mCerrar').onclick=cerrarModal; $('fiCred').onclick=()=>credito(finanzas); $('fiCom').onclick=()=>comercio(finanzas);
+}
+
+// ---------- crédito: si la aprobación es alta se autoriza solo; si no, se negocia con el cabildo ----------
+const REGIDORES=[
+ {r:3,con:'Semilla y fertilizante para el ejido',pct:.1,bias:()=>S.eds.filter(e=>e.t==='parcela'||e.t==='agro').length>=2?6:-4},
+ {r:4,con:'Diésel para las lanchas',pct:.08,bias:()=>S.eds.some(e=>e.t==='muelle')?6:-6},
+ {r:5,con:'Descuento en licencias por 6 meses (−5% a negocios)',pct:0,efecto:'desclic',bias:()=>S.eds.filter(e=>recursoDe(e)==='com').length>=3?6:-2},
+ {r:6,con:'Bono a los trabajadores del municipio',pct:.12,bias:()=>(S.calc&&S.calc.desempleo>.25)?-10:4},
+ {r:7,con:'Arreglar el techo de la parroquia',pct:.07,bias:()=>S.eds.some(e=>e.t==='iglesia')?6:-3},
+ {r:8,con:'Medicinas para el centro de salud',pct:.1,bias:()=>S.eds.some(e=>e.t==='clinica')?6:-6},
+ {r:10,con:'Comisión de transparencia (la oposición vigila: −2 aprobación)',pct:0,efecto:'transp',bias:()=>-22}];
+const VOTOS_NEC=4, AUTO_APR=60;
+function deuda(){return (S.creditos||[]).reduce((s,c)=>s+c.saldo,0);}
+function capacidad(){const c=recalcular(); return Math.max(0,Math.round((c.tIngBase*8-deuda())/10)*10);}
+function credito(volver){ const cerrar=typeof volver==='function'?volver:cerrarModal;
+  const cap=capacidad(), act=S.creditos||[];
+  const ops=[.25,.5,1].map(f=>Math.max(0,Math.round(cap*f/10)*10)).filter((v,i,a)=>v>=50&&a.indexOf(v)===i);
+  const veto=S.vetoCredito&&S.mes<S.vetoCredito;
+  let monto=ops[0]||0, plazo=12;
+  const pinta=()=>{ const tasa=plazo===12?.015:.018, total=monto*(1+tasa*plazo), pago=total/plazo;
+    modal(`<h2>PEDIR CRÉDITO</h2>
+    <p style="font-size:14px">Un crédito de la banca de desarrollo para los malos tiempos. Con ${AUTO_APR}% de aprobación o más, el cabildo lo autoriza sin discutir; si no, tendrás que negociar con los regidores.</p>
+    ${act.length?`<div class="cuenta"><span class="t">Créditos vigentes</span>${act.map(c=>`<span>${dinero(c.monto)} · faltan ${c.meses} meses</span><span>−${dinero(c.pago)}/mes</span>`).join('')}</div>`:''}
+    ${veto?`<p style="color:var(--mal)">El cabildo rechazó tu última solicitud. Puedes volver a pedirlo en ${MESES[(S.vetoCredito-1)%12]}.</p>`:!ops.length?`<p style="color:var(--mal)">Con tus ingresos y lo que ya debes, el banco no te presta más por ahora.</p>`:`
+    <div class="cuenta"><span class="t">Monto (te prestan hasta ${dinero(cap)})</span></div><div class="chips">${ops.map(v=>`<button class="chip opc" data-m="${v}" aria-pressed="${v===monto}">${dinero(v)}</button>`).join('')}</div>
+    <div class="cuenta"><span class="t">Plazo</span></div><div class="chips">${[12,24].map(v=>`<button class="chip opc" data-p="${v}" aria-pressed="${v===plazo}">${v} meses · ${v===12?'1.5':'1.8'}% mensual</button>`).join('')}</div>
+    <div class="cuenta"><span>Pagarás cada mes</span><span><b>${dinero(pago)}</b></span><span>Total a pagar</span><span>${dinero(total)}</span><span>Aprobación actual</span><span style="color:${S.apr>=AUTO_APR?'var(--bien)':'var(--mal)'}">${S.apr}%</span></div>`}
+    <div class="fila"><button class="btn" id="mCerrar">Cerrar</button>${!veto&&ops.length?`<button class="btn-sol btn" id="crPedir">${S.apr>=AUTO_APR?'Solicitar':'Llevarlo al cabildo'}</button>`:''}</div>`);
+    $('mCerrar').onclick=cerrar;
+    $('modal').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{monto=+b.dataset.m;pinta();});
+    $('modal').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{plazo=+b.dataset.p;pinta();});
+    if($('crPedir')) $('crPedir').onclick=()=>{ const sol={monto,plazo,pago,total};
+      if(S.apr>=AUTO_APR){ otorgar(sol,[]); modal(`<h2>CRÉDITO APROBADO</h2><p>Con ${S.apr}% de aprobación, el cabildo lo autorizó por mayoría y sin discusión. Entran <b>${dinero(monto)}</b> a la caja.</p><p style="font-size:14px;color:var(--tenue)">Pagarás ${dinero(pago)} al mes durante ${plazo} meses.</p><div class="fila"><button class="btn-sol btn" id="mCerrar">Listo</button></div>`); $('mCerrar').onclick=cerrar; }
+      else cabildo(sol,cerrar); };
+  };
+  pinta();
+}
+function otorgar(sol,comp){
+  let neto=sol.monto;
+  for(const k of comp){ const R=REGIDORES[k]; neto-=Math.round(sol.monto*R.pct);
+    if(R.efecto==='desclic') S.efectos.push({tipo:'desclic',nom:'Descuento en licencias',meses:6});
+    if(R.efecto==='transp'){ S.apr=clamp(S.apr-2,1,99); S.mana=clamp(S.mana-3,0,100); } }
+  S.creditos=S.creditos||[]; S.creditos.push({monto:sol.monto,pago:sol.pago,meses:sol.plazo,saldo:sol.total});
+  S.dinero+=neto; recalcular(); hud(); efectos(); guardarPronto();
+}
+function cabildo(sol,cerrar){
+  const conc=new Set();
+  const humor=k=>S.apr+REGIDORES[k].bias()+(conc.has(k)?(REGIDORES[k].efecto==='transp'?26:20):0);
+  const pinta=()=>{ const vot=REGIDORES.map((_,k)=>humor(k)>=52); const si=vot.filter(Boolean).length;
+    const cst=k=>Math.round(sol.monto*REGIDORES[k].pct); const costo=[...conc].reduce((s,k)=>s+cst(k),0);
+    modal(`<h2>SESIÓN DE CABILDO</h2>
+    <p style="font-size:14px">Con ${S.apr}% de aprobación el crédito no pasa solo. Se necesitan <b>${VOTOS_NEC} de ${REGIDORES.length}</b> votos. Puedes comprometerte con algunos regidores; lo que cueste se descuenta del crédito si se aprueba.</p>
+    <div class="regidores">${REGIDORES.map((R,k)=>{const P=PERSONAJES[R.r]; return `<div class="reg ${vot[k]?'si':'no'}"><img alt="" src="${retrato(R.r)}"><span class="q"><b>${esc(P.nom)}</b><small>${esc(P.rol)} · ${vot[k]?'A favor':'En contra'}</small>
+      ${!vot[k]||conc.has(k)?`<button class="btn chip opc" data-k="${k}" aria-pressed="${conc.has(k)}">${conc.has(k)?'✓ ':''}${esc(R.con)}${R.pct?` · ${dinero(cst(k))}`:''}</button>`:''}</span></div>`;}).join('')}</div>
+    <div class="cuenta"><span>Votos a favor</span><span style="color:${si>=VOTOS_NEC?'var(--bien)':'var(--mal)'}"><b>${si} de ${REGIDORES.length}</b></span><span>Crédito</span><span>${dinero(sol.monto)}${costo?` − ${dinero(costo)} en compromisos`:''}</span></div>
+    <div class="fila"><button class="btn" id="cbNo">Retirar la propuesta</button><button class="btn-sol btn" id="cbVotar">Someter a votación</button></div>`);
+    $('modal').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=+b.dataset.k; conc.has(k)?conc.delete(k):conc.add(k); pinta();});
+    $('cbNo').onclick=cerrar;
+    $('cbVotar').onclick=()=>{
+      if(si>=VOTOS_NEC){ otorgar(sol,[...conc]); modal(`<h2>EL CABILDO APROBÓ EL CRÉDITO</h2><p>${si} votos a favor. Entran <b>${dinero(sol.monto-costo)}</b> a la caja${costo?` (ya descontados ${dinero(costo)} de compromisos)`:''}.</p><p style="font-size:14px;color:var(--tenue)">Pagarás ${dinero(sol.pago)} al mes durante ${sol.plazo} meses.</p><div class="fila"><button class="btn-sol btn" id="mCerrar">Listo</button></div>`); }
+      else { S.vetoCredito=S.mes+3; S.apr=clamp(S.apr-2,1,99); hud(); guardarPronto(); modal(`<h2>EL CABILDO LO RECHAZÓ</h2><p>Solo ${si} votos a favor. La noticia corre por el pueblo (−2 aprobación) y no podrás volver a pedirlo en 3 meses.</p><div class="fila"><button class="btn-sol btn" id="mCerrar">Ni modo</button></div>`); }
+      $('mCerrar').onclick=cerrar; };
+  };
+  pinta();
+}
+
+// ---------- comercio exterior: embarques por carretera o por mar, con protección ----------
+const BIENES=[
+ {k:'granos',nom:'Granos (maíz y sorgo)',de:e=>(e.t==='parcela'&&['maiz','sorgo'].includes(e.cult))||e.t==='agro'||e.t==='bodega'},
+ {k:'hortalizas',nom:'Chile y tomate',de:e=>(e.t==='parcela'&&['chile','tomate'].includes(e.cult))||e.t==='empacadora'},
+ {k:'fruta',nom:'Mango y plátano',de:e=>e.t==='parcela'&&['mango','platano'].includes(e.cult)},
+ {k:'carne',nom:'Carne de res',de:e=>['engorda','rastro'].includes(e.t)},
+ {k:'mariscos',nom:'Camarón y pescado',de:e=>['muelle','congeladora','granja'].includes(e.t)},
+ {k:'madera',nom:'Madera',de:e=>e.t==='aserradero'}];
+const RUTAS_COM={
+ tierra:{nom:'Carretera',txt:'Camión a Culiacán y Guadalajara',riesgo:.25,precio:1},
+ mar:{nom:'Barco',txt:'Del muelle a Mazatlán y a EE. UU.: paga mejor',riesgo:.12,precio:1.3,necesita:'muelle'}};
+const PROTE={
+ nada:{nom:'Sin protección',txt:'No cuesta; si lo asaltan se pierde todo',pct:0,mult:1},
+ seguro:{nom:'Seguro de carga',txt:'8% del valor; si lo asaltan te pagan 75%',pct:.08,mult:1,cubre:.75},
+ escolta:{nom:'Escolta de la Guardia',txt:'14% del valor; el riesgo baja mucho',pct:.14,mult:.2},
+ cuota:{nom:'Cuota a la maña',txt:'18% del valor; nadie lo toca, pero la maña crece y puede saberse',pct:.18,mult:0,mana:3}};
+function valorBien(b){ recalcular(); const l=S.eds.filter(b.de); if(!l.length) return 0; return Math.round(l.reduce((s,e)=>s+(e._ing||0),0)*1.6+8*l.length); }
+function riesgoDe(ruta,prot){ return Math.min(.8,RUTAS_COM[ruta].riesgo*(.6+S.deli/50))*PROTE[prot].mult; }
+function comercio(volver){ const cerrar=typeof volver==='function'?volver:cerrarModal;
+  S.embarques=S.embarques||[];
+  const hayMuelle=S.eds.some(e=>e.t==='muelle');
+  let bien=(BIENES.find(b=>valorBien(b)>0&&!S.embarques.some(x=>x.bien===b.k))||{}).k, ruta='tierra', prot='seguro';
+  const pinta=()=>{
+    const B=BIENES.find(b=>b.k===bien), val=B?Math.round(valorBien(B)*RUTAS_COM[ruta].precio):0, cst=Math.round(val*PROTE[prot].pct), r=riesgoDe(ruta,prot);
+    modal(`<h2>COMERCIO</h2>
+    <p style="font-size:14px">Vende fuera del municipio lo que producen tus campos, corrales y el mar. Cada producto sale una vez al mes; el pago llega al pasar el mes, si la carga llega completa.</p>
+    <div class="cuenta"><span class="t">Producto</span></div>
+    <div class="chips">${BIENES.map(b=>{const v=valorBien(b), ya=S.embarques.some(x=>x.bien===b.k); return `<button class="chip opc" data-b="${b.k}" aria-pressed="${b.k===bien}" ${!v||ya?'disabled':''}>${b.nom}${ya?' · ya salió':v?` · ${dinero(v)}`:' · no produces'}</button>`;}).join('')}</div>
+    <div class="cuenta"><span class="t">Ruta</span></div>
+    <div class="chips">${Object.entries(RUTAS_COM).map(([k,R])=>`<button class="chip opc" data-r="${k}" aria-pressed="${k===ruta}" ${R.necesita&&!hayMuelle?'disabled':''}>${R.nom}: ${R.txt}${R.necesita&&!hayMuelle?' (necesitas muelle)':''}</button>`).join('')}</div>
+    <div class="cuenta"><span class="t">Protección del envío</span></div>
+    <div class="chips">${Object.entries(PROTE).map(([k,P])=>`<button class="chip opc" data-p="${k}" aria-pressed="${k===prot}">${P.nom}: ${P.txt}</button>`).join('')}</div>
+    ${B?`<div class="cuenta"><span>Valor de la carga</span><span>${dinero(val)}</span><span>Costo de la protección</span><span>−${dinero(cst)}</span><span>Riesgo de asalto</span><span style="color:${r>.15?'var(--mal)':'var(--bien)'}">${Math.round(r*100)}%</span></div>`:'<p style="color:var(--mal)">No hay producto disponible para mandar este mes.</p>'}
+    ${S.embarques.length?`<p style="font-size:13px;color:var(--tenue)">En camino este mes: ${S.embarques.map(x=>`${BIENES.find(b=>b.k===x.bien).nom} por ${RUTAS_COM[x.ruta].nom.toLowerCase()}`).join(', ')}.</p>`:''}
+    <div class="fila"><button class="btn" id="mCerrar">Cerrar</button>${B?`<button class="btn-sol btn" id="coMandar" ${S.dinero<cst?'disabled':''}>Mandar embarque</button>`:''}</div>`);
+    $('mCerrar').onclick=cerrar;
+    $('modal').querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{bien=b.dataset.b;pinta();});
+    $('modal').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ruta=b.dataset.r;pinta();});
+    $('modal').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{prot=b.dataset.p;pinta();});
+    if($('coMandar')) $('coMandar').onclick=()=>{ S.dinero-=cst; if(PROTE[prot].mana) S.mana=clamp(S.mana+PROTE[prot].mana,0,100);
+      S.embarques.push({bien,ruta,prot,val,riesgo:r}); hud(); guardarPronto(); reponerAgentes();
+      aviso(`Salió el embarque de ${B.nom.toLowerCase()} por ${RUTAS_COM[ruta].nom.toLowerCase()}`,3000); pinta(); };
+  };
+  pinta();
+}
+function resolverEmbarques(){
+  const res=[];
+  for(const x of S.embarques||[]){ const B=BIENES.find(b=>b.k===x.bien); const asalto=Math.random()<x.riesgo; let pago=x.val, txt;
+    if(asalto){ pago=x.prot==='seguro'?Math.round(x.val*.75):0; txt=x.ruta==='mar'?`Abordaron el barco con ${B.nom.toLowerCase()}`:`Asaltaron el camión de ${B.nom.toLowerCase()} en la carretera`; txt+=pago?`; el seguro pagó ${dinero(pago)}`:'; se perdió la carga'; }
+    else txt=`Se vendió la carga de ${B.nom.toLowerCase()}: +${dinero(pago)}`;
+    if(x.prot==='cuota'&&Math.random()<.15){ S.apr=clamp(S.apr-4,1,99); txt+=' · se supo que pagaste cuota (−4 aprobación)'; }
+    S.dinero+=pago; res.push({ok:!asalto||pago>0,txt,pago}); }
+  S.embarques=[]; return res;
+}
 // ---------- paso del tiempo ----------
 function transicionMes(nombre){
   return new Promise(res=>{
@@ -1415,13 +1653,17 @@ function reporte(r,listo){
   if((r.talas||[]).length) chips.push(['',`El aserradero taló ${r.talas.length} parcela${r.talas.length>1?'s':''} de monte`]);
   if(S.deli>45) chips.push(['mal',`Delincuencia alta (${Math.round(S.deli)}): construye una comandancia`]);
   if(S.mana>40) chips.push(['mal',`La maña cobra piso (${Math.round(S.mana)})`]);
+  for(const x of r.embarques||[]) chips.push([x.ok?'bien':'mal',x.txt]);
   if(!chips.length) chips.push(['bien','El pueblo va bien este mes']);
   const fila=(n,v)=>`<span>${n}</span><span>${dinero(v)}</span>`;
   modal(`<h2>INFORME DE ${MESES[(r.mes-1)%12].toUpperCase()} · AÑO ${Math.floor((r.mes-1)/12)+1}</h2>
   <div class="cols"><div class="cuenta"><span class="t">Entradas</span>${c.ing.map(x=>fila(...x)).join('')}<span class="t">Salidas</span>${c.gas.map(x=>fila(x[0],-x[1])).join('')}<span class="tot">Balance</span><span class="tot" style="color:${c.bal>=0?'var(--bien)':'var(--mal)'}">${c.bal>=0?'+':''}${dinero(c.bal)}</span></div>
   <div class="cuenta"><span class="t">El pueblo</span><span>Habitantes</span><span>${r.despues.pob} (${dp>=0?'+':''}${dp})</span><span>Aprobación</span><span>${r.despues.apr}% (${da>=0?'+':''}${da})</span><span>Empleo</span><span>${c.ocupados} de ${c.fuerza}</span><span>Caja</span><span>${dinero(r.despues.din)}</span><span>Delincuencia</span><span>${Math.round(S.deli)}</span><span>La maña</span><span>${Math.round(S.mana)}</span></div></div>
   <div class="chips">${chips.map(([k,t])=>`<span class="chip ${k}">${t}</span>`).join('')}</div>
-  <div class="fila"><button class="btn-sol btn" id="mOk">${S.mes>36?'Continuar':'Sacar carta del mes'}</button></div>`);
+  <details class="desg"><summary>Ver cuánto se espera de cada edificio el mes que entra</summary>${tablaEdificios()}</details>
+  <div class="fila"><button class="btn" id="mCom">Comercio</button><button class="btn" id="mCred">Pedir crédito</button><button class="btn-sol btn" id="mOk">${S.mes>36?'Continuar':'Sacar carta del mes'}</button></div>`);
+  $('mCom').onclick=()=>comercio(()=>reporte(r,listo));
+  $('mCred').onclick=()=>credito(()=>reporte(r,listo));
   $('mOk').onclick=()=>{cerrarModal(); if(listo) listo();};
   $('mOk').focus();
 }
@@ -1436,14 +1678,92 @@ function eleccion(){
   $('eNueva').onclick=()=>{cerrarModal();iniciar(true);};
 }
 $('btnMenu').onclick=()=>{
-  modal(`<h2>MENÚ</h2><p>La partida se guarda sola cada mes y al construir.</p>
+  modal(`<h2>MENÚ</h2>${perfil?`<div class="perfiles"><div class="pf" aria-current="true"><img alt="" src="${retrato(perfil.ret)}"><span class="q"><b>${esc(perfil.nombre)}</b><small>Perfil en este equipo</small></span><button class="btn borrar" id="mPerfil">Cambiar perfil</button></div></div>`:''}<p>La partida se guarda sola cada mes y al construir.</p>
   <div class="cuenta"><span class="t">Cómo jugar</span></div>
   <p style="font-size:14px">Arrastra para moverte y pellizca para acercar. Elige una pieza en el panel, toca el mapa para ubicarla y confirma con <b>Construir</b>. Todo edificio necesita una calle al lado. Cubre las casas con salud, escuela y seguridad para subir la aprobación. Las calles se trazan arrastrando y se aprueban con ✓. En Campo construyes parcelas y eliges qué sembrar; cada cultivo tiene su temporada. La presa va sobre el río. En Servicios compras rutas de autobús: dos paradas (A y B) y, por 20% más cada una, paradas C, D, E…; más autobuses por ruta dan mejor servicio y suben la aprobación. Con <b>↻ Mapa</b> giras la vista para ver lo que tapan los edificios. Cada mes sacas una carta: el 60% son buenas y el dado (1·1·1·2·2·3) multiplica su efecto. En el mes 36 llega la elección.</p>
   <div class="fila"><button class="btn" id="mNueva">Nueva partida</button><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
   $('mCerrar').onclick=cerrarModal;
+  if($('mPerfil')) $('mPerfil').onclick=()=>{guardar(); cerrarModal(); volverPortada(); elegirPerfil();};
   $('mNueva').onclick=()=>{ $('modal').querySelector('.fila').innerHTML='<span style="align-self:center;color:var(--mal)">Se perderá la partida actual.</span><button class="btn" id="mNo">No</button><button class="btn-sol btn" id="mSi">Empezar de nuevo</button>';
     $('mNo').onclick=cerrarModal; $('mSi').onclick=()=>{cerrarModal();iniciar(true);}; };
 };
+
+// ---------- perfiles en este equipo (cada uno con su partida y su alcalde) ----------
+// los 10 personajes del juego (retratos sprites/ret-rN.png); el jugador elige uno como su alcalde
+const PERSONAJES=[null,
+ {nom:'Ing. Octavio Bojórquez Leyva',rol:'Presidente municipal',fig:26},
+ {nom:'Lalo Gastélum Rubio',rol:'Alcalde vecino · el fiestero',fig:1},
+ {nom:'Ramiro Camacho Verdugo',rol:'Agricultores y ejidatarios',fig:0},
+ {nom:'Don Chuy Osuna Tirado',rol:'Pescadores',fig:4},
+ {nom:'Lic. Mariana Zazueta Félix',rol:'Empresarios',fig:5},
+ {nom:'Doña Rosario Elenes Coppel',rol:'Sindicato',fig:13},
+ {nom:'Padre Tomás Inzunza Beltrán',rol:'Iglesia',fig:22},
+ {nom:'Dra. Lucía Valenzuela Ochoa',rol:'Centro de salud',fig:7},
+ {nom:'Lic. Esteban Quintero Salcido',rol:'Enviado de la Federación',fig:26},
+ {nom:'Rodrigo "El Güero" Arce Lizárraga',rol:'Oposición',fig:18}];
+const RET_ARCH=[0,10,9,8,7,6,5,4,1,3,2];   // personaje → archivo de retrato
+const retrato=n=>`sprites/ret-r${RET_ARCH[n||1]}.png`;
+let PERFILES=[], perfil=null;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+function cargarPerfiles(){ try{PERFILES=JSON.parse(lsGet('trienio.perfiles'))||[];}catch(e){PERFILES=[];} for(const p of PERFILES) if(!p.ret) p.ret=1; const a=lsGet('trienio.perfil'); perfil=PERFILES.find(p=>p.id===a)||PERFILES[0]||null; }
+function guardarPerfiles(){ lsSet('trienio.perfiles',JSON.stringify(PERFILES)); if(perfil) lsSet('trienio.perfil',perfil.id); }
+function pref(){return perfil?`trienio.p.${perfil.id}.`:'trienio.';}
+const AVA={};
+function avatar(fig,cuerpo){const k=fig+(cuerpo?'c':''); if(AVA[k]) return AVA[k]; const im=IMG.gente; if(!im) return '';
+  const [x,w]=GENTE[fig]; const h=cuerpo?96:50; const c=lienzo(w,h); c.getContext('2d').drawImage(im,x,0,w,h,0,0,w,h); try{AVA[k]=c.toDataURL();}catch(e){AVA[k]='';} return AVA[k];}
+function detPartida(o){return o?`${MESES[(o.mes-1)%12]} · Año ${Math.floor((o.mes-1)/12)+1}`:'Sin partida';}
+function refrescarPortada(){
+  guardada=cargar();
+  $('pCont').hidden=!guardada; if(guardada) $('pContDet').textContent=detPartida(guardada);
+  const el=$('pPerfil');
+  if(!perfil){el.hidden=true;return;}
+  el.hidden=false; el.innerHTML=`<img alt="" src="${retrato(perfil.ret)}"><span class="q"><b>${esc(perfil.nombre)}</b><small>${PERFILES.length>1?PERFILES.length+' perfiles en este equipo':'Tu perfil'}</small></span><button class="btn" id="pCambiar">Cambiar</button>`;
+  $('pCambiar').onclick=elegirPerfil;
+  const h=$('hAva'); h.src=retrato(perfil.ret); h.hidden=false; h.title=perfil.nombre;
+}
+function volverPortada(){ $('portada').hidden=false; document.body.classList.add('en-portada'); $('ficha').hidden=true; refrescarPortada(); }
+function elegirPerfil(){
+  const fila=p=>{ const P0=perfil; perfil=p; const o=cargar(); perfil=P0;
+    return `<div class="pf" aria-current="${perfil&&p.id===perfil.id}"><img alt="" src="${retrato(p.ret)}"><span class="q"><b>${esc(p.nombre)}</b><small>${detPartida(o)}</small></span><button class="btn" data-usar="${p.id}">Jugar</button><button class="btn borrar" data-borrar="${p.id}">Borrar</button></div>`; };
+  modal(`<h2>PERFILES EN ESTE EQUIPO</h2><p style="font-size:14px">Cada perfil tiene su propio personaje y su propia partida guardada.</p><div class="perfiles">${PERFILES.map(fila).join('')}</div>
+    <div class="fila">${PERFILES.length<5?'<button class="btn" id="mNuevoPerfil">+ Nuevo perfil</button>':''}<button class="btn-sol btn" id="mCerrar">Listo</button></div>`);
+  $('mCerrar').onclick=()=>{cerrarModal(); refrescarPortada();};
+  if($('mNuevoPerfil')) $('mNuevoPerfil').onclick=()=>crearPerfil();
+  $('modal').querySelectorAll('[data-usar]').forEach(b=>b.onclick=()=>{perfil=PERFILES.find(p=>p.id===b.dataset.usar); guardarPerfiles(); cerrarModal(); refrescarPortada(); aviso(`Hola, ${perfil.nombre}`);});
+  $('modal').querySelectorAll('[data-borrar]').forEach(b=>b.onclick=()=>{const p=PERFILES.find(x=>x.id===b.dataset.borrar);
+    const f=b.parentElement; f.innerHTML=`<span class="q" style="color:var(--mal);font-size:13px">¿Borrar a ${esc(p.nombre)} y su partida? No se puede deshacer.</span><button class="btn" id="bNo">No</button><button class="btn btn-sol" id="bSi">Borrar</button>`;
+    $('bNo').onclick=elegirPerfil;
+    $('bSi').onclick=()=>{ for(let k=0;k<3;k++) lsDel(`trienio.p.${p.id}.save.${k}`); lsDel(`trienio.p.${p.id}.slot`);
+      PERFILES=PERFILES.filter(x=>x!==p); if(perfil===p) perfil=PERFILES[0]||null; guardarPerfiles(); if(!PERFILES.length) lsDel('trienio.perfil');
+      if(PERFILES.length) elegirPerfil(); else {cerrarModal(); refrescarPortada(); crearPerfil(true);} };});
+}
+function crearPerfil(primero,despues){
+  let elegido=1;
+  modal(`<h2>${primero?'BIENVENIDO A EL TRIENIO':'NUEVO PERFIL'}</h2><p style="font-size:14px">${primero?'Crea tu perfil: escribe tu nombre y elige tu personaje. Tu partida queda guardada en este equipo.':'Cada perfil juega su propia partida en este equipo.'}</p>
+    <label class="campo">Nombre<input id="pfNom" maxlength="18" autocomplete="off" placeholder="Ej. Fernando"></label>
+    <div class="campo">Elige tu personaje</div>
+    <div class="alcaldes">${PERSONAJES.map((q,f)=>q?`<button data-f="${f}" aria-pressed="${f===elegido}" title="${esc(q.nom)} · ${esc(q.rol)}"><img alt="" src="${retrato(f)}"><span>${esc(q.nom.replace(/^(Ing\.|Lic\.|Dra\.|Don|Doña|Padre) /,'').split(' ')[0])}</span></button>`:'').join('')}</div>
+    <div class="fila">${!primero||PERFILES.length?'<button class="btn" id="pfNo">Cancelar</button>':''}<button class="btn-sol btn" id="pfOk">Crear perfil</button></div>`);
+  const sel=$('modal').querySelectorAll('[data-f]');
+  sel.forEach(b=>b.onclick=()=>{elegido=+b.dataset.f; sel.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));});
+  if($('pfNo')) $('pfNo').onclick=()=>{ if(PERFILES.length) elegirPerfil(); else cerrarModal(); };
+  $('pfOk').onclick=()=>{
+    const nombre=$('pfNom').value.trim().replace(/\s+/g,' ');
+    if(!nombre){aviso('Escribe un nombre para el perfil'); $('pfNom').focus(); return;}
+    if(PERFILES.some(p=>p.nombre.toLowerCase()===nombre.toLowerCase())){aviso('Ya hay un perfil con ese nombre'); return;}
+    const p={id:Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36),nombre,ret:elegido,creado:Date.now()};
+    // la primera vez, la partida que ya existía pasa a este perfil
+    if(!PERFILES.length) for(const k of ['save.0','save.1','save.2','slot']){const v=lsGet('trienio.'+k); if(v!=null) lsSet(`trienio.p.${p.id}.${k}`,v);}
+    PERFILES.push(p); perfil=p; guardarPerfiles(); cerrarModal(); refrescarPortada();
+    aviso(`¡Listo, ${nombre}! Ya puedes gobernar tu pueblo`,3000);
+    if(despues) despues();
+  };
+  setTimeout(()=>{try{$('pfNom').focus();}catch(e){}},50);
+}
+function conPerfil(fn){ if(perfil) fn(); else crearPerfil(true,fn); }
 
 // ---------- arranque ----------
 function iniciar(nueva){
@@ -1462,15 +1782,17 @@ fabricarTexturas(); ajustar(); requestAnimationFrame(bucle);
 // mapa de fondo para la portada
 occ=new Int32Array(N*N); nuevaPartida(); cam.z=.5; centrarEn(19,19);
 for(let k=0;k<4;k++){S.eds.length;} 
-const guardada=cargar();
+cargarPerfiles();
+let guardada=cargar();
 const t0=performance.now();
 Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   $('cargando').classList.add('fuera'); setTimeout(()=>$('cargando').hidden=true,600); pedir(); reponerAgentes();
-  if(guardada){$('pCont').hidden=false;$('pContDet').textContent=`${MESES[(guardada.mes-1)%12]} · Año ${Math.floor((guardada.mes-1)/12)+1}`;}
+  refrescarPortada();
+  if(!perfil) crearPerfil(true);
 });
 window.__t={get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
-$('pCont').onclick=()=>{S=guardada; completarEstado(); reconstruirOcc(); iniciar(false);};
-$('pNueva').onclick=()=>iniciar(true);
+$('pCont').onclick=()=>conPerfil(()=>{ guardada=cargar(); if(!guardada) return refrescarPortada(); S=guardada; completarEstado(); reconstruirOcc(); iniciar(false);});
+$('pNueva').onclick=()=>conPerfil(()=>{ if(cargar()){ modal(`<h2>NUEVA PARTIDA</h2><p>${esc(perfil.nombre)}, ya tienes una partida en ${detPartida(cargar())}. Si empiezas otra, se reemplaza.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Empezar de nuevo</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>{cerrarModal();iniciar(true);}; } else iniciar(true); });
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&S&&$('portada').hidden) guardar();});
 window.addEventListener('pagehide',()=>{if(S&&$('portada').hidden) guardar();});
 })();
