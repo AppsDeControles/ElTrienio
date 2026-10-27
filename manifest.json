@@ -1,8 +1,16 @@
 {
+ "id": "./?app=el-trienio",
  "name": "El Trienio: Gobierna tu pueblo",
  "short_name": "El Trienio",
+ "description": "Dirige tu municipio sinaloense: cosechas, presupuesto, la maña y la elección.",
+ "lang": "es-MX",
  "start_url": "./",
- "display": "fullscreen",
+ "scope": "./",
+ "display": "standalone",
+ "display_override": [
+  "fullscreen",
+  "standalone"
+ ],
  "orientation": "landscape",
  "background_color": "#1E1A16",
  "theme_color": "#1E1A16",
@@ -10,12 +18,20 @@
   {
    "src": "icono-192.png",
    "sizes": "192x192",
-   "type": "image/png"
+   "type": "image/png",
+   "purpose": "any"
   },
   {
    "src": "icono-512.png",
    "sizes": "512x512",
-   "type": "image/png"
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icono-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
   }
  ]
 }
