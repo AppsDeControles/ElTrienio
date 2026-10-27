@@ -167,6 +167,16 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
 @media (max-width:980px){#hud .logo,#hud .stat small.et{display:none} #hud{gap:10px} .barra{width:44px}}
 @media (max-height:420px){.caja{padding:10px 14px;gap:7px;font-size:14px} .cuenta{font-size:13px} .chip{font-size:12px} #modal .btn{min-height:36px} #panel{width:208px} #pasar{right:calc(220px + env(safe-area-inset-right,0px))} #colocar{max-width:calc(100vw - 250px)} .item{grid-template-columns:44px 1fr} .item img{width:44px;height:38px}}
 @media (prefers-reduced-motion:reduce){#panel,#pasar{transition:none}}
+#radio{position:absolute;right:calc(244px + env(safe-area-inset-right,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 54px);z-index:4;display:flex;align-items:center;gap:3px;background:#2A2018;border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px #6B4E31;padding:4px 5px;transition:right .2s;max-width:250px}
+body.panel-cerrado #radio{right:max(12px,env(safe-area-inset-right,0px))}
+body.en-portada #radio{visibility:hidden}
+#radio .ant{position:absolute;right:16px;top:-16px;width:3px;height:14px;background:#8C8C8C;transform:rotate(18deg)}
+#radio .info{display:flex;flex-direction:column;align-items:flex-start;min-width:0;width:118px;background:#11160F;border:2px solid #000;padding:2px 6px;text-align:left;color:#9BE08A;cursor:pointer}
+#radio .est{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#F2B233}
+#radio .can{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#radio button:not(.info){width:30px;height:30px;padding:0;background:var(--panel2);border:2px solid var(--hondo);font-size:13px;color:var(--crema)}
+#radio.sonando .info{box-shadow:0 0 6px rgba(155,224,138,.35)}
+@media (max-height:420px){#radio{right:calc(220px + env(safe-area-inset-right,0px))}}
 #herr .badge{display:inline-block;min-width:18px;height:18px;line-height:18px;margin-left:6px;background:var(--sol);color:var(--suelo);font-size:11px;border-radius:9px;padding:0 4px}
 #efectos{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 52px);z-index:4;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100vw - 300px);pointer-events:none}
 #efectos span{font-size:12px;padding:2px 7px;background:rgba(30,26,22,.92);border:2px solid var(--borde);white-space:nowrap}
@@ -227,6 +237,11 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
     <button id="tRot" aria-label="Girar el mapa" title="Girar el mapa">↻ Mapa</button>
     <button id="tCartas" aria-pressed="false">Cartas<span class="badge" id="bCartas" hidden>0</span></button>
   </div>
+  <div id="radio" role="group" aria-label="Radio">
+    <span class="ant" aria-hidden="true"></span>
+    <button id="rEst" class="info" title="Cambiar de estación"><span class="est">Regional</span><span class="can">—</span></button>
+    <button id="rAnt" aria-label="Canción anterior">⏮</button><button id="rPlay" aria-label="Tocar música">▶</button><button id="rSig" aria-label="Siguiente canción">⏭</button>
+  </div>
   <button id="pasar" class="btn-sol">PASAR MES ▸</button>
 
   <div id="colocar" hidden>
@@ -277,6 +292,9 @@ const CAT_CORTO={calles:'Calles',vivienda:'Casas',comercio:'Comercio',servicios:
 const DEF={
  calle:{nom:'Calle',cat:'calles',costo:4,mant:.1,desc:'Conecta edificios. Arrastra para trazar.'},
  humilde:{nom:'Casa humilde',cat:'vivienda',spr:'casa-humilde-a',A:1,B:1,costo:15,casas:6,predial:.5,lote:'tierra'},
+ cuartos:{nom:'Cuartos de renta',cat:'vivienda',spr:'edif-cuartos-a',A:2,B:2,costo:110,casas:24,predial:3.2,mant:.3,desc:'Edificio de 3 pisos con changarros abajo.'},
+ vecindad:{nom:'Vecindad La Alegría',cat:'vivienda',spr:'edif-vecindad-a',A:3,B:3,costo:230,casas:40,predial:5,mant:.6,empleos:10,ingreso:4,serv:'diversion',radio:6,desc:'Mucha gente, fondas abajo y fiesta en la azotea.'},
+ residencial:{nom:'Edificio residencial',cat:'vivienda',spr:'edif-residencial-a',A:3,B:3,costo:340,casas:48,predial:9,mant:1,desc:'Departamentos para gente con más ingreso: paga más predial.'},
  media:{nom:'Casa media',cat:'vivienda',spr:'casa-media-a',A:2,B:1,costo:40,casas:10,predial:1.4},
  buena:{nom:'Casa de dos pisos',cat:'vivienda',spr:'casa-buena-a',A:2,B:1,costo:70,casas:12,predial:2.6},
  buenab:{nom:'Casa con balcón',cat:'vivienda',spr:'casa-buena-b',A:2,B:1,costo:75,casas:12,predial:2.8},
@@ -387,7 +405,9 @@ function trazarRio(){const l=[]; let pi=null;
     l.push(idx(i,j)); pi=i;}
   return [...new Set(l)];}
 let RIO=new Uint8Array(N*N);
-function marcarRio(){RIO=new Uint8Array(N*N); for(const k of S.rio||[]) RIO[k]=1;}
+function marcarRio(){RIO=new Uint8Array(N*N); for(const k of S.rio||[]) RIO[k]=1;
+  VIA=new Uint8Array(N*N); for(let j=0;j<N;j++){const k=idx(VIA_I,j); if(S.ter[k]==='mar') break; if(!occ||!occ[k]) VIA[k]=1;}}
+const VIA_I=3; let VIA=new Uint8Array(N*N);
 function nuevaPartida(){
   S={v:2,mes:1,dinero:1200,pob:22,apr:52,ter:terrenoInicial(),eds:[],sig:1,hist:[],eleccion:0};
   completarEstado();
@@ -426,6 +446,7 @@ function puede(tipo,i,j,flip){
     if(occ[idx(x,y)]) return 'El terreno está ocupado';
     const t=S.ter[idx(x,y)];
     if(t==='calle') return 'Hay una calle encima';
+    if(VIA[idx(x,y)]) return 'Ahí pasa la vía del tren';
     if(t==='rio'){ if(!d.presa) return 'Ahí pasa el río'; rio++; continue; }
     if(t==='mar') mar++; else if(t==='playa') playa++; else {tierra++; if(t==='monte') monte++;}
   }
@@ -655,6 +676,19 @@ function fabricarTexturas(){
     if(ns&&!eo){g.beginPath();g.moveTo(88,20);g.lineTo(40,44);g.stroke();}
     TEX['calle'+m]=c;
   }
+  // vía del tren: balasto, durmientes y rieles a lo largo de un eje de la vista
+  for(const [k,c0,c1,ov] of [['via-j',[96,16],[32,48],[64,32]],['via-i',[32,16],[96,48],[-64,32]]]){
+    const c=lienzo(128,64),g=c.getContext('2d'); rombo(g,0); g.save(); g.clip();
+    const o=[ov[0]*.2,ov[1]*.2], P=(t,f)=>[c0[0]+(c1[0]-c0[0])*t+o[0]*f, c0[1]+(c1[1]-c0[1])*t+o[1]*f];
+    const ext=t=>[c0[0]+(c1[0]-c0[0])*t,c0[1]+(c1[1]-c0[1])*t];
+    g.fillStyle='#6E6258'; g.beginPath(); [P(-.1,-1),P(1.1,-1),P(1.1,1),P(-.1,1)].forEach((p,n)=>n?g.lineTo(...p):g.moveTo(...p)); g.fill();
+    for(let n=0;n<70;n++){const t=Math.random()*1.2-.1,f=Math.random()*2-1; const [x,y]=P(t,f); g.fillStyle=Math.random()<.5?'#8A7C6E':'#4E443C'; g.fillRect(x,y,2,1.5);}
+    g.lineCap='butt';
+    for(let t=0;t<1;t+=.2){g.strokeStyle='#4A3220'; g.lineWidth=4; g.beginPath(); g.moveTo(...P(t+.1,-.8)); g.lineTo(...P(t+.1,.8)); g.stroke();}
+    for(const f of [-.45,.45]){ g.strokeStyle='#3A3A3A'; g.lineWidth=3; g.beginPath(); g.moveTo(...P(-.1,f)); g.lineTo(...P(1.1,f)); g.stroke();
+      g.strokeStyle='#B8B8B8'; g.lineWidth=1.4; g.beginPath(); g.moveTo(P(-.1,f)[0],P(-.1,f)[1]-1); g.lineTo(P(1.1,f)[0],P(1.1,f)[1]-1); g.stroke(); }
+    g.restore(); TEX[k]=c;
+  }
   // barandales de puente: a lo largo del eje i de la vista (eo) o del eje j (ns)
   for(const [k,ej] of [['eo',[[64,0],[128,32],[64,64],[0,32]]],['ns',[[0,32],[64,0],[128,32],[64,64]]]]){
     const c=lienzo(128,72),g=c.getContext('2d'); const [a,b,cc,d]=ej.map(([x,y])=>[x,y+8]);
@@ -682,7 +716,7 @@ function texDe(i,j,a,b){
     if(e.t==='presa') return [TEX[(t==='monte'?'temporal':t)+v]||TEX['temporal'+v],0];
     if(e.t==='parcela'&&brote(e)){const tm=TEX['cult_'+e.cult+'0']; return [tm,tm.alto];}
     const l=D(e).lote||'patio'; return [TEX['lote-'+l],0];}
-  if(t==='monte') return [TEX['monte'+v],40];
+  if(t==='monte'){ const h=((i*73856093)^(j*19349663))>>>0; const n=j<=4||h%7===0?'monte-sierra':(h%5<2?'monte-verde':'monte-desierto'); const im=IMG[n]; if(im) return [im,im.height-64]; return [TEX['monte'+v],40]; }
   return [TEX[t+v],0];
 }
 function brote(e){const cu=CULT[e.cult]; return cu.madura?(S.mes-e.sem<cu.madura):(S.mes-e.sem<1);}
@@ -748,6 +782,7 @@ function romboPantalla(i,j,fill,stroke){
 }
 // orden de dibujo: lo que está detrás (en la vista) va primero. Cajas en coordenadas de vista.
 function cajaDe(o){
+  if(o.ag&&o.ag.largo) return cajaV(o.ag.wx-.3,o.ag.wy-o.ag.largo/2,.6,o.ag.largo);
   if(o.ag){const [a,b]=toV(o.ag.wx,o.ag.wy); const r=.12; return {i0:a-r,i1:a+r,j0:b-r,j1:b+r};}
   const [A,B]=huella(D(o),o.f); return cajaV(o.i,o.j,A,B);
 }
@@ -782,7 +817,8 @@ function dibujar(){
         const h=7*z; g.strokeStyle='#3A2A1A'; g.lineWidth=Math.max(2,5*z); g.beginPath(); g.moveTo(a[0],a[1]-h); g.lineTo(b[0],b[1]-h); g.stroke();
         g.strokeStyle='#D9CDB2'; g.lineWidth=Math.max(1,3*z); g.beginPath(); g.moveTo(a[0],a[1]-h); g.lineTo(b[0],b[1]-h); g.stroke();
         g.fillStyle='#8C7A60'; for(let t=0;t<=1.001;t+=.25){const x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t; g.fillRect(x-1.5*z,y-h-1*z,3*z+.5,h+1*z);} }}
-    else g.drawImage(tx,Math.floor(sx),Math.floor(sy),Math.ceil(128*z)+1,Math.ceil((64+oy)*z)+1);}
+    else g.drawImage(tx,Math.floor(sx),Math.floor(sy),Math.ceil(128*z)+1,Math.ceil((64+oy)*z)+1);
+    if(VIA[idx(i,j)]){const [va]=dirV(0,1); const r=TEX[va?'via-i':'via-j']; const [x2,y2]=topW(a,b); const [s2x,s2y]=aPantalla(x2-64,y2); g.drawImage(r,Math.floor(s2x),Math.floor(s2y),Math.ceil(128*z)+1,Math.ceil(64*z)+1);}}
   // radio del servicio que se coloca o se mira
   const rad=(modo==='construir'&&fant&&DEF[sel].radio)?{t:sel,i:fant.i,j:fant.j,f:fant.flip}:(elegido&&D(elegido).radio?elegido:null);
   if(rad){const d=D(rad);const [A,B]=huella(d,rad.f);const c=[rad.i+A/2,rad.j+B/2];
@@ -795,6 +831,7 @@ function dibujar(){
   const lista=S.eds.slice();
   if(modo==='construir'&&fant) lista.push({t:sel,i:fant.i,j:fant.j,f:fant.flip,fant:true,cult:selCult});
   for(const a of agentes) if(a.wx!=null) lista.push({ag:a});
+  for(const v of piezasTren()) lista.push({ag:v});
   for(const r of S.rutas) if(!borr||borr.r!==r) r.paradas.forEach((p,n)=>lista.push({ag:{k:'parada',wx:p[0]+.16,wy:p[1]+.16,letra:LETRAS[n],col:r.color}}));
   if(borr) borr.paradas.forEach((p,n)=>lista.push({ag:{k:'parada',wx:p[0]+.16,wy:p[1]+.16,letra:LETRAS[n],col:borr.r?borr.r.color:'#FFFFFF'}}));
   for(const e of ordenar(lista)){
@@ -998,6 +1035,7 @@ function dibujarAgente(a){
     if(a.alc){const y=sy-44*z+Math.sin(now*3)*2*z; g.fillStyle='#14202B'; g.beginPath(); g.moveTo(sx,y-7*z-1); g.lineTo(sx+6*z+1,y); g.lineTo(sx,y+7*z+1); g.lineTo(sx-6*z-1,y); g.fill(); g.fillStyle='#F2B233'; g.beginPath(); g.moveTo(sx,y-6*z); g.lineTo(sx+5*z,y); g.lineTo(sx,y+6*z); g.lineTo(sx-5*z,y); g.fill();}}
   else if(a.k==='c') camion(a);
   else if(a.k==='bus') autobus(a);
+  else if(a.k==='tren') dibujarVagon(a);
   else if(a.k==='b'){const im=IMG['veh-camaronero-a']; if(!im) return; const k=.42, bob=Math.sin(now*2+a.o)*2; const w=im.width*k*z,h=im.height*k*z; const [sx,sy]=aPantalla(px,py+bob);
     g.save(); g.translate(sx,sy); if(a.fl) g.scale(-1,1); g.drawImage(im,-w/2,-h*.8,w,h); g.restore();
     if(a.fase!=='atracado'){g.strokeStyle='rgba(220,240,255,.55)';g.lineWidth=Math.max(1,2*z);g.beginPath();g.ellipse(sx,sy-2*z,w*.42,6*z,0,0,7);g.stroke();}}
@@ -1011,12 +1049,37 @@ function dibujarAgente(a){
     const sw=f<5?Math.sin(now*9+a.n)*.9:0; g.save(); g.translate(sx+(a.n?-9*z:9*z),sy-20*z); g.rotate(sw*(a.n?-1:1)+(a.n?.6:-.6));
     g.fillStyle='#8C6A42'; g.fillRect(-1.3*z,-18*z,2.6*z,18*z); g.fillStyle='#BFC6CC'; g.fillRect((a.n?1:-1)*-5*z-2.5*z,-19*z,6*z,5*z); g.restore();}
 }
+// ---------- tren de carga Ferromex: cruza el municipio por la vía ----------
+const TREN={s:-4,sg:1,espera:6,vagones:3,on:false};
+const PIEZA={loco:{ax:144.8,ay:211.6,largo:2.4},tanque:{ax:64.8,ay:136.3,largo:1.4}}, KT=.67;
+function trenSalir(extra){ let sg=1; const d=dirV(0,1); if(d[0]+d[1]<0) sg=-1;
+  TREN.sg=sg; TREN.s=sg>0?-4:N+4; TREN.vagones=2+Math.floor(Math.random()*3)+(extra||0); TREN.on=true; }
+function piezasTren(){ const l=[]; if(!TREN.on) return l; const c=TREN.s-TREN.sg*1.2;
+  l.push({k:'tren',p:'loco',wx:VIA_I+.5,wy:c,largo:2.4});
+  for(let n=0;n<TREN.vagones;n++) l.push({k:'tren',p:'tanque',wx:VIA_I+.5,wy:c-TREN.sg*(2.03+n*1.45),largo:1.4});
+  return l; }
+function moverTren(dt){
+  if(!TREN.on){ TREN.espera-=dt; if(TREN.espera<=0) trenSalir(0); return; }
+  TREN.s+=TREN.sg*1.3*dt; const largo=4+TREN.vagones*1.5;
+  if((TREN.sg>0&&TREN.s>N+3+largo)||(TREN.sg<0&&TREN.s<-3-largo)){ TREN.on=false; TREN.espera=25+Math.random()*25; }
+}
+function dibujarVagon(a){
+  const P=PIEZA[a.p], im=IMG['tren-'+a.p]; if(!im) return;
+  const al=clamp(Math.min(a.wy+1.5, N-.5-a.wy+1),0,1)*(S.ter[idx(VIA_I,clamp(Math.floor(a.wy),0,N-1))]==='mar'?0:1); if(al<=0) return;
+  const d=dirV(0,TREN.sg); const espejo=d[0]>0;           // hacia abajo-derecha: se voltea
+  const [sx,sy]=aPantalla(...proj(a.wx,a.wy)); const z=cam.z, k=KT*z, w=im.width*k, h=im.height*k;
+  if(sx<-w-50||sx>VW+w+50||sy<-h-50||sy>VH+h) return;
+  const imF=espejo&&IMG['tren-'+a.p+'-f'];   // versión espejo con el letrero legible
+  g.globalAlpha=al; g.save(); g.translate(sx,sy+6*z);
+  if(imF) g.drawImage(imF,-(im.width-P.ax)*k,-P.ay*k,w,h); else { if(espejo) g.scale(-1,1); g.drawImage(im,-P.ax*k,-P.ay*k,w,h); }
+  g.restore(); g.globalAlpha=1;
+}
 let ultCuadro=0;
 function bucle(ts){
   requestAnimationFrame(bucle);
   if(document.hidden||!S) return;
   if(ts-ultCuadro<30) return; const dt=Math.min(.1,(ts-(ultT||ts))/1000); ultT=ts; ultCuadro=ts;
-  actualizar(dt); dibujar();
+  actualizar(dt); moverTren(dt*tEscala); dibujar();
 }
 // ---------- toque en edificios (por píxel) ----------
 function alfaDe(nombre){
@@ -1284,6 +1347,7 @@ function ficha(){
 }
 
 // panel plegable
+$('rPlay').onclick=()=>Radio.on?Radio.apagar():Radio.encender(); $('rSig').onclick=()=>Radio.siguiente(); $('rAnt').onclick=()=>Radio.anterior(); $('rEst').onclick=()=>Radio.estacion();
 $('sCaja').onclick=()=>finanzas(); $('bCredito').onclick=()=>credito(); $('bComercio').onclick=()=>comercio();
 $('tirador').onclick=()=>{const p=$('panel');p.classList.toggle('cerrado');document.body.classList.toggle('panel-cerrado',p.classList.contains('cerrado'));$('tirador').textContent=p.classList.contains('cerrado')?'‹':'›';};
 
@@ -1564,6 +1628,7 @@ const BIENES=[
  {k:'madera',nom:'Madera',de:e=>e.t==='aserradero'}];
 const RUTAS_COM={
  tierra:{nom:'Carretera',txt:'Camión a Culiacán y Guadalajara',riesgo:.25,precio:1},
+ tren:{nom:'Tren de carga',txt:'Ferromex a Nogales y EE. UU.: mucha carga y poco riesgo',riesgo:.1,precio:1.15,tren:true},
  mar:{nom:'Barco',txt:'Del muelle a Mazatlán y a EE. UU.: paga mejor',riesgo:.12,precio:1.3,necesita:'muelle'}};
 const PROTE={
  nada:{nom:'Sin protección',txt:'No cuesta; si lo asaltan se pierde todo',pct:0,mult:1},
@@ -1595,6 +1660,7 @@ function comercio(volver){ const cerrar=typeof volver==='function'?volver:cerrar
     $('modal').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{prot=b.dataset.p;pinta();});
     if($('coMandar')) $('coMandar').onclick=()=>{ S.dinero-=cst; if(PROTE[prot].mana) S.mana=clamp(S.mana+PROTE[prot].mana,0,100);
       S.embarques.push({bien,ruta,prot,val,riesgo:r}); hud(); guardarPronto(); reponerAgentes();
+      if(ruta==='tren'&&!TREN.on) trenSalir(2);
       aviso(`Salió el embarque de ${B.nom.toLowerCase()} por ${RUTAS_COM[ruta].nom.toLowerCase()}`,3000); pinta(); };
   };
   pinta();
@@ -1602,12 +1668,165 @@ function comercio(volver){ const cerrar=typeof volver==='function'?volver:cerrar
 function resolverEmbarques(){
   const res=[];
   for(const x of S.embarques||[]){ const B=BIENES.find(b=>b.k===x.bien); const asalto=Math.random()<x.riesgo; let pago=x.val, txt;
-    if(asalto){ pago=x.prot==='seguro'?Math.round(x.val*.75):0; txt=x.ruta==='mar'?`Abordaron el barco con ${B.nom.toLowerCase()}`:`Asaltaron el camión de ${B.nom.toLowerCase()} en la carretera`; txt+=pago?`; el seguro pagó ${dinero(pago)}`:'; se perdió la carga'; }
+    if(asalto){ pago=x.prot==='seguro'?Math.round(x.val*.75):0; txt=x.ruta==='mar'?`Abordaron el barco con ${B.nom.toLowerCase()}`:x.ruta==='tren'?`Saquearon el tren con ${B.nom.toLowerCase()}`:`Asaltaron el camión de ${B.nom.toLowerCase()} en la carretera`; txt+=pago?`; el seguro pagó ${dinero(pago)}`:'; se perdió la carga'; }
     else txt=`Se vendió la carga de ${B.nom.toLowerCase()}: +${dinero(pago)}`;
     if(x.prot==='cuota'&&Math.random()<.15){ S.apr=clamp(S.apr-4,1,99); txt+=' · se supo que pagaste cuota (−4 aprobación)'; }
     S.dinero+=pago; res.push({ok:!asalto||pago>0,txt,pago}); }
   S.embarques=[]; return res;
 }
+// ---------- radio: música instrumental generada en el momento (sin archivos) ----------
+const Radio=(()=>{
+  let ctx=null, master, rev, dist, ruido, on=false, idx=0, tick=null, nextT=0, paso=0, bar=0, song=null, mel=null, vueltas=0, vol=.55;
+  const mtof=m=>440*Math.pow(2,(m-69)/12);
+  const MAY=[0,2,4,5,7,9,11], MEN=[0,2,3,5,7,8,10];
+  function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+  function init(){
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-14; comp.ratio.value=4;
+    master=ctx.createGain(); master.gain.value=vol*.7; master.connect(comp); comp.connect(ctx.destination);
+    rev=ctx.createConvolver(); const len=ctx.sampleRate*1.6|0, ir=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let c=0;c<2;c++){const d=ir.getChannelData(c); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2);}
+    rev.buffer=ir; const rg=ctx.createGain(); rg.gain.value=.25; rev.connect(rg); rg.connect(master);
+    dist=ctx.createWaveShaper(); const n=1024,cv=new Float32Array(n); for(let i=0;i<n;i++){const x=i/n*2-1; cv[i]=Math.tanh(x*6);} dist.curve=cv;
+    const dl=ctx.createBiquadFilter(); dl.type='lowpass'; dl.frequency.value=3200; const dg=ctx.createGain(); dg.gain.value=.35; dist.connect(dl); dl.connect(dg); dg.connect(master);
+    ruido=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate); const r=ruido.getChannelData(0); for(let i=0;i<r.length;i++) r[i]=Math.random()*2-1;
+  }
+  // una voz con envolvente; o = {tipo, vol, a, s, r, cut, q, det:[cents], vib, dist, rev, oct}
+  function voz(t,m,dur,o){
+    const g=ctx.createGain(), f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=o.cut||5000; f.Q.value=o.q||.8;
+    const fin=t+dur+(o.r||.08)*5+.05;
+    const os=(o.det||[0]).map(dt=>{const x=ctx.createOscillator(); x.type=o.tipo||'sawtooth'; x.frequency.value=mtof(m); x.detune.value=dt; x.connect(f); x.start(t); x.stop(fin); return x;});
+    if(o.vib){const l=ctx.createOscillator(), lg=ctx.createGain(); l.frequency.value=o.vf||5.5; lg.gain.value=0; lg.gain.setValueAtTime(0,t); lg.gain.linearRampToValueAtTime(o.vib,t+Math.min(dur,.35)); l.connect(lg); os.forEach(x=>lg.connect(x.detune)); l.start(t); l.stop(fin);}
+    if(o.fenv){f.frequency.setValueAtTime(o.cut*o.fenv,t); f.frequency.exponentialRampToValueAtTime(o.cut,t+.12);}
+    f.connect(g); g.connect(o.dist?dist:master);
+    if(o.rev){const s=ctx.createGain(); s.gain.value=o.rev; g.connect(s); s.connect(rev);}
+    const v=o.vol||.15, a=o.a||.006, s=o.s==null?.7:o.s, r=o.r||.08;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+a); g.gain.setTargetAtTime(v*s,t+a,(o.d||.12)/3); g.gain.setTargetAtTime(0,t+Math.max(a,dur),r/3);
+  }
+  function golpe(t,tipo,v){
+    const g=ctx.createGain(); g.connect(master);
+    if(tipo==='bombo'||tipo==='tambora'){const o=ctx.createOscillator(); o.type='sine'; const f0=tipo==='bombo'?140:110, f1=tipo==='bombo'?42:58;
+      o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+.14); o.connect(g); g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+(tipo==='bombo'?.32:.5)); o.start(t); o.stop(t+.6);
+      if(tipo==='bombo') return;}
+    const n=ctx.createBufferSource(); n.buffer=ruido; const f=ctx.createBiquadFilter(); const gn=ctx.createGain(); n.connect(f); f.connect(gn); gn.connect(master);
+    const P={tarola:['bandpass',1900,.16],tambora:['bandpass',700,.12],hat:['highpass',7500,.04],abierto:['highpass',6500,.22],platillo:['highpass',5200,.38],escoba:['bandpass',3500,.09],guiro:['bandpass',4200,.06]}[tipo];
+    f.type=P[0]; f.frequency.value=P[1]; gn.gain.setValueAtTime(v*(tipo==='tambora'?.6:1),t); gn.gain.exponentialRampToValueAtTime(.001,t+P[2]); n.start(t,Math.random()*.5); n.stop(t+P[2]+.05);
+    if(tipo==='tarola'){const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=190; const og=ctx.createGain(); og.gain.setValueAtTime(v*.5,t); og.gain.exponentialRampToValueAtTime(.001,t+.08); o.connect(og); og.connect(master); o.start(t); o.stop(t+.1);}
+  }
+  // armonía
+  const esc=S=>S.modo==='men'?MEN:MAY;
+  function grado(S,d,oct){const e=esc(S); const k=((d%7)+7)%7, o=Math.floor(d/7); return S.tono+12*(oct+o)+e[k];}
+  function acorde(S,deg,oct){return [0,2,4].map(i=>grado(S,deg+i,oct));}
+  // melodía: frase por sección, notas del acorde en tiempos fuertes y pasos por grado entre ellas
+  function componer(S){
+    const r=rng(S.semilla), secc={};
+    const tonos=d=>[d,d+2,d+4];
+    for(const L of new Set(S.forma)){ const prog=S.prog[L]; let pos=7+ (prog[0]%7); const out=[];
+      const ritmos=S.ritmos; const motivo=[ritmos[Math.floor(r()*ritmos.length)],ritmos[Math.floor(r()*ritmos.length)]];
+      prog.forEach((ch,b)=>{ const rit=motivo[b%2]; const notas=[];
+        rit.forEach(([st,du],k)=>{ const fuerte=st%(S.spb/2)===0;
+          if(fuerte||r()<.35){ const ct=tonos(ch).flatMap(x=>[x+7,x+14]); pos=ct.reduce((a,c)=>Math.abs(c-pos)<Math.abs(a-pos)?c:a,ct[0]); if(r()<.3) pos=ct[Math.floor(r()*ct.length)]; }
+          else pos+=r()<.5?1:-1;
+          pos=Math.max(4,Math.min(16,pos));
+          if(b===prog.length-1&&k===rit.length-1) pos=7+(ch%7)===pos?pos:7;   // cierre sobre la tónica
+          notas.push([st,du,pos]); });
+        out.push(notas); });
+      secc[L]=out; }
+    return S.forma.split('').flatMap(L=>S.prog[L].map((ch,b)=>({ch,notas:secc[L][b]})));
+  }
+  // ---------- estaciones y canciones ----------
+  const R8=[[[0,2],[2,2],[4,2],[6,2]],[[0,3],[3,1],[4,4]],[[0,2],[2,1],[3,1],[4,2],[6,2]],[[0,4],[4,2],[6,2]],[[1,1],[2,2],[4,1],[5,1],[6,2]]];
+  const R16=[[[0,4],[4,4],[8,4],[12,4]],[[0,6],[6,2],[8,8]],[[0,2],[2,2],[4,4],[8,2],[10,2],[12,4]],[[0,8],[8,4],[12,4]],[[2,2],[4,2],[6,2],[8,6],[14,2]],[[0,3],[3,3],[6,2],[8,4],[12,4]]];
+  const R6=[[[0,2],[2,1],[3,2],[5,1]],[[0,1],[1,1],[2,1],[3,3]],[[0,3],[3,2],[5,1]],[[0,2],[2,2],[4,2]]];
+  const ESTACIONES=[
+   {nom:'Regional',canciones:[
+     {nom:'Son de la Presa',tono:62,modo:'may',bpm:0,dur:.16,spb:6,semilla:11,forma:'AABA',prog:{A:[0,4,4,0,0,4,4,0],B:[3,0,4,0,3,0,4,0]},ritmos:R6,estilo:'son'},
+     {nom:'Huapango del Ejido',tono:57,modo:'may',dur:.15,spb:6,semilla:23,forma:'AABB',prog:{A:[0,3,4,0,0,3,4,0],B:[4,4,0,0,3,3,4,0]},ritmos:R6,estilo:'son'}]},
+   {nom:'Norteño',canciones:[
+     {nom:'Corrido del Trienio',tono:57,modo:'may',dur:.125,spb:8,semilla:7,forma:'AABA',prog:{A:[0,0,4,4,4,4,0,0],B:[3,3,0,0,4,4,0,0]},ritmos:R8,estilo:'norteno'},
+     {nom:'La Troca Colorada',tono:55,modo:'may',dur:.12,spb:8,semilla:41,forma:'ABAB',prog:{A:[0,0,3,3,4,4,0,0],B:[4,4,0,0,4,4,0,0]},ritmos:R8,estilo:'norteno'}]},
+   {nom:'Baladas',canciones:[
+     {nom:'Atardecer en Altata',tono:60,modo:'may',dur:.21,spb:16,semilla:5,forma:'AABA',prog:{A:[0,5,3,4,0,5,3,4],B:[3,4,2,5,3,4,0,0]},ritmos:R16,estilo:'balada'},
+     {nom:'Cartas al Cabildo',tono:57,modo:'men',dur:.22,spb:16,semilla:19,forma:'ABAB',prog:{A:[0,5,2,6,0,5,3,4],B:[5,2,3,4,5,2,6,0]},ritmos:R16,estilo:'balada'}]},
+   {nom:'Banda',canciones:[
+     {nom:'La Tambora de Elota',tono:58,modo:'may',dur:.13,spb:8,semilla:3,forma:'AABA',prog:{A:[0,0,4,4,4,4,0,0],B:[3,3,0,0,4,4,0,0]},ritmos:R8,estilo:'banda'},
+     {nom:'El Mezquital',tono:53,modo:'may',dur:.125,spb:8,semilla:77,forma:'ABAB',prog:{A:[0,4,4,0,0,4,4,0],B:[3,0,4,0,3,0,4,0]},ritmos:R8,estilo:'banda'}]},
+   {nom:'Pop',canciones:[
+     {nom:'Malecón de Noche',tono:60,modo:'may',dur:.145,spb:16,semilla:9,forma:'AABA',prog:{A:[0,4,5,3,0,4,5,3],B:[3,4,5,5,3,4,0,0]},ritmos:R16,estilo:'pop'},
+     {nom:'Verano en Mazatlán',tono:62,modo:'men',dur:.14,spb:16,semilla:31,forma:'ABAB',prog:{A:[0,5,2,6,0,5,2,6],B:[5,6,0,0,5,6,4,4]},ritmos:R16,estilo:'pop'}]},
+   {nom:'Rock',canciones:[
+     {nom:'Carretera Costera',tono:52,modo:'men',dur:.115,spb:16,semilla:13,forma:'AABA',prog:{A:[0,0,5,6,0,0,5,6],B:[3,3,4,4,5,5,6,6]},ritmos:R16,estilo:'rock'},
+     {nom:'Sin Pavimento',tono:57,modo:'may',dur:.11,spb:16,semilla:57,forma:'ABAB',prog:{A:[0,6,3,0,0,6,3,4],B:[3,4,0,0,3,4,6,6]},ritmos:R16,estilo:'rock'}]}];
+  const LISTA=ESTACIONES.flatMap((e,ei)=>e.canciones.map(c=>Object.assign(c,{est:e.nom,ei})));
+  // ---------- arreglos por género ----------
+  function tocar(t,S,b,st){
+    const B=mel[b%mel.length], ch=B.ch, A=acorde(S,ch,-1), d=S.dur, n=S.spb;
+    const me=B.notas.find(x=>x[0]===st); const nota=me?grado(S,me[2],-1):null, mdur=me?me[1]*d:0;
+    const tercera=me?grado(S,me[2]-2,-1):null;
+    switch(S.estilo){
+    case 'norteno':
+      if(st===0) voz(t,A[0]-12,d*3,{tipo:'triangle',vol:.32,cut:900,s:.4,r:.1});
+      if(st===4) voz(t,A[2]-12-12+12,d*3,{tipo:'triangle',vol:.28,cut:900,s:.4,r:.1});
+      if(st===2||st===6) A.forEach(m=>voz(t,m+12,d*1.2,{tipo:'square',vol:.045,cut:1800,s:.2,r:.05}));
+      if(st===2||st===6) golpe(t,'escoba',.18);
+      if(nota){ voz(t,nota,mdur,{tipo:'square',det:[-7,7],vol:.07,cut:2600,vib:9,vf:6,s:.85,r:.06,rev:.15}); voz(t,tercera,mdur,{tipo:'square',det:[5],vol:.04,cut:2200,s:.85,r:.06}); }
+      break;
+    case 'banda':
+      if(st===0) voz(t,A[0]-24,d*2.5,{tipo:'sawtooth',vol:.3,cut:420,s:.5,r:.08});
+      if(st===4) voz(t,A[2]-24,d*2.5,{tipo:'sawtooth',vol:.27,cut:420,s:.5,r:.08});
+      if(st===2||st===6){ A.forEach(m=>voz(t,m+12,d*1.1,{tipo:'sawtooth',vol:.035,cut:1600,fenv:2,s:.3,r:.04})); golpe(t,'platillo',.12); }
+      if(st===0) golpe(t,'tambora',.9); if(st===4&&(b%2)) golpe(t,'tambora',.6);
+      if(nota){ voz(t,nota+12,mdur,{tipo:'sawtooth',det:[-5,5],vol:.06,cut:2800,fenv:1.8,vib:12,vf:5.5,s:.8,r:.07,rev:.2}); voz(t,tercera+12,mdur,{tipo:'square',vol:.035,cut:2200,vib:8,s:.8,r:.07}); }
+      break;
+    case 'son':
+      if(st===0||st===3) voz(t,A[0]-12+(st?7:0),d*2.5,{tipo:'triangle',vol:.28,cut:800,s:.4});
+      if([0,2,3,5].includes(st)) A.forEach((m,i)=>voz(t+i*.012,m+12,d*.9,{tipo:'square',vol:.035,cut:2400,s:.15,r:.04}));
+      if(st===1||st===4) golpe(t,'guiro',.14);
+      if(nota) voz(t,nota+12,mdur,{tipo:'sawtooth',det:[-4,4],vol:.05,cut:3200,vib:14,vf:6.2,a:.03,s:.8,r:.12,rev:.25});
+      break;
+    case 'balada':
+      if(st===0) voz(t,A[0]-12,d*15,{tipo:'sine',vol:.3,cut:600,a:.02,s:.5,r:.5});
+      if(st===0) A.forEach(m=>voz(t,m+12,d*15,{tipo:'sawtooth',det:[-8,8],vol:.018,cut:1100,a:.5,s:.9,r:.6,rev:.4}));
+      if(st%2===0){ const arp=[A[0],A[1],A[2],A[0]+12,A[2],A[1],A[0]+12,A[2]]; voz(t,arp[st/2]+12,d*3,{tipo:'triangle',vol:.07,cut:2500,s:.15,d:.4,r:.5,rev:.3}); }
+      if(st===8) golpe(t,'escoba',.08);
+      if(nota) voz(t,nota+12,mdur,{tipo:'sine',det:[0,1200],vol:.08,cut:3000,vib:10,vf:5,a:.04,s:.8,r:.25,rev:.4});
+      break;
+    case 'pop':
+      if(st===0||st===8||st===10) golpe(t,'bombo',.8); if(st===4||st===12) golpe(t,'tarola',.35); if(st%2===0) golpe(t,'hat',.1);
+      if(st%2===0) voz(t,A[0]-12,d*1.6,{tipo:'sawtooth',vol:.12,cut:600,fenv:2,s:.5,r:.05});
+      if([3,6,11,14].includes(st)) A.forEach(m=>voz(t,m+12,d*1.2,{tipo:'square',vol:.03,cut:2600,s:.2,r:.08,rev:.2}));
+      if(nota) voz(t,nota+12,mdur,{tipo:'square',det:[-10,10],vol:.05,cut:3200,vib:6,s:.8,r:.1,rev:.25});
+      break;
+    case 'rock':
+      if(st===0||st===6||st===8) golpe(t,'bombo',.9); if(st===4||st===12) golpe(t,'tarola',.45); if(st%2===0) golpe(t,st===14?'abierto':'hat',.12);
+      if(st%2===0){ const pm=st%4===2; [A[0]-12,A[0]-5,A[0]].forEach(m=>voz(t,m,d*(pm?.8:1.8),{tipo:'sawtooth',det:[-6,6],vol:.11,cut:5000,s:.8,r:.04,dist:true})); voz(t,A[0]-24,d*1.6,{tipo:'sawtooth',vol:.14,cut:500,s:.6,r:.05}); }
+      if(nota&&(Math.floor(b/8)%2===1)) voz(t,nota+12,mdur,{tipo:'sawtooth',vol:.08,cut:6000,vib:18,vf:5.5,s:.9,r:.1,dist:true,rev:.2});
+      break;
+    }
+  }
+  function programar(){
+    if(!on||!song) return;
+    while(nextT<ctx.currentTime+.15){
+      tocar(nextT,song,bar,paso);
+      nextT+=song.dur; paso++;
+      if(paso>=song.spb){paso=0; bar++; if(bar>=mel.length){bar=0; vueltas++; if(vueltas>=2){siguiente(true);return;}}}
+    }
+  }
+  function cargar(i){ idx=(i+LISTA.length)%LISTA.length; song=LISTA[idx]; mel=componer(song); bar=0; paso=0; vueltas=0; nextT=ctx?ctx.currentTime+.08:0; pintar(); try{localStorage.setItem('trienio.radio.idx',idx);}catch(e){} }
+  function encender(){ if(!ctx) init(); if(ctx.state==='suspended') ctx.resume(); on=true; if(!song) cargar(idx); nextT=ctx.currentTime+.08; clearInterval(tick); tick=setInterval(programar,25); pintar(); try{localStorage.setItem('trienio.radio.on','1');}catch(e){} }
+  function apagar(guardar=true){ on=false; clearInterval(tick); if(master){ master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(0,ctx.currentTime,.05); setTimeout(()=>{ if(!on&&master) master.gain.value=vol*.7; },300); } pintar(); if(guardar) try{localStorage.setItem('trienio.radio.on','0');}catch(e){} }
+  function siguiente(auto){ const ya=on; if(on&&!auto) apagarSuave(); cargar(idx+1); if(ya){ setTimeout(()=>{ if(master) master.gain.value=vol*.7; nextT=ctx.currentTime+.1; },auto?0:180);} }
+  function anterior(){ const ya=on; if(on) apagarSuave(); cargar(idx-1); if(ya) setTimeout(()=>{ if(master) master.gain.value=vol*.7; nextT=ctx.currentTime+.1; },180); }
+  function estacion(){ const ya=on; if(on) apagarSuave(); const e=(LISTA[idx].ei+1)%ESTACIONES.length; cargar(LISTA.findIndex(c=>c.ei===e)); if(ya) setTimeout(()=>{ if(master) master.gain.value=vol*.7; nextT=ctx.currentTime+.1; },180); }
+  function apagarSuave(){ if(!master) return; master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(0,ctx.currentTime,.04); }
+  function pintar(){ const el=document.getElementById('radio'); if(!el) return; const c=LISTA[idx];
+    el.querySelector('.est').textContent=c.est; el.querySelector('.can').textContent=c.nom;
+    const b=el.querySelector('#rPlay'); b.textContent=on?'⏸':'▶'; b.setAttribute('aria-label',on?'Pausar música':'Tocar música'); el.classList.toggle('sonando',on); }
+  function prender(){ try{ idx=(+localStorage.getItem('trienio.radio.idx')||0)%LISTA.length; }catch(e){} pintar(); }
+  function quiereSonar(){ try{ return localStorage.getItem('trienio.radio.on')!=='0'; }catch(e){ return true; } }
+  document.addEventListener('visibilitychange',()=>{ if(!ctx) return; if(document.hidden) ctx.suspend(); else if(on) ctx.resume(); });
+  return {encender,apagar,siguiente:()=>siguiente(false),anterior,estacion,prender,quiereSonar,get on(){return on;},LISTA};
+})();
 // ---------- paso del tiempo ----------
 function transicionMes(nombre){
   return new Promise(res=>{
@@ -1680,7 +1899,7 @@ function eleccion(){
 $('btnMenu').onclick=()=>{
   modal(`<h2>MENÚ</h2>${perfil?`<div class="perfiles"><div class="pf" aria-current="true"><img alt="" src="${retrato(perfil.ret)}"><span class="q"><b>${esc(perfil.nombre)}</b><small>Perfil en este equipo</small></span><button class="btn borrar" id="mPerfil">Cambiar perfil</button></div></div>`:''}<p>La partida se guarda sola cada mes y al construir.</p>
   <div class="cuenta"><span class="t">Cómo jugar</span></div>
-  <p style="font-size:14px">Arrastra para moverte y pellizca para acercar. Elige una pieza en el panel, toca el mapa para ubicarla y confirma con <b>Construir</b>. Todo edificio necesita una calle al lado. Cubre las casas con salud, escuela y seguridad para subir la aprobación. Las calles se trazan arrastrando y se aprueban con ✓. En Campo construyes parcelas y eliges qué sembrar; cada cultivo tiene su temporada. La presa va sobre el río. En Servicios compras rutas de autobús: dos paradas (A y B) y, por 20% más cada una, paradas C, D, E…; más autobuses por ruta dan mejor servicio y suben la aprobación. Con <b>↻ Mapa</b> giras la vista para ver lo que tapan los edificios. Cada mes sacas una carta: el 60% son buenas y el dado (1·1·1·2·2·3) multiplica su efecto. En el mes 36 llega la elección.</p>
+  <p style="font-size:14px">Arrastra para moverte y pellizca para acercar. Elige una pieza en el panel, toca el mapa para ubicarla y confirma con <b>Construir</b>. Todo edificio necesita una calle al lado. Cubre las casas con salud, escuela y seguridad para subir la aprobación. Las calles se trazan arrastrando y se aprueban con ✓. En Campo construyes parcelas y eliges qué sembrar; cada cultivo tiene su temporada. La presa va sobre el río. En Servicios compras rutas de autobús: dos paradas (A y B) y, por 20% más cada una, paradas C, D, E…; más autobuses por ruta dan mejor servicio y suben la aprobación. El tren de carga cruza el municipio por la vía; en Comercio puedes mandar tus productos en él. Con <b>↻ Mapa</b> giras la vista para ver lo que tapan los edificios. Cada mes sacas una carta: el 60% son buenas y el dado (1·1·1·2·2·3) multiplica su efecto. En el mes 36 llega la elección.</p>
   <div class="fila"><button class="btn" id="mNueva">Nueva partida</button><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
   $('mCerrar').onclick=cerrarModal;
   if($('mPerfil')) $('mPerfil').onclick=()=>{guardar(); cerrarModal(); volverPortada(); elegirPerfil();};
@@ -1771,10 +1990,11 @@ function iniciar(nueva){
   $('portada').hidden=true; document.body.classList.remove('en-portada'); ponerModo('ver'); cat='vivienda'; pestanas(); lista(); recalcular(); hud();
   cam.z=.55; centrarEn(19,18); agentes.length=0; reponerAgentes(); efectos(); pedir();
   if(nueva) aviso('Construye casas junto a las calles y negocios para dar empleo',4200);
+  if(Radio.quiereSonar()&&!Radio.on) try{Radio.encender();}catch(e){}
 }
 function cargarSprites(){
   const FLIP=['palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper'];
-  const nombres=[...new Set(Object.values(DEF).map(d=>d.spr).filter(Boolean).concat(['veh-camaronero-a','gente'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
+  const nombres=[...new Set(Object.values(DEF).map(d=>d.spr).filter(Boolean).concat(['veh-camaronero-a','gente','tren-loco','tren-loco-f','tren-tanque','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
   let listos=0;
   return Promise.all(nombres.map(n=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[n]=im;listos++;$('cargaTxt').textContent=`Cargando piezas… ${listos} de ${nombres.length}`;res();};im.onerror=()=>{listos++;res();};im.src=`sprites/${n}.png`;})));
 }
@@ -1782,7 +2002,7 @@ fabricarTexturas(); ajustar(); requestAnimationFrame(bucle);
 // mapa de fondo para la portada
 occ=new Int32Array(N*N); nuevaPartida(); cam.z=.5; centrarEn(19,19);
 for(let k=0;k<4;k++){S.eds.length;} 
-cargarPerfiles();
+cargarPerfiles(); Radio.prender();
 let guardada=cargar();
 const t0=performance.now();
 Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
@@ -1790,7 +2010,7 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 $('pCont').onclick=()=>conPerfil(()=>{ guardada=cargar(); if(!guardada) return refrescarPortada(); S=guardada; completarEstado(); reconstruirOcc(); iniciar(false);});
 $('pNueva').onclick=()=>conPerfil(()=>{ if(cargar()){ modal(`<h2>NUEVA PARTIDA</h2><p>${esc(perfil.nombre)}, ya tienes una partida en ${detPartida(cargar())}. Si empiezas otra, se reemplaza.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Empezar de nuevo</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>{cerrarModal();iniciar(true);}; } else iniciar(true); });
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&S&&$('portada').hidden) guardar();});
