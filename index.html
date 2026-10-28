@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#1E1A16">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icono-512.png">
+<link rel="apple-touch-icon" href="icono-180.png">
+<link rel="icon" type="image/png" href="icono-192.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -60,6 +61,13 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .ramos{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
 .ramo{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--borde);padding:4px 6px}
 .ramo .q{flex:1;min-width:0;display:flex;flex-direction:column} .ramo b{font-size:13.5px} .ramo small{font-size:11.5px;color:var(--tenue)} .ramo .pct{min-width:38px;text-align:center;font-weight:700} .ramo .mini2{min-height:30px;min-width:32px;padding:0}
+.legado{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow:auto}
+.lg{display:flex;align-items:center;gap:8px;background:var(--panel2);border:2px solid var(--borde);padding:4px 8px 4px 4px}
+.lg.yo{border-color:var(--sol)} .lg .pos{width:22px;text-align:center;font-weight:800;color:var(--sol)} .lg img{width:34px;height:34px;object-fit:cover;background:var(--hondo)}
+.lg .q{flex:1;min-width:0;display:flex;flex-direction:column} .lg b{font-size:14px} .lg small{font-size:11.5px;color:var(--tenue)} .lg .pts{font-weight:800;font-variant-numeric:tabular-nums}
+.conteo{display:flex;flex-direction:column;gap:8px}
+.conteo .cf{display:grid;grid-template-columns:44px 110px 1fr 48px;gap:8px;align-items:center}
+.conteo img{width:44px;height:44px;object-fit:cover;background:var(--hondo)} .conteo .br{height:18px;background:var(--hondo);border:2px solid var(--borde)} .conteo .br i{display:block;height:100%;width:0;background:var(--sol)} .conteo span:last-child{font-weight:800;text-align:right}
 .tabla{display:grid;grid-template-columns:1fr auto auto auto;gap:2px 12px;font-size:13px;max-height:220px;overflow:auto}
 .tabla .h{color:var(--tenue);font-size:12px;position:sticky;top:0;background:var(--suelo)} .tabla .pos{color:var(--bien)} .tabla .neg{color:var(--mal)} .tabla small{color:var(--tenue)}
 details.desg summary{cursor:pointer;color:var(--sol);font-size:14px;font-weight:600}
@@ -72,6 +80,16 @@ details.desg[open]{display:flex;flex-direction:column;gap:6px}
 #panel .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:8px 8px 4px}
 #panel .tabs button{height:30px;background:var(--panel2);border:2px solid var(--borde);font-size:12px;padding:0;font-weight:700}
 #panel .tabs button[aria-selected="true"]{border-color:var(--sol);background:#4A3A1E;color:var(--sol)}
+#panel .phead{display:flex;align-items:center;gap:7px;padding:8px 10px 0;color:var(--sol);font-family:var(--f-display);font-weight:800;font-size:14px;letter-spacing:.8px;flex-wrap:wrap}
+#panel .phead small{flex-basis:100%;font-family:var(--f-body);font-weight:600;letter-spacing:0;font-size:11.5px;color:var(--tenue)}
+#panel.nuevo .phead small{color:var(--sol)} #panel.nuevo .item.sug{animation:latido 1.4s ease-in-out infinite;border-color:var(--sol)}
+@keyframes latido{0%,100%{box-shadow:0 0 0 0 rgba(242,178,51,.0)}50%{box-shadow:0 0 0 4px rgba(242,178,51,.55)}}
+#tirador{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+#panel.cerrado #tirador{width:40px;left:-43px;height:auto;padding:8px 0}
+#panel.cerrado #tirador::after{content:'CONSTRUIR';writing-mode:vertical-rl;transform:rotate(180deg);font:800 11px var(--f-display);letter-spacing:1px;color:var(--sol)}
+.item .tam{display:inline-block;font-size:10.5px;font-weight:700;color:var(--suelo);background:var(--tenue);padding:0 4px;margin-left:4px;vertical-align:1px}
+.item .req{display:block;font-size:11px;color:#E0B25C;margin-top:2px}
+@media (prefers-reduced-motion:reduce){#panel.nuevo .item.sug{animation:none}}
 #panel h3{margin:4px 10px 6px;font-size:14px;color:var(--tenue);font-weight:600}
 #lista{flex:1;overflow-y:auto;padding:0 8px 10px;display:flex;flex-direction:column;gap:6px;touch-action:pan-y}
 .item{display:grid;grid-template-columns:52px 1fr;gap:8px;align-items:center;text-align:left;background:var(--panel2);border:2px solid var(--borde);padding:5px}
@@ -180,6 +198,9 @@ body.en-portada #radio{visibility:hidden}
 #radio button:not(.info){width:30px;height:30px;padding:0;background:var(--panel2);border:2px solid var(--hondo);font-size:13px;color:var(--crema)}
 #radio.sonando .info{box-shadow:0 0 6px rgba(155,224,138,.35)}
 @media (max-height:420px){#radio{right:calc(220px + env(safe-area-inset-right,0px))}}
+#capas{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 52px);z-index:6;background:var(--suelo);border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);padding:8px;max-width:min(560px,calc(100vw - 290px));display:flex;flex-direction:column;gap:6px}
+#capas .chip{cursor:pointer;font-family:var(--f-body);color:var(--crema)} #capas small{font-size:12px;color:var(--tenue)}
+body.con-capas #efectos{visibility:hidden}
 #herr .badge{display:inline-block;min-width:18px;height:18px;line-height:18px;margin-left:6px;background:var(--sol);color:var(--suelo);font-size:11px;border-radius:9px;padding:0 4px}
 #efectos{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 52px);z-index:4;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100vw - 300px);pointer-events:none}
 #efectos span{font-size:12px;padding:2px 7px;background:rgba(30,26,22,.92);border:2px solid var(--borde);white-space:nowrap}
@@ -221,13 +242,14 @@ body.en-portada #radio{visibility:hidden}
     <span class="stat" title="Habitantes / capacidad de vivienda"><small class="et">Habitantes</small><b id="hPob">0</b><small id="hCap"></small></span>
     <span class="stat" title="Empleos ocupados / disponibles"><small class="et">Empleo</small><b id="hEmp">0%</b></span>
     <span class="stat"><small class="et">Aprob.</small><span class="barra"><i id="hAprBar"></i></span><b id="hApr">50%</b></span>
-    <button class="btn hb" id="bGob">Gobierno</button><button class="btn hb" id="bCredito">Crédito</button><button class="btn hb" id="bComercio">Comercio</button>
+    <button class="btn hb" id="bGob">Gobierno</button>
     <span class="mes"><b id="hMes">Enero · Año 1</b><small id="hTurno">Mes 1 de 36</small></span>
     <button class="btn" id="btnMenu" aria-label="Menú">≡</button>
   </header>
 
   <aside id="panel" aria-label="Construir">
-    <button id="tirador" aria-label="Mostrar u ocultar panel">›</button>
+    <button id="tirador" aria-label="Mostrar u ocultar el panel de construcción"><span class="fl">›</span></button>
+    <div class="phead"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg><span>CONSTRUIR</span><small id="pAyuda">Elige una pestaña y una pieza</small></div>
     <div class="tabs" role="tablist" id="tabs"></div>
     <h3 id="catNom">Calles</h3>
     <div id="lista"></div>
@@ -238,7 +260,9 @@ body.en-portada #radio{visibility:hidden}
     <button id="tCalle" aria-pressed="false">Calle</button>
     <button id="tDem" aria-pressed="false">Demoler</button>
     <button id="tRot" aria-label="Girar el mapa" title="Girar el mapa">↻ Mapa</button>
+    <button id="tCapas" aria-pressed="false">Capas</button>
     <button id="tCartas" aria-pressed="false">Cartas<span class="badge" id="bCartas" hidden>0</span></button>
+    <button id="tCamp" hidden>Campaña</button>
     <button id="tInv" aria-pressed="false">Investigar<span class="badge" id="bInv" hidden></span></button>
   </div>
   <div id="radio" role="group" aria-label="Radio">
@@ -248,6 +272,7 @@ body.en-portada #radio{visibility:hidden}
   </div>
   <button id="pasar" class="btn-sol">PASAR MES ▸</button>
 
+  <div id="capas" hidden><div class="chips" id="capasChips"></div><small id="capasTxt"></small></div>
   <div id="colocar" hidden>
     <button class="btn" id="cGirar">Girar</button>
     <span class="msg" id="cMsg"></span>
@@ -271,6 +296,7 @@ body.en-portada #radio{visibility:hidden}
       <div class="acciones">
         <button class="btn-sol" id="pCont" hidden>CONTINUAR <span id="pContDet"></span></button>
         <button class="btn" id="pNueva">NUEVA PARTIDA</button>
+        <button class="btn" id="pLegado">SALÓN DEL LEGADO</button>
       </div>
       <small style="color:var(--tenue)">Prototipo · fase 0</small>
     </div>
@@ -300,45 +326,45 @@ const DEF={
  vecindad:{nom:'Vecindad La Alegría',cat:'vivienda',spr:'edif-vecindad-a',A:3,B:3,costo:230,casas:40,predial:5,mant:.6,empleos:10,ingreso:4,serv:'diversion',radio:6,desc:'Mucha gente, fondas abajo y fiesta en la azotea.'},
  residencial:{nom:'Edificio residencial',cat:'vivienda',spr:'edif-residencial-a',A:3,B:3,costo:340,casas:48,predial:9,mant:1,desc:'Departamentos para gente con más ingreso: paga más predial.'},
  media:{nom:'Casa media',cat:'vivienda',spr:'casa-media-a',A:2,B:1,costo:40,casas:10,predial:1.4},
- buena:{nom:'Casa de dos pisos',cat:'vivienda',spr:'casa-buena-a',A:2,B:1,costo:70,casas:12,predial:2.6},
- buenab:{nom:'Casa con balcón',cat:'vivienda',spr:'casa-buena-b',A:2,B:1,costo:75,casas:12,predial:2.8},
+ buena:{nom:'Casa de dos pisos',cat:'vivienda',spr:'casa-buena-a',A:2,B:1,costo:70,casas:14,predial:2.6},
+ buenab:{nom:'Casa con balcón',cat:'vivienda',spr:'casa-buena-b',A:2,B:1,costo:75,casas:14,predial:2.8},
  minisuper:{nom:'Mini super',cat:'comercio',spr:'edif-minisuper-a',A:2,B:2,costo:60,mant:.5,empleos:6,ingreso:4,serv:'abasto',radio:10},
- cafe:{nom:'Café',cat:'comercio',spr:'edif-cafe-a',A:3,B:3,costo:90,mant:.5,empleos:8,ingreso:6,serv:'diversion',radio:9},
- sushi:{nom:'Kiko Sushi Bar',cat:'comercio',spr:'edif-sushi-a',A:3,B:3,costo:100,mant:.5,empleos:10,ingreso:7,serv:'diversion',radio:9,unico:true},
+ cafe:{nom:'Café',cat:'comercio',spr:'edif-cafe-a',A:2,B:2,costo:75,mant:.5,empleos:8,ingreso:6,serv:'diversion',radio:7},
+ sushi:{nom:'Kiko Sushi Bar',cat:'comercio',spr:'edif-sushi-a',A:2,B:2,costo:85,mant:.5,empleos:10,ingreso:7,serv:'diversion',radio:7,unico:true},
  mercado:{nom:'Mercado municipal',cat:'comercio',spr:'edif-mercado-a',A:4,B:3,costo:220,mant:3,empleos:30,ingreso:12,serv:'abasto',radio:18,lote:'plaza'},
  escuela:{nom:'Escuela primaria',cat:'social',spr:'edif-escuela-a',A:4,B:2,costo:180,mant:8,empleos:12,serv:'educacion',radio:14},
- clinica:{nom:'Centro de salud',cat:'social',spr:'edif-clinica-a',A:3,B:3,costo:260,mant:12,empleos:15,serv:'salud',radio:16},
- comandancia:{nom:'Comandancia',cat:'publica',spr:'edif-comandancia-a',A:3,B:3,costo:200,mant:10,empleos:18,serv:'seguridad',radio:18},
+ clinica:{nom:'Centro de salud',cat:'social',spr:'edif-clinica-a',A:2,B:2,costo:220,mant:8,empleos:15,serv:'salud',radio:14},
+ comandancia:{nom:'Comandancia',cat:'publica',spr:'edif-comandancia-a',A:2,B:2,costo:180,mant:7,empleos:18,serv:'seguridad',radio:16},
  autobus:{nom:'Ruta de autobús',cat:'publica',icono:'autobus-icono',costo:140,desc:'Pon paradas A y B sobre calles. Cada parada extra (C, D, E…) cuesta 20% más; más autobuses dan mejor servicio.'},
- kiosco:{nom:'Plazuela con kiosco',cat:'social',spr:'edif-kiosco-a',A:4,B:4,costo:70,mant:1.5,serv:'diversion',radio:12,lote:'plaza'},
+ kiosco:{nom:'Plazuela con kiosco',cat:'social',spr:'edif-kiosco-a',A:3,B:3,costo:70,mant:1.5,serv:'diversion',radio:11,lote:'plaza'},
  iglesia:{nom:'Parroquia de San Isidro',cat:'social',spr:'edif-iglesia-a',A:3,B:3,costo:150,mant:0,empleos:2,unico:true,lote:'plaza',fe:true},
- panteon:{nom:'Panteón',cat:'publica',spr:'edif-panteon-a',A:4,B:4,costo:50,mant:1,empleos:3,unico:true},
+ panteon:{nom:'Panteón',cat:'publica',spr:'edif-panteon-a',A:3,B:3,costo:50,mant:1,empleos:3,unico:true},
  estadio:{nom:'Estadio El Diamante',cat:'social',spr:'edif-estadio-a',A:6,B:6,costo:550,mant:8,empleos:20,ingreso:6,serv:'diversion',radio:30,unico:true},
  bodega:{nom:'Bodega de granos',cat:'produccion',spr:'edif-bodega-a',A:2,B:4,costo:180,mant:2,empleos:15,ingreso:8,campo:true,lote:'ind'},
- empacadora:{nom:'Empacadora',cat:'industria',spr:'edif-empacadora-a',A:7,B:2,costo:420,mant:4,empleos:80,ingreso:22,campo:true,lote:'ind'},
+ empacadora:{nom:'Empacadora',cat:'industria',spr:'edif-empacadora-a',A:6,B:2,costo:420,mant:4,empleos:80,ingreso:22,campo:true,lote:'ind'},
  presa:{nom:'Presa',cat:'publica',spr:'edif-presa-a',trasera:'edif-presa-b',A:5,B:3,costo:750,mant:6,empleos:10,presa:true,desc:'Va en el embalse de la sierra. Riega una franja de 20 casillas desde la presa hasta el mar. Máximo 3 en todo el municipio.'},
  mina:{nom:'Mina',cat:'produccion',spr:'edif-mina-oro',A:3,B:3,costo:220,mant:2,empleos:18,mina:true,lote:'roca',desc:'Va sobre el monte. Elige el mineral: oro, plata, cobre o zinc.'},
- engorda:{nom:'Corral de engorda',cat:'produccion',spr:'edif-engorda-a',A:6,B:6,costo:260,mant:2,empleos:20,ingreso:14,contamina:6,lote:'tierra'},
+ engorda:{nom:'Corral de engorda',cat:'produccion',spr:'edif-engorda-a',A:4,B:4,costo:260,mant:2,empleos:20,ingreso:14,contamina:6,lote:'tierra'},
  rastro:{nom:'Rastro municipal',cat:'industria',spr:'edif-rastro-a',A:4,B:3,costo:230,mant:3,empleos:25,ingreso:12,necesita:'engorda',contamina:4,lote:'ind'},
- veterinaria:{nom:'Veterinaria',cat:'produccion',spr:'edif-veterinaria-a',A:3,B:3,costo:110,mant:1,empleos:6,ingreso:3},
+ veterinaria:{nom:'Veterinaria',cat:'produccion',spr:'edif-veterinaria-a',A:2,B:2,costo:95,mant:1,empleos:6,ingreso:3},
  aserradero:{nom:'Aserradero',cat:'industria',spr:'edif-aserradero-a',A:3,B:3,costo:190,mant:2,empleos:20,ingreso:10,monte:true,lote:'tierra'},
  muelle:{nom:'Muelle pesquero',cat:'produccion',spr:'edif-muelle-a',A:4,B:4,costo:240,mant:3,empleos:40,ingreso:10,suelo:'mar'},
- congeladora:{nom:'Congeladora',cat:'industria',spr:'edif-congeladora-a',A:7,B:2,costo:420,mant:4,empleos:70,ingreso:20,necesita:'muelle',lote:'ind'},
- granja:{nom:'Granja acuícola',cat:'produccion',spr:'edif-granja-a',A:5,B:5,costo:280,mant:2,empleos:25,ingreso:15,suelo:'costa',contamina:3},
+ congeladora:{nom:'Congeladora',cat:'industria',spr:'edif-congeladora-a',A:6,B:2,costo:420,mant:4,empleos:70,ingreso:20,necesita:'muelle',lote:'ind'},
+ granja:{nom:'Granja acuícola',cat:'produccion',spr:'edif-granja-a',A:4,B:4,costo:280,mant:2,empleos:25,ingreso:15,suelo:'costa',contamina:3},
  hotel:{nom:'Hotel de playa',cat:'comercio',spr:'edif-hotel-a',A:4,B:4,costo:480,mant:4,empleos:40,ingreso:24,suelo:'costa',turismo:true,lote:'plaza'},
- palapa:{nom:'Palapa de mariscos',cat:'comercio',spr:'edif-palapa-a',A:3,B:3,costo:70,mant:.5,empleos:8,ingreso:5,suelo:'costa',turismo:true,serv:'diversion',radio:8},
+ palapa:{nom:'Palapa de mariscos',cat:'comercio',spr:'edif-palapa-a',A:2,B:2,costo:60,mant:.5,empleos:8,ingreso:5,suelo:'costa',turismo:true,serv:'diversion',radio:7},
  malecon:{nom:'Malecón',cat:'comercio',spr:'edif-malecon-a',A:3,B:1,costo:35,mant:.5,serv:'diversion',radio:8,suelo:'playa',turismo:true},
  parcela:{nom:'Parcela agrícola',cat:'produccion',A:3,B:3,costo:35,agri:true,lote:'tierra',desc:'Elige qué sembrar: maíz, sorgo, chile, tomate, plátano o mango.'},
  agro:{nom:'Empresa agroindustrial',cat:'produccion',spr:'edif-agro-a',A:6,B:6,costo:950,mant:8,empleos:90,ingreso:42,agroind:true,lote:'tierra',desc:'Campo tecnificado con silos y maquinaria. Necesita tierra de riego.'},
- tacos:{nom:'Taquería',cat:'comercio',spr:'edif-tacos-a',A:3,B:3,costo:55,mant:.4,empleos:6,ingreso:4.5,serv:'diversion',radio:7,desc:'Tacos al pastor para la colonia.'},
+ tacos:{nom:'Taquería',cat:'comercio',spr:'edif-tacos-a',A:2,B:2,costo:45,mant:.4,empleos:6,ingreso:4.5,serv:'diversion',radio:6,desc:'Tacos al pastor para la colonia.'},
  canchas:{nom:'Canchas deportivas',cat:'social',spr:'edif-canchas-a',A:4,B:2,costo:60,mant:1,empleos:2,serv:'deporte',radio:10,lote:'plaza',desc:'Fútbol rápido y básquet para el barrio.'},
- universidad:{nom:'Universidad',cat:'social',spr:'edif-universidad-a',A:6,B:6,costo:650,mant:12,empleos:45,serv:'educacion',radio:22,univ:true,lote:'plaza',desc:'Al ponerla eliges su enfoque: investigación o formar gente para la producción, el comercio o la industria.'},
- agua:{nom:'Junta de Agua Potable',cat:'publica',spr:'edif-agua-a',A:5,B:5,costo:450,mant:6,empleos:20,serv:'agua',radio:18,tec:'agua',lote:'ind',desc:'Agua potable para las casas que cubre: sube la aprobación.'},
- subestacion:{nom:'Subestación eléctrica',cat:'publica',spr:'edif-subestacion-a',A:5,B:5,costo:480,mant:5,empleos:8,radio:20,sub:true,tec:'sub',lote:'ind',desc:'Lo que queda en su radio no sufre apagones.'},
- basura:{nom:'Relleno sanitario',cat:'publica',spr:'edif-basura-a',A:5,B:5,costo:300,mant:5,empleos:25,serv:'limpieza',radio:18,tec:'basura',lote:'ind',desc:'Recolecta la basura y quita los malos olores de las colonias en su radio.'},
+ universidad:{nom:'Universidad',cat:'social',spr:'edif-universidad-a',A:3,B:3,costo:650,mant:12,empleos:45,serv:'educacion',radio:18,univ:true,lote:'plaza',desc:'Al ponerla eliges su enfoque: investigación o formar gente para la producción, el comercio o la industria.'},
+ agua:{nom:'Junta de Agua Potable',cat:'publica',spr:'edif-agua-a',A:4,B:4,costo:450,mant:6,empleos:20,serv:'agua',radio:18,tec:'agua',lote:'ind',desc:'Agua potable para las casas que cubre: sube la aprobación.'},
+ subestacion:{nom:'Subestación eléctrica',cat:'publica',spr:'edif-subestacion-a',A:4,B:4,costo:480,mant:5,empleos:8,radio:20,sub:true,tec:'sub',lote:'ind',desc:'Lo que queda en su radio no sufre apagones.'},
+ basura:{nom:'Relleno sanitario',cat:'publica',spr:'edif-basura-a',A:4,B:4,costo:300,mant:5,empleos:25,serv:'limpieza',radio:18,tec:'basura',lote:'ind',desc:'Recolecta la basura y quita los malos olores de las colonias en su radio.'},
  prision:{nom:'Centro penitenciario',cat:'publica',spr:'edif-prision-a',A:4,B:3,costo:520,mant:9,empleos:22,unico:true,carcel:true,tec:'prision',lote:'ind',desc:'Baja la delincuencia y la influencia de la maña.'},
- fabrica:{nom:'Fábrica',cat:'industria',spr:'edif-fabrica-alimentos-a',A:5,B:5,costo:700,mant:6,empleos:70,ingreso:30,fabrica:true,tec:'fabrica',contamina:3,lote:'ind',desc:'Elige el rubro. Necesita egresados de la universidad.'},
- minaind:{nom:'Mina industrial',cat:'produccion',spr:'edif-minaind-a',A:5,B:5,costo:950,mant:7,empleos:60,mina:true,ind:true,tec:'minaind',lote:'roca',contamina:3,desc:'Va sobre el monte. Paga casi el triple que una mina.'},
+ fabrica:{nom:'Fábrica',cat:'industria',spr:'edif-fabrica-alimentos-a',A:4,B:4,costo:700,mant:6,empleos:70,ingreso:30,fabrica:true,tec:'fabrica',contamina:3,lote:'ind',desc:'Elige el rubro. Necesita egresados de la universidad.'},
+ minaind:{nom:'Mina industrial',cat:'produccion',spr:'edif-minaind-a',A:4,B:4,costo:950,mant:7,empleos:60,mina:true,ind:true,tec:'minaind',lote:'roca',contamina:3,desc:'Va sobre el monte (4 × 4). Paga casi el triple que una mina.'},
  palacio:{nom:'H. Ayuntamiento',cat:null,spr:'edif-palacio-a',A:3,B:3,costo:0,mant:15,empleos:25,lote:'plaza'}
 };
 const CULT={
@@ -380,7 +406,7 @@ const TEC=[
  {id:'sub',nom:'Subestación eléctrica',pts:12,abre:'subestacion',txt:'Desbloquea la subestación: lo que cubre ya no sufre apagones.'},
  {id:'prision',nom:'Centro penitenciario',pts:14,abre:'prision',txt:'Desbloquea la prisión: baja la delincuencia y la influencia de la maña.'},
  {id:'fabrica',nom:'Industria manufacturera',pts:20,abre:'fabrica',reqEd:'universidad',txt:'Desbloquea la fábrica: alimentos, textil, materiales o ensambladora. Trabaja con egresados de la universidad.'},
- {id:'minaind',nom:'Minería industrial',pts:22,abre:'minaind',reqEd:'mina',txt:'Desbloquea la mina industrial (5 × 5): paga casi el triple que una mina.'},
+ {id:'minaind',nom:'Minería industrial',pts:22,abre:'minaind',reqEd:'mina',txt:'Desbloquea la mina industrial (4 × 4): paga casi el triple que una mina.'},
  {id:'riego',nom:'Riego por goteo',pts:12,txt:'Parcelas y campos tecnificados rinden 20% más.'},
  {id:'genetica',nom:'Mejoramiento genético',pts:12,txt:'Corrales, rastros y veterinarias rinden 20% más.'},
  {id:'frio',nom:'Cadena de frío',pts:12,txt:'Muelles, congeladoras y granjas acuícolas rinden 20% más.'},
@@ -414,9 +440,10 @@ function nombreDe(e){return e.nombre||D(e).nom;}
 const DM={};
 function tecMods(t){ if(!S||!S.tec) return ''; if(t==='comandancia'&&tieneTec('camaras')) return 'cam'; if(t==='agua'&&tieneTec('drenaje')) return 'dren'; if(t==='basura'&&tieneTec('reciclaje')) return 'rec'; return ''; }
 function limpiarCacheD(){ for(const k of Object.keys(DM)) delete DM[k]; }
-function D(o){ const b=D0(o); if(!o) return b; const ks=o.mej?Object.keys(o.mej).sort():[]; const tk=tecMods(o.t); if(!ks.length&&!tk) return b;
-  const key=o.t+'.'+(o.cult||o.min||o.rub||o.enf||'')+'.'+ks.join(',')+'.'+tk; if(DM[key]) return DM[key];
+function D(o){ const b=D0(o); if(!o) return b; const ks=o.mej?Object.keys(o.mej).sort():[]; const tk=tecMods(o.t); if(!ks.length&&!tk&&!o.dano) return b;
+  const key=o.t+'.'+(o.cult||o.min||o.rub||o.enf||'')+'.'+ks.join(',')+'.'+tk+(o.dano?'.dano':''); if(DM[key]) return DM[key];
   const d=Object.assign({},b);
+  if(o.dano){ d.empleos=0; d.ingreso=0; d.serv=undefined; d.sub=false; d.carcel=false; d.casas=Math.round((d.casas||0)/2)||undefined; d.predial=(d.predial||0)/2; d.fe=false; }
   if(tk==='cam') d.radio=(d.radio||0)+5;
   if(tk==='dren') d.radio=(d.radio||0)+6;
   if(tk==='rec'){ d.ingreso=(d.ingreso||0)+6; d.mant=(d.mant||0)*.7; }
@@ -512,6 +539,7 @@ function nuevaPartida(){
 function completarEstado(){
   S.v=2; for(const e of S.eds) if(e.cult==='frijol') e.cult='sorgo';
   reconstruirOcc();
+  for(const e of S.eds) if(e.t==='mina'||e.t==='minaind'){ const [A,B]=huella(D(e),e.f); despejarMonte(e,A,B); }
   if(!S.rio){ S.rio=trazarRio(); for(const k of S.rio) if(S.ter[k]!=='calle'&&!occ[k]) S.ter[k]='rio'; }
   if(!S.embalses){ // partidas anteriores: el río se ensancha y aparece el embalse (sin tocar calles ni edificios)
     const nuevo=trazarRio().filter(k=>!occ[k]); const set=new Set(S.rio);
@@ -522,11 +550,14 @@ function completarEstado(){
   S.rutas=S.rutas||[]; S.creditos=S.creditos||[]; S.embarques=S.embarques||[];
   S.mods=S.mods||{turismo:1,negocios:1,part:1}; S.efectos=S.efectos||[]; S.retos=S.retos||[]; S.mano=S.mano||[];
   S.tec=S.tec||{hechas:[],actual:null,pts:0};
+  if(!S.alcalde||S.alcalde===10){ S.alcalde=(perfil&&perfil.ret&&perfil.ret!==10)?perfil.ret:1; }
+  if(!S.hist||Array.isArray(S.hist)||!S.hist[S.alcalde]) S.hist=Object.assign(Array.isArray(S.hist)?{}:(S.hist||{}),{[S.alcalde]:{cons:1,ultimo:(S.eleccion||0)+1}});
+  if(S.obras==null) S.obras=S.eds.length>6?S.eds.length:0;
   S.ramos=S.ramos||repartoParejo(); S.imp=S.imp||{predial:2,lic:2,hosp:2}; S.prog=S.prog||{};
   if(S.bono===undefined) S.bono=null; S.callesGratis=S.callesGratis||0; S.cartas=S.cartas||0;
 }
 function costoDe(tipo){return tipo==='parcela'?CULT[selCult].costo:DEF[tipo].costo;}
-function costoReal(tipo){let c=costoDe(tipo); if(tipo!=='calle'&&S.eds.some(e=>e.t==='fabrica'&&e.rub==='materiales')) c=Math.round(c*.92); const b=S.bono; if(!b||tipo==='calle') return c; if(b.tipo==='gratis') return c<=b.tope?0:c-b.tope; if(b.tipo==='desc') return Math.round(c*(1-b.pct)); return c;}
+function costoReal(tipo){let c=costoDe(tipo); if(tipo!=='calle'&&perk(1)) c=Math.round(c*.95); if(tipo!=='calle'&&S.eds.some(e=>e.t==='fabrica'&&e.rub==='materiales')) c=Math.round(c*.92); const b=S.bono; if(!b||tipo==='calle') return c; if(b.tipo==='gratis') return c<=b.tope?0:c-b.tope; if(b.tipo==='desc') return Math.round(c*(1-b.pct)); return c;}
 // ---------- reglas de colocación ----------
 function huella(d,flip){return flip?[d.B,d.A]:[d.A,d.B];}
 function puede(tipo,i,j,flip){
@@ -535,7 +566,7 @@ function puede(tipo,i,j,flip){
   if(d.presa){ if(S.eds.filter(e=>e.t==='presa').length>=MAX_PRESAS) return `Máximo ${MAX_PRESAS} presas`;
     if(flip||!(S.embalses||[]).some(e=>e.i===i&&e.j===j)) return 'La presa va en el embalse marcado'; }
   if(d.unico && S.eds.some(e=>e.t===tipo)) return 'Solo puede haber uno';
-  if(S.dinero<costoReal(tipo)) return 'No alcanza el dinero';
+  if(S.dinero<(mov?mov.c:costoReal(tipo))) return 'No alcanza el dinero';
   let playa=0, mar=0, tierra=0, monte=0, rio=0, costaCerca=false;
   for(let a=0;a<A;a++)for(let b=0;b<B;b++){
     const x=i+a,y=j+b; if(!dentro(x,y)) return 'Fuera del mapa';
@@ -571,6 +602,7 @@ function agregar(tipo,i,j,flip,gratis,cult){
   const e={id:S.sig++,t:tipo,i,j,f:!!flip};
   if(tipo==='parcela'){e.cult=cult||selCult; e.sem=S.mes;}
   if(tipo==='mina'||tipo==='minaind'){e.min=selMin; e.sem=S.mes;}
+  if(tipo==='mina'||tipo==='minaind') despejarMonte(e,A,B);
   if(tipo==='fabrica') e.rub=selRub;
   if(tipo==='universidad') e.enf=selEnf;
   S.eds.push(e);
@@ -582,6 +614,8 @@ function agregar(tipo,i,j,flip,gratis,cult){
   }
   return e;
 }
+// alrededor de una mina el monte se despeja: así los árboles de enfrente no quedan debajo de la mina
+function despejarMonte(e,A,B){ for(let a=-1;a<=A;a++)for(let b=-1;b<=B;b++){ const x=e.i+a,y=e.j+b; if(!dentro(x,y)) continue; const k=idx(x,y); if(S.ter[k]==='monte'&&!occ[k]) S.ter[k]='tierra'; } }
 function quitar(e){
   const d=D(e); const [A,B]=huella(d,e.f);
   for(let a=0;a<A;a++)for(let b=0;b<B;b++) occ[idx(e.i+a,e.j+b)]=0;
@@ -636,7 +670,7 @@ function recalcular(){
   olor/=nc;
   // dinero
   const ing=[], gas=[];
-  const part=(30+.6*S.pob)*S.mods.part; ing.push(['Participaciones federales',part]);
+  const part=(30+.6*S.pob)*S.mods.part*(perk(9)?1.08:1); ing.push(['Participaciones federales',part]);
   const pred=casas.reduce((s,e)=>s+D(e).predial,0)*fImp('predial'); if(pred>0) ing.push(['Predial',pred]);
   const ef=t=>S.efectos.some(x=>x.tipo===t);
   let neg=0; const porRec={}; for(const e of S.eds) e._ing=0;
@@ -651,15 +685,16 @@ function recalcular(){
   const tecF=(e,d,r)=>{ let f=1; if(tieneTec('riego')&&(d.agri||d.agroind)) f*=1.2; if(tieneTec('genetica')&&r==='gana') f*=1.2; if(tieneTec('frio')&&r==='mar') f*=1.2; if(tieneTec('turismo')&&d.turismo) f*=1.15;
     const rb=d.turismo?'tur':r; if(bonoU[rb]) f*=bonoU[rb];
     // fondo federal por ramo e impuestos
+    if(perk(3)&&r==='agri') f*=1.1; if(perk(4)&&r==='mar') f*=1.1; if(perk(5)&&(r==='com'||d.turismo)) f*=1.1;
     if(r==='agri'||r==='mar') f*=1+.25*qR('campo'); if(r==='gana') f*=1+.3*qR('ganaderia'); if(r==='com') f*=1+.25*qR('comercio');
     if(d.turismo) f*=(1+.3*qR('turismo')+.1*qR('cultura'))*fImp('hosp'); else if(r==='com'||r==='ind'||r==='otro') f*=fImp('lic');
     return f; };
   for(const e of S.eds){const d=D(e);
-    if(d.mina){ let f=llenado*S.mods.negocios*tecF(e,d,'min'); if(sinLuz(e)) f*=.7; e._ing=pagoMina(e,S.mes)*f; neg+=e._ing; porRec.min=(porRec.min||0)+e._ing; continue; }
+    if(d.mina){ let f=(e.dano?0:1)*llenado*S.mods.negocios*tecF(e,d,'min'); if(sinLuz(e)) f*=.7; e._ing=pagoMina(e,S.mes)*f; neg+=e._ing; porRec.min=(porRec.min||0)+e._ing; continue; }
     if(!d.ingreso) continue; let f=llenado*factorDe(e)[0]*S.mods.negocios*(1+.1*trans);
     if(d.turismo) f*=S.mods.turismo;
     f*=tecF(e,d,recursoDe(e)); if(d.fabrica) f*=fEgr;
-    if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=prog('seguro')?.75:.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=prog('seguro')?.8:.6; if(sinLuz(e)) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
+    if((d.campo||d.agri||d.agroind)&&ef('inundacion')) f*=prog('seguro')?.8:.6; if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=prog('seguro')?.75:.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=prog('seguro')?.8:.6; if(sinLuz(e)) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
     if(ef('huracan')&&(d.turismo||e.t==='muelle'||e.t==='congeladora'||e.t==='granja')) f=0;
     e._ing=d.ingreso*f; neg+=e._ing; const r=recursoDe(e); porRec[r]=(porRec[r]||0)+e._ing;}
   for(const [r,n] of RECURSOS) if(porRec[r]) ing.push([n,porRec[r]]);
@@ -675,9 +710,10 @@ function recalcular(){
   for(const x of S.efectos.filter(x=>x.tipo==='paralisis')){const m=resto*(1-x.keep); gas.push([`Paralización: ${x.nom}`,m]); resto-=m;}
   const tIng=tIngBase, tGas=gas.reduce((s,x)=>s+x[1],0);
   // aprobación objetivo
-  const pesoDes=(1-.5*qR('social'))*(prog('empleo')?.5:1);
+  const pesoDes=(1-.5*qR('social'))*(prog('empleo')?.5:1)*(perk(6)?.8:1);
   let obj=42+cob.salud*8+cob.educacion*8+cob.seguridad*7+cob.diversion*6+cob.abasto*5+(1-desempleo)*10-desempleo*22*pesoDes-olor*12+trans*7+aire*5;
   const aprGob=aprGobierno(); obj+=aprGob;
+  if(perk(2)) obj+=2+cob.diversion*6; if(perk(8)&&S.eds.some(e=>e.t==='clinica'&&!e.dano)) obj+=3;
   obj+=cob.agua*(tieneTec('drenaje')?10:7)+cob.deporte*4+cob.limpieza*3;
   if(S.eds.some(e=>D(e).fe)) obj+=3;
   if(S.dinero<0) obj-=15;
@@ -699,10 +735,11 @@ function pasarMes(){
   c=recalcular();
   // delincuencia y la maña
   const carcel=S.eds.some(e=>D(e).carcel), camaras=tieneTec('camaras')&&S.eds.some(e=>e.t==='comandancia');
-  const objDeli=clamp(28+c.desempleo*55-c.cob.seguridad*30+(S.pob>200?8:0)-(carcel?12:0)-(camaras?5:0)-16*qR('seguridad')-(prog('despensas')?4:0),3,95);
+  const objDeli=clamp(28+c.desempleo*55-c.cob.seguridad*30+(S.pob>200?8:0)-(carcel?12:0)-(camaras?5:0)-16*qR('seguridad')-(prog('despensas')?4:0)-(perk(7)?5:0),3,95);
   S.deli=clamp(S.deli+(objDeli-S.deli)*.3,0,100);
   const atraeMinas=S.eds.reduce((s,e)=>s+(e.t==='mina'?MINERAL[e.min||'oro'].mana:e.t==='minaind'?MINERAL[e.min||'oro'].mana*1.5:0),0);
   S.mana=clamp(S.mana+1.6-c.cob.seguridad*2.2+(S.deli>50?1:0)+atraeMinas-(carcel?1.2:0)-1.2*qR('seguridad'),0,100);
+  avanzarCampana();
   const minas=S.eds.filter(e=>(e.t==='mina'||e.t==='minaind')&&e._ing>0).map(e=>({nom:nombreDe(e),pago:e._ing}));
   // investigación: llegan los puntos del mes
   let tecLista=null; S.tec.pts=Math.min(60,S.tec.pts+ptsMes());
@@ -732,6 +769,7 @@ function pasarMes(){
 
 // ---------- guardado (3 ranuras rotativas) ----------
 function guardar(){
+  if(S&&S.terminada) return;
   try{
     const P=pref(); const slot=((+localStorage.getItem(P+'slot')||0)+1)%3;
     const data=JSON.stringify({...S,calc:undefined,t:Date.now()},(k,v)=>k[0]==='_'?undefined:v);
@@ -913,6 +951,11 @@ function dibujarSprite(e,alfa){
   if(q.mir){g.save();g.translate(sx+im.width*cam.z,sy);g.scale(-1,1);g.drawImage(im,0,0,im.width*cam.z,im.height*cam.z);g.restore();}
   else g.drawImage(im,sx,sy,im.width*cam.z,im.height*cam.z);
   g.globalAlpha=1;
+  if(e.dano&&!e.fant){ const z=cam.z, [A,B]=huella(D(e),e.f); const [px,py]=aPantalla(...proj(e.i+A/2,e.j+B/2)); const y=sy+Math.min(40*z,im.height*z*.25);
+    g.fillStyle='rgba(40,30,25,.35)'; for(let k=0;k<6;k++){ const r=(8+((k*37)%11))*z; g.beginPath(); g.ellipse(px+((k*53)%40-20)*z, py-(10+k*6)*z, r*1.4, r, 0,0,7); g.fill(); }
+    g.fillStyle='#14202B'; g.beginPath(); g.moveTo(px,y-16*z-2); g.lineTo(px+14*z+2,y+8*z); g.lineTo(px-14*z-2,y+8*z); g.closePath(); g.fill();
+    g.fillStyle='#F2B233'; g.beginPath(); g.moveTo(px,y-13*z); g.lineTo(px+11*z,y+6*z); g.lineTo(px-11*z,y+6*z); g.closePath(); g.fill();
+    g.fillStyle='#14202B'; g.fillRect(px-1.4*z-.5,y-6*z,2.8*z+1,7*z); g.fillRect(px-1.4*z-.5,y+2*z,2.8*z+1,2.5*z); }
 }
 function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`;}
 function romboPantalla(i,j,fill,stroke){
@@ -964,6 +1007,7 @@ function dibujar(){
   const rad=(modo==='construir'&&fant&&DEF[sel].radio)?{t:sel,i:fant.i,j:fant.j,f:fant.flip}:(elegido&&D(elegido).radio?elegido:null);
   if(rad){const d=D(rad);const [A,B]=huella(d,rad.f);const c=[rad.i+A/2,rad.j+B/2];
     for(let j=Math.max(0,Math.floor(c[1]-d.radio));j<=Math.min(N-1,c[1]+d.radio);j++)for(let i=Math.max(0,Math.floor(c[0]-d.radio));i<=Math.min(N-1,c[0]+d.radio);i++) romboPantalla(i,j,'rgba(242,178,51,.13)');}
+  dibujarCapa();
   // presa: franja que pasará a riego y embalses libres
   if(modo==='construir'&&sel==='presa'&&fant){ for(const k of franjaRiego(fant)){ const t=S.ter[k]; if(t==='temporal'||t==='tierra') romboPantalla(k%N,(k/N)|0,'rgba(127,208,106,.38)'); }
     for(const e of S.embalses||[]) if(!S.eds.some(x=>x.t==='presa'&&x.i===e.i&&x.j===e.j)) for(let a=0;a<5;a++)for(let b=0;b<3;b++) romboPantalla(e.i+a,e.j+b,null,'rgba(242,178,51,.9)'); }
@@ -984,11 +1028,43 @@ function dibujar(){
     if(e.fant){const [A,B]=huella(D(e),e.f);const ok=!fant.motivo;for(let a=0;a<A;a++)for(let b=0;b<B;b++) if(dentro(e.i+a,e.j+b)) romboPantalla(e.i+a,e.j+b,ok?'rgba(127,208,106,.35)':'rgba(240,90,60,.4)');dibujarSprite(e,.72);}
     else dibujarSprite(e);
   }
+  dibujarCapa(true);
   if(elegido){const [A,B]=huella(D(elegido),elegido.f);for(let a=0;a<A;a++)for(let b=0;b<B;b++) romboPantalla(elegido.i+a,elegido.j+b,null,'rgba(242,178,51,.9)');}
   if(trans){const p=clamp((performance.now()-trans.t0)/trans.dur,0,1); const a=Math.sin(Math.PI*p)*.5; g.fillStyle=`rgba(10,18,52,${a})`; g.fillRect(0,0,VW,VH);
     if(a>.15){g.fillStyle=`rgba(255,214,120,${(a-.15)*1.6})`; for(const e of S.eds){if(!D(e).casas&&!D(e).serv)continue; const [A,B]=huella(D(e),e.f); const [x,y]=proj(e.i+A/2,e.j+B/2); const [sx,sy]=aPantalla(x,y+8); g.fillRect(sx-2*z*2,sy-22*z,4*z*2,4*z*2);}}}
 }
 
+// ---------- capas de influencia ----------
+const CAPAS=[
+ ['salud','Salud','#7FD06A','Casas a la redonda de un centro de salud.'],['educacion','Escuela','#6FB0D8','Alcance de escuelas y universidad.'],
+ ['seguridad','Seguridad','#B48CE0','Alcance de las comandancias.'],['diversion','Diversión','#F2B233','Cafés, taquerías, palapas, kiosco, estadio…'],
+ ['abasto','Abasto','#E0703A','Mini súper y mercado.'],['deporte','Deporte','#5FC9B0','Canchas deportivas.'],['agua','Agua potable','#4AA8E8','Junta de Agua Potable.'],
+ ['limpieza','Basura','#9BBF5A','Relleno sanitario: donde no hay malos olores.'],['olor','Malos olores','#C0502A','Corrales, rastro, granjas y fábricas huelen; el relleno lo quita.'],
+ ['luz','Sin apagón','#F6E27A','Lo que protege la subestación.'],['agri','Agrícola','#8CC456','Bodega o empacadora cerca: las parcelas rinden más.'],
+ ['gana','Ganadera','#D9A066','Veterinaria y sorgo cerca: el corral rinde más.'],['trans','Transporte','#E8E0D0','A 5 casillas de una parada de autobús.']];
+let capa=null;
+$('tCapas').onclick=()=>{ const el=$('capas'); el.hidden=!el.hidden; $('tCapas').setAttribute('aria-pressed',String(!el.hidden)); if(el.hidden){capa=null; document.body.classList.remove('con-capas');} else { if(!capa) capa='salud'; document.body.classList.add('con-capas'); pintaCapas(); } pedir(); };
+function pintaCapas(){ $('capasChips').innerHTML=CAPAS.map(([k,n,c])=>`<button class="chip opc" data-capa="${k}" aria-pressed="${k===capa}" style="${k===capa?`border-color:${c};color:${c}`:''}">${n}</button>`).join('');
+  const C=CAPAS.find(x=>x[0]===capa); $('capasTxt').textContent=C?C[3]+' Las casas sin cobertura se marcan en rojo.':'';
+  $('capasChips').querySelectorAll('[data-capa]').forEach(b=>b.onclick=()=>{capa=b.dataset.capa; pintaCapas(); pedir();}); }
+function fuentesCapa(k){ const L=[], cen=e=>centro(e);
+  if(SERV_NOM[k]) for(const e of S.eds){const d=D(e); if(d.serv===k) L.push([cen(e),d.radio]);}
+  if(k==='olor') for(const e of S.eds){const d=D(e); if(d.contamina) L.push([cen(e),d.contamina+2]);}
+  if(k==='luz') for(const e of S.eds){const d=D(e); if(d.sub) L.push([cen(e),d.radio]);}
+  if(k==='agri') for(const e of S.eds) if(e.t==='bodega'||e.t==='empacadora') L.push([cen(e),14]);
+  if(k==='gana'){ for(const e of S.eds){ if(e.t==='veterinaria') L.push([cen(e),14]); if(e.t==='parcela'&&e.cult==='sorgo') L.push([cen(e),16]); } }
+  if(k==='trans') for(const r of S.rutas) for(const p of r.paradas) L.push([[p[0]+.5,p[1]+.5],5]);
+  return L; }
+function dibujarCapa(despues){
+  if(!capa) return; const C=CAPAS.find(x=>x[0]===capa); const L=fuentesCapa(capa);
+  const limp=capa==='olor'?fuentesCapa('limpieza'):[];
+  const [a0,a1,b0,b1]=rangoVisible(); const col=hexA(C[2],.30);
+  const cubre=(x,y)=>{ const c=[x+.5,y+.5]; if(capa==='olor'&&limp.some(([p,r])=>dist(p,c)<=r)) return false; return L.some(([p,r])=>dist(p,c)<=r); };
+  if(!despues) for(let b=b0;b<=b1;b++)for(let a=a0;a<=a1;a++){ const [i,j]=celW(a,b); if(!dentro(i,j)) continue; const t=S.ter[idx(i,j)]; if(t==='mar') continue; if(cubre(i,j)) romboPantalla(i,j,col); }
+  // casas sin cobertura (o con olor), encima de los edificios
+  if(despues) for(const e of S.eds){ if(!D(e).casas) continue; const c=centro(e); let ok=L.some(([p,r])=>dist(p,c)<=r); if(capa==='olor') ok=!ok||limp.some(([p,r])=>dist(p,c)<=r);
+    if(capa==='olor'||SERV_NOM[capa]||capa==='trans'){ if(!ok){ const [A,B]=huella(D(e),e.f); for(let x=0;x<A;x++)for(let y=0;y<B;y++) romboPantalla(e.i+x,e.j+y,'rgba(240,80,60,.28)','rgba(240,80,60,.95)'); } } }
+}
 // ---------- vida en el pueblo (posiciones en coordenadas del mundo) ----------
 const agentes=[]; let trans=null, tEscala=1, ultT=0;
 const ROPA=['#E0703A','#6FB0D8','#F2B233','#7FD06A','#E8E0D0','#B5302B','#B48CE0','#2C79A8'];
@@ -1021,7 +1097,7 @@ function reponerAgentes(){
   }
   for(const a of agentes) if((a.k==='p'||a.k==='c')&&(!esCalle(a.i,a.j)||!esCalle(a.ni,a.nj))){const b=nuevoCaminante(a.k); if(b) Object.assign(a,b);}
   // el alcalde (personaje del perfil) también se pasea por el pueblo
-  if(perfil&&!agentes.some(a=>a.alc)&&nCalles>3){const a=nuevoCaminante('p'); if(a){a.alc=true; a.fig=PERSONAJES[perfil.ret||1].fig; a.v=.3; agentes.push(a);}}
+  if(perfil&&!agentes.some(a=>a.alc)&&nCalles>3){const a=nuevoCaminante('p'); if(a){a.alc=true; a.fig=PERSONAJES[S.alcalde||perfil.ret||1].fig; a.v=.3; agentes.push(a);}}
   // autobuses: uno por cada unidad comprada en cada ruta con servicio
   for(let q=agentes.length-1;q>=0;q--){const a=agentes[q]; if(a.k!=='bus') continue; const r=S.rutas.find(x=>x.id===a.r); if(!r||!r._c||a.n>=r.buses) agentes.splice(q,1); else a.s=Math.min(a.s,r._c.length-1);}
   for(const r of S.rutas){ if(!r._c) continue; for(let n=0;n<r.buses;n++) if(!agentes.some(a=>a.k==='bus'&&a.r===r.id&&a.n===n)){
@@ -1328,7 +1404,7 @@ function barraCalles(){
 function aprobarCalles(){
   const c=costoCalles(); if(S.dinero<c){aviso('No alcanza el dinero');return;}
   const usadas=Math.min(prop.size,S.callesGratis); S.callesGratis-=usadas;
-  for(const k of prop) S.ter[k]='calle'; const n=prop.size; prop.clear(); S.dinero-=c;
+  for(const k of prop) S.ter[k]='calle'; const n=prop.size; prop.clear(); S.dinero-=c; S.obras=(S.obras||0)+1;
   recalcular(); hud(); barraCalles(); reponerAgentes(); pedir(); guardarPronto(); aviso(`${n} tramo${n>1?'s':''} de calle construido${n>1?'s':''}`);
 }
 let borr=null, rutaSel=null;   // ruta en edición / ruta con ficha abierta
@@ -1401,7 +1477,7 @@ function terrenoBase(i,j){return RIO[idx(i,j)]?'rio':(i+j)%2?'temporal':'riego';
 function validarFant(){
   fant.motivo=puede(sel,fant.i,fant.j,fant.flip);
   const d=DEF[sel];
-  const cr=costoReal(sel), cb=costoDe(sel), nm=D0({t:sel,cult:selCult,min:selMin,rub:selRub,enf:selEnf}).nom; $('cMsg').textContent=fant.motivo||`${nm} · ${cr<cb?(S.bono?(cr?dinero(cr)+' con carta':'gratis por carta'):dinero(cr)+' con descuento'):dinero(cb)}`; $('cMsg').className='msg'+(fant.motivo?' mal':'');
+  const cr=costoReal(sel), cb=costoDe(sel), nm=D0({t:sel,cult:selCult,min:selMin,rub:selRub,enf:selEnf}).nom; $('cMsg').textContent=fant.motivo||(mov?`Mover ${nombreDe(mov.e)} · ${dinero(mov.c)}`:null)||`${nm} · ${cr<cb?(S.bono?(cr?dinero(cr)+' con carta':'gratis por carta'):dinero(cr)+' con descuento'):dinero(cb)}`; $('cMsg').className='msg'+(fant.motivo?' mal':'');
   $('cOk').disabled=!!fant.motivo; $('colocar').hidden=false;
 }
 function elegirCultivo(alElegir){
@@ -1419,21 +1495,22 @@ function elegirOpcion(titulo,texto,ops,alElegir){
 }
 function elegirMineral(alElegir,ind){
   const k_=ind?K_IND:1, d=ind?DEF.minaind:DEF.mina;
-  elegirOpcion('¿QUÉ VAMOS A SACAR?',`${ind?'La mina industrial ocupa 5 × 5':'La mina ocupa 3 × 3'} casillas, va sobre el monte y necesita una calle al lado. Cuesta ${dinero(d.costo)} y da ${d.empleos} empleos.`,
+  elegirOpcion('¿QUÉ VAMOS A SACAR?',`${ind?'La mina industrial ocupa 4 × 4':'La mina ocupa 3 × 3'} casillas, va sobre el monte y necesita una calle al lado. Cuesta ${dinero(d.costo)} y da ${d.empleos} empleos.`,
     Object.entries(MINERAL).map(([k,m])=>({k,img:ind?'sprites/edif-minaind-a.png':`sprites/edif-mina-${k}.png`,nom:m.mnom,l1:`${dinero(m.pago*k_)} ${m.ciclo===1?'cada mes':`cada ${m.ciclo} meses`} · promedio ${dinero(m.pago*k_/m.ciclo)}/mes`,l2:m.info})),
     k=>{selMin=k; alElegir();});
 }
 function elegirRubro(alElegir,titulo){
-  elegirOpcion(titulo||'¿QUÉ VA A PRODUCIR?',`La fábrica ocupa 5 × 5 casillas y necesita una calle al lado. Trabaja con egresados de la universidad: sin suficientes, rinde menos.`,
+  elegirOpcion(titulo||'¿QUÉ VA A PRODUCIR?',`La fábrica ocupa 4 × 4 casillas y necesita una calle al lado. Trabaja con egresados de la universidad: sin suficientes, rinde menos.`,
     Object.entries(RUBRO).map(([k,r])=>({k,img:`sprites/edif-fabrica-${k}-a.png`,nom:r.rnom,l1:`${r.empleos} empleos · hasta +${dinero(r.ingreso)}/mes · necesita ${r.egr} egresados`,l2:r.info})),
     k=>{selRub=k; alElegir();});
 }
 function elegirEnfoque(alElegir,titulo){
-  elegirOpcion(titulo||'¿QUÉ ENFOQUE TENDRÁ?',`La universidad ocupa 6 × 6 casillas, da servicio de educación y forma egresados. Su enfoque se puede cambiar después.`,
+  elegirOpcion(titulo||'¿QUÉ ENFOQUE TENDRÁ?',`La universidad ocupa 3 × 3 casillas, da servicio de educación y forma egresados. Su enfoque se puede cambiar después.`,
     Object.entries(ENFOQUE).map(([k,e])=>({k,img:'sprites/edif-universidad-a.png',nom:e.enom,l2:e.info})),
     k=>{selEnf=k; alElegir();});
 }
 function elegirTipo(t,yaCultivo){
+  if(mov){ cancelarMover(); ponerModo('ver'); }
   if(t==='calle'){ponerModo('calle');return;}
   if(t==='autobus'){iniciarRuta(null);return;}
   if(t==='parcela'&&!yaCultivo){elegirCultivo(()=>elegirTipo('parcela',true));return;}
@@ -1461,19 +1538,38 @@ $('cOk').onclick=()=>{
   if(modo==='calle') return aprobarCalles();
   if(modo==='ruta') return guardarRuta();
   if(!fant||fant.motivo) return;
-  agregar(sel,fant.i,fant.j,fant.flip,false,selCult); recalcular(); hud(); guardarPronto(); reponerAgentes();
+  if(mov) return terminarMover();
+  agregar(sel,fant.i,fant.j,fant.flip,false,selCult); S.obras=(S.obras||0)+1; recalcular(); hud(); guardarPronto(); reponerAgentes();
   aviso(sel==='parcela'?`Se sembró ${CULT[selCult].cnom.toLowerCase()}`:`${D0({t:sel,min:selMin,rub:selRub,enf:selEnf}).nom}: listo`);
   if(sel==='presa'){ ponerModo('ver'); return; }
   validarFant(); pedir(); lista();
 };
 function confirmarDemoler(e){
   elegido=e; const d=D(e);
-  $('ficha').innerHTML=`<h4>${d.nom.toUpperCase()}</h4><p style="margin:0;font-size:13px;color:var(--tenue)">¿Demoler? No se recupera el dinero.</p><div class="acc"><button class="btn" id="fNo">No</button><button class="btn btn-sol" id="fSi">Demoler</button></div>`;
+  const dev=Math.round((D0(e).costo||0)*.25);
+  $('ficha').innerHTML=`<h4>${d.nom.toUpperCase()}</h4><p style="margin:0;font-size:13px;color:var(--tenue)">¿Demoler? Se recupera el 25%: ${dinero(dev)}.</p><div class="acc"><button class="btn" id="fNo">No</button><button class="btn btn-sol" id="fSi">Demoler</button></div>`;
   $('ficha').hidden=false; pedir();
   $('fNo').onclick=()=>{elegido=null;$('ficha').hidden=true;pedir();};
-  $('fSi').onclick=()=>{quitar(e);reponerAgentes();elegido=null;$('ficha').hidden=true;recalcular();hud();pedir();guardarPronto();aviso(`${d.nom} demolido`);};
+  $('fSi').onclick=()=>{quitar(e);S.dinero+=dev;reponerAgentes();elegido=null;$('ficha').hidden=true;recalcular();hud();pedir();guardarPronto();aviso(`${d.nom} demolido: recuperaste ${dinero(dev)}`);};
+}
+// mover un edificio: cuesta 20% de su precio y conserva nombre, mejoras, cultivo, mineral, rubro o enfoque
+let mov=null;
+function ocupar(e){ const [A,B]=huella(D(e),e.f); for(let a=0;a<A;a++)for(let b=0;b<B;b++) occ[idx(e.i+a,e.j+b)]=e.id; }
+function moverEdificio(e){
+  if(e.t==='presa'){aviso('La presa no se puede mover: va en su embalse');return;}
+  const c=Math.max(10,Math.round((D0(e).costo||0)*.2)); if(S.dinero<c){aviso(`Mover cuesta ${dinero(c)}: no alcanza`);return;}
+  quitar(e); mov={e,c,orig:{i:e.i,j:e.j,f:e.f}};
+  if(e.cult) selCult=e.cult; if(e.min) selMin=e.min; if(e.rub) selRub=e.rub; if(e.enf) selEnf=e.enf;
+  sel=e.t; ponerModo('construir'); sel=e.t; fant={i:e.i,j:e.j,flip:e.f}; validarFant(); pedir();
+  aviso(`Toca el nuevo lugar para ${nombreDe(e)} y confirma (cuesta ${dinero(c)})`,3600);
+}
+function cancelarMover(){ if(!mov) return; const e=mov.e; Object.assign(e,mov.orig); S.eds.push(e); ocupar(e); mov=null; pedir(); }
+function terminarMover(){ const e=mov.e; e.i=fant.i; e.j=fant.j; e.f=fant.flip; S.eds.push(e); ocupar(e); S.dinero-=mov.c;
+  if(e.t==='mina'||e.t==='minaind'){ const [A,B]=huella(D(e),e.f); despejarMonte(e,A,B); }
+  const c=mov.c; mov=null; ponerModo('ver'); marcarRio(); recalcular(); hud(); reponerAgentes(); guardarPronto(); lista(); aviso(`${nombreDe(e)} se cambió de lugar (${dinero(c)})`);
 }
 function ponerModo(m){
+  if(mov&&m!=='construir') cancelarMover();
   if(modo==='calle'&&m!=='calle'&&prop.size){prop.clear();aviso('Se descartó el trazo sin aprobar');}
   modo=m; $('cGirar').hidden=false; $('cOk').textContent='Construir'; $('cNo').textContent='Cancelar';
   if(m!=='construir'){sel=null;fant=null;$('colocar').hidden=true;}
@@ -1505,6 +1601,12 @@ function detalle(d){
   if(d.desc) p.push(d.desc);
   return p.join(' · ');
 }
+function requisitos(k,d){ const r=[];
+  if(d.suelo==='mar') r.push('En el mar, junto a la playa'); else if(d.suelo==='costa') r.push('En la costa'); else if(d.suelo==='playa') r.push('Sobre la arena');
+  if(d.mina) r.push('Sobre el monte'); if(d.monte) r.push('Junto al monte'); if(d.presa) r.push('Solo en el embalse');
+  if(d.agri) r.push('Tierra de cultivo'); if(d.agroind) r.push('Tierra de riego'); if(d.necesita) r.push('Necesita '+DEF[d.necesita].nom.toLowerCase());
+  if(d.fabrica) r.push('Necesita egresados'); if(d.unico) r.push('Solo uno');
+  return r.join(' · '); }
 function lista(){
   $('catNom').textContent=CATS.find(c=>c[0]===cat)[1];
   const tipos=Object.keys(DEF).filter(k=>DEF[k].cat===cat);
@@ -1513,11 +1615,17 @@ function lista(){
     const img=k==='parcela'?`<img alt="" src="sprites/cult-tomate.png">`:k==='mina'?`<img alt="" src="sprites/edif-mina-oro.png">`:d.icono?`<img alt="" src="sprites/${d.icono}.png">`:d.spr?`<img src="sprites/${d.spr}.png" alt="">`:`<img alt="" src="${TEX.calle10?TEX.calle10.toDataURL():''}">`;
     const activo=(k==='calle'&&modo==='calle')||(k==='autobus'&&modo==='ruta')||(sel===k);
     if(bloq) return `<button class="item bloq" data-t="${k}" data-bloq="1">${img}<span><span class="nom">🔒 ${d.nom}</span><br><span class="det">Se investiga: ${tecPor(d.tec).nom}. ${d.desc||''}</span></span></button>`;
-    return `<button class="item${S&&S.dinero<d.costo?' caro':''}" data-t="${k}" aria-pressed="${activo}" ${usado?'disabled':''}>${img}<span><span class="nom">${d.nom}</span><br><span class="det">${usado?'Ya construido':(k==='parcela'?'Desde '+dinero(35)+' · ':dinero(d.costo)+' · ')+detalle(d)}</span></span></button>`;}).join('');
+    const req=requisitos(k,d), tam=d.A?`<span class="tam">${d.A}×${d.B}</span>`:'';
+    return `<button class="item${S&&S.dinero<d.costo?' caro':''}${k===SUG[cat]?' sug':''}" data-t="${k}" aria-pressed="${activo}" ${usado?'disabled':''}>${img}<span><span class="nom">${d.nom}${tam}</span>${req?`<span class="req">${req}</span>`:'<br>'}<span class="det">${usado?'Ya construido':(k==='parcela'?'Desde '+dinero(35)+' · ':dinero(d.costo)+' · ')+detalle(d)}</span></span></button>`;}).join('');
   $('lista').querySelectorAll('.item').forEach(b=>b.onclick=()=>b.dataset.bloq?investigar(DEF[b.dataset.t].tec):elegirTipo(b.dataset.t));
+  // jugadores nuevos: mientras no construyan nada, el panel late y sugiere por dónde empezar
+  const nuevo=S&&!S.obras; $('panel').classList.toggle('nuevo',!!nuevo);
+  $('pAyuda').textContent=nuevo?(cat==='vivienda'?'Empieza aquí: toca la Casa humilde y luego el mapa junto a una calle':'Empieza en Vivienda con una Casa humilde'):'Elige una pestaña y una pieza';
 }
+const SUG={vivienda:'humilde',publica:'calle',social:'escuela',produccion:'parcela',comercio:'minisuper',industria:'empacadora'};
 function hud(){
   const c=S.calc||recalcular();
+  if(S.alcalde){ const h=$('hAva'); h.src=retrato(S.alcalde); h.hidden=false; h.title=PERSONAJES[S.alcalde].nom+' · '+PERK[S.alcalde]; }
   $('hDin').textContent=dinero(S.dinero);
   $('hBal').innerHTML=`<span class="${c.bal>=0?'pos':'neg'}">${c.bal>=0?'+':''}${dinero(c.bal)}/mes</span>`;
   $('hPob').textContent=S.pob; $('hCap').textContent=`/ ${c.cap}`;
@@ -1532,6 +1640,7 @@ function ficha(){
   const e=elegido, f=$('ficha'); if(!e){f.hidden=true;return;}
   const d=D(e), c=S.calc; const [fac,nota]=factorDe(e);
   const filas=[];
+  if(e.dano) filas.push(['Estado','<span style="color:var(--mal)">Dañado: no funciona hasta repararlo</span>']);
   if(d.casas) filas.push(['Vivienda',`${d.casas} habitantes`],['Predial',`${dinero(d.predial)}/mes`]);
   if(d.empleos) filas.push(['Empleos',`${Math.round(d.empleos*c.llenado)} de ${d.empleos} ocupados`]);
   if(d.ingreso) filas.push(['Ingreso',`${dinero(e._ing!=null?e._ing:d.ingreso*c.llenado*fac)}/mes`]);
@@ -1553,7 +1662,8 @@ function ficha(){
   f.innerHTML=`<div class="titf"><h4>${esc(nombreDe(e)).toUpperCase()}</h4><button class="btn mini2" id="fNom" title="Cambiar nombre" aria-label="Cambiar nombre">✎</button></div>${e.nombre?`<small class="tipo">${esc(d.nom)}</small>`:''}
   <dl>${filas.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>
   ${disp.length?`<div class="mejoras"><span class="t">Mejoras disponibles</span>${disp.map(k=>{const m=MEJORAS[k], cst=costoMejora(e,k); return `<button class="btn" data-mej="${k}" ${S.dinero<cst?'disabled':''}><b>${m.nom}</b><span>${m.txt} · ${dinero(cst)}</span></button>`;}).join('')}</div>`:''}
-  <div class="acc"><button class="btn" id="fCerrar">Cerrar</button>${e.t==='parcela'?'<button class="btn" id="fCult">Cambiar cultivo</button>':''}${e.t==='fabrica'?'<button class="btn" id="fRub">Cambiar rubro</button>':''}${e.t==='universidad'?'<button class="btn" id="fEnf">Cambiar enfoque</button>':''}${e.t!=='palacio'?'<button class="btn" id="fDem">Demoler</button>':''}</div>`;
+  ${e.dano?`<div class="acc"><button class="btn btn-sol" id="fRep" ${S.dinero<costoReparar(e)?'disabled':''}>Reparar · ${dinero(costoReparar(e))}</button></div>`:''}
+  <div class="acc"><button class="btn" id="fCerrar">Cerrar</button>${e.t==='parcela'?'<button class="btn" id="fCult">Cambiar cultivo</button>':''}${e.t==='fabrica'?'<button class="btn" id="fRub">Cambiar rubro</button>':''}${e.t==='universidad'?'<button class="btn" id="fEnf">Cambiar enfoque</button>':''}${e.t!=='presa'?'<button class="btn" id="fMov">Mover</button>':''}${e.t!=='palacio'?'<button class="btn" id="fDem">Demoler</button>':''}</div>`;
   f.hidden=false;
   $('fCerrar').onclick=()=>{elegido=null;f.hidden=true;pedir();};
   $('fNom').onclick=()=>{ const t=f.querySelector('.titf'); t.innerHTML=`<input id="fNomIn" maxlength="28" value="${esc(nombreDe(e))}" aria-label="Nuevo nombre"><button class="btn mini2" id="fNomOk">✓</button>`;
@@ -1563,6 +1673,8 @@ function ficha(){
   f.querySelectorAll('[data-mej]').forEach(b=>b.onclick=()=>{ const k=b.dataset.mej, cst=costoMejora(e,k); if(S.dinero<cst){aviso('No alcanza el dinero');return;}
     S.dinero-=cst; e.mej=Object.assign({},e.mej,{[k]:S.mes}); recalcular(); hud(); reponerAgentes(); guardarPronto(); ficha(); aviso(`${MEJORAS[k].nom}: listo en ${nombreDe(e)}`); });
   if($('fDem')) $('fDem').onclick=()=>confirmarDemoler(e);
+  if($('fMov')) $('fMov').onclick=()=>moverEdificio(e);
+  if($('fRep')) $('fRep').onclick=()=>{ const c=costoReparar(e); if(S.dinero<c) return; S.dinero-=c; e.dano=false; limpiarCacheD(); recalcular(); hud(); efectos(); ficha(); guardarPronto(); aviso(`${nombreDe(e)} reparado`); };
   if($('fRub')) $('fRub').onclick=()=>{ const cst=Math.round(DEF.fabrica.costo*.3); elegirRubro(()=>{ if(selRub===e.rub){aviso('Ya produce eso');return;} if(S.dinero<cst){aviso('No alcanza el dinero');return;}
     S.dinero-=cst; e.rub=selRub; recalcular(); hud(); ficha(); guardarPronto(); pedir(); aviso(`Ahora es ${D0(e).nom} (costó ${dinero(cst)})`); },`CAMBIAR RUBRO · ${dinero(cst)}`); };
   if($('fEnf')) $('fEnf').onclick=()=>{ const cst=50; elegirEnfoque(()=>{ if(selEnf===(e.enf||'inv')){aviso('Ya tiene ese enfoque');return;} if(S.dinero<cst){aviso('No alcanza el dinero');return;}
@@ -1576,12 +1688,12 @@ function ficha(){
 
 // panel plegable
 $('rPlay').onclick=()=>Radio.on?Radio.apagar():Radio.encender(); $('rSig').onclick=()=>Radio.siguiente(); $('rAnt').onclick=()=>Radio.anterior(); $('rEst').onclick=()=>Radio.estacion();
-$('sCaja').onclick=()=>finanzas(); $('bCredito').onclick=()=>credito(); $('bComercio').onclick=()=>comercio();
-$('tirador').onclick=()=>{const p=$('panel');p.classList.toggle('cerrado');document.body.classList.toggle('panel-cerrado',p.classList.contains('cerrado'));$('tirador').textContent=p.classList.contains('cerrado')?'‹':'›';};
+$('sCaja').onclick=()=>finanzas();
+$('tirador').onclick=()=>{const p=$('panel');p.classList.toggle('cerrado');document.body.classList.toggle('panel-cerrado',p.classList.contains('cerrado'));$('tirador').querySelector('.fl').textContent=p.classList.contains('cerrado')?'‹':'›';};
 
 // ---------- baraja de modificadores ----------
 const DADO=[1,1,1,2,2,3];
-const CAT_CARTA={mayor:['GRAN CAMBIO','#F2B233'],recursos:['RECURSOS','#7FD06A'],usable:['CARTA DE MANO','#6FB0D8'],reto:['RETO','#B48CE0'],retencion:['RETENCIÓN','#F08A5A'],peticion:['PETICIÓN','#E0563A'],contratiempo:['CONTRATIEMPO','#C9A061']};
+const CAT_CARTA={mayor:['GRAN CAMBIO','#F2B233'],recursos:['RECURSOS','#7FD06A'],usable:['CARTA DE MANO','#6FB0D8'],reto:['RETO','#B48CE0'],retencion:['RETENCIÓN','#F08A5A'],peticion:['PETICIÓN','#E0563A'],contratiempo:['CONTRATIEMPO','#C9A061'],catastrofe:['CATÁSTROFE','#D8452E']};
 const PESOS=[['mayor',5],['recursos',15],['usable',20],['reto',20],['retencion',12],['peticion',12],['contratiempo',16]];
 const baseMes=()=>Math.max(60,(S.calc||recalcular()).tIngBase);
 const NIV=['bajo','medio','alto'];
@@ -1650,7 +1762,7 @@ const CARTAS=[
  {id:'c7',cat:'contratiempo',nom:'Escándalo en redes',txt:'Un video tuyo en la fiesta se hace viral.',ef:'Aprobación −3 × dado.',ap:d=>{S.apr=clamp(S.apr-3*d,1,99);return `La aprobación baja ${3*d} puntos.`;}},
 ];
 const porId=id=>CARTAS.find(c=>c.id===id);
-function sacarCarta(){let r=Math.random()*100,cat='recursos';for(const [c,w] of PESOS){if(r<w){cat=c;break;}r-=w;} const l=CARTAS.filter(c=>c.cat===cat); return l[Math.floor(Math.random()*l.length)];}
+function sacarCarta(){const PW=pesosCartas(); let r=Math.random()*PW.reduce((s,x)=>s+x[1],0),cat='recursos';for(const [c,w] of PW){if(r<w){cat=c;break;}r-=w;} const l=CARTAS.filter(c=>c.cat===cat); return l[Math.floor(Math.random()*l.length)];}
 function progreso(c){
   const cc=S.calc||recalcular();
   switch(c.k){
@@ -1735,15 +1847,18 @@ function efectos(){
   ch.push(`<span class="${S.mana>40?'mal':''}">La maña ${Math.round(S.mana)}</span>`);
   for(const x of S.efectos){ const t=x.tipo==='retencion'?`${x.nom} −${Math.round(x.pct*100)}%`:x.tipo==='paralisis'?`Paralización (${x.nom}) ${Math.round(x.keep*100)}%`:x.nom; ch.push(`<span class="mal">${t} · ${x.meses} m</span>`);}
   for(const r of S.retos){ const q=r.plazo-S.mes+1; ch.push(`<span class="reto">${r.tipo==='peticion'?'Petición':'Reto'}: ${r.cond.txt} · ${q} m</span>`);}
+  if(S.campana&&S.campana.enc) ch.push(`<span class="${S.campana.enc.v>=50?'bien':'mal'}">Encuesta: ${S.campana.enc.v}% vs ${100-S.campana.enc.v}%</span>`);
+  for(const e of S.eds) if(e.dano){ ch.push('<span class="mal">Edificios dañados</span>'); break; }
   if(S.bono) ch.push(`<span class="bien">${S.bono.tipo==='gratis'?`Obra gratis hasta ${dinero(S.bono.tope)}`:`Descuento ${Math.round(S.bono.pct*100)}%`}</span>`);
   if(S.callesGratis) ch.push(`<span class="bien">${S.callesGratis} calles gratis</span>`);
   el.innerHTML=ch.join('');
+  $('tCamp').hidden=!S.campana;
   const n=S.mano.length+S.retos.length; $('bCartas').hidden=!n; $('bCartas').textContent=n;
   const ta=S.tec.actual&&tecPor(S.tec.actual); $('bInv').hidden=false; $('bInv').textContent=ta?Math.min(99,Math.round(S.tec.pts/ta.pts*100))+'%':'!';
   $('bInv').style.background=ta?'#B48CE0':'var(--sol)';
 }
 $('tCartas').onclick=()=>verMano();
-$('tInv').onclick=()=>investigar();
+$('tInv').onclick=()=>investigar(); $('tCamp').onclick=()=>campana();
 // ---------- investigación ----------
 function investigar(resaltar){
   const pm=ptsMes(), act=S.tec.actual&&tecPor(S.tec.actual);
@@ -1829,7 +1944,7 @@ function gobierno(tab,obligado){ return new Promise(fin=>{
   let borr={...S.ramos};
   const pinta=()=>{
     const usadas=Object.values(borr).reduce((s,v)=>s+v,0), F=fondoFed();
-    const tabs=`<div class="chips">${[['fondo','Fondo federal'],['imp','Impuestos'],['prog','Programas sociales']].map(([k,n])=>`<button class="chip opc" data-tab="${k}" aria-pressed="${k===tab}" ${obligado&&k!==tab?'disabled':''}>${n}</button>`).join('')}</div>`;
+    const tabs=`<div class="chips">${[['fondo','Fondo federal'],['imp','Impuestos'],['prog','Programas sociales'],['cred','Crédito'],['com','Comercio'],['fin','Finanzas']].map(([k,n])=>`<button class="chip opc" data-tab="${k}" aria-pressed="${k===tab}" ${obligado&&k!==tab?'disabled':''}>${n}</button>`).join('')}</div>`;
     let cuerpo='';
     if(tab==='fondo'){
       cuerpo=`<p style="font-size:14px">Este año llegan <b>${dinero(F)}</b> de la Federación. Solo pueden ir a estos 12 ramos, no a edificios ni a obra. ${puede?'Reparte las 20 partes (cada una es 5%, '+dinero(F/PARTES)+'): apostar fuerte a un ramo da más, pero repartir también suma.':`Ya se repartió el fondo del año ${anio}. El próximo reparto es en enero.`}</p>
@@ -1848,7 +1963,8 @@ function gobierno(tab,obligado){ return new Promise(fin=>{
     const usadas2=Object.values(borr).reduce((s,v)=>s+v,0);
     modal(`<h2>GOBIERNO MUNICIPAL${tab==='fondo'?` · AÑO ${anio}`:''}</h2>${tabs}${cuerpo}
       <div class="fila">${tab==='fondo'&&puede?`<button class="btn" id="gParejo">Repartir parejo</button><button class="btn-sol btn" id="gOk" ${usadas2<PARTES?'disabled':''}>Confirmar reparto</button>`:`<button class="btn-sol btn" id="gCerrar">Listo</button>`}</div>`);
-    $('modal').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;pinta();});
+    $('modal').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{ const t=b.dataset.tab; const volver=()=>{tab='fondo';pinta();};
+      if(t==='cred') return credito(volver); if(t==='com') return comercio(volver); if(t==='fin') return finanzas(volver); tab=t; pinta();});
     $('modal').querySelectorAll('[data-mas]').forEach(b=>b.onclick=()=>{const k=b.dataset.mas; borr[k]=(borr[k]||0)+1; pinta();});
     $('modal').querySelectorAll('[data-menos]').forEach(b=>b.onclick=()=>{const k=b.dataset.menos; borr[k]=Math.max(0,(borr[k]||0)-1); pinta();});
     $('modal').querySelectorAll('[data-imp]').forEach(b=>b.onclick=()=>{ const k=b.dataset.imp, v=+b.dataset.v; if(v===S.imp[k]) return;
@@ -1878,14 +1994,14 @@ function tablaEdificios(){
    ${l.map(g_=>`<span>${esc(g_.nom)}${g_.n>1?` <small>×${g_.n}</small>`:''}</span><span>${dinero(g_.ing)}</span><span>${g_.mant?'−'+dinero(g_.mant):'—'}</span><span class="${g_.ing-g_.mant>=0?'pos':'neg'}">${g_.ing-g_.mant>=0?'+':''}${dinero(g_.ing-g_.mant)}</span>`).join('')}</div>
    <p style="font-size:13px;color:var(--tenue)">Balance esperado del mes que entra (con participaciones, calles, créditos y descuentos): <b style="color:${tot>=0?'var(--bien)':'var(--mal)'}">${tot>=0?'+':''}${dinero(tot)}</b>. Los cultivos cambian según la temporada.</p>`;
 }
-function finanzas(){
+function finanzas(volver){
   const c=recalcular(); const fila=(n,v)=>`<span>${n}</span><span>${dinero(v)}</span>`;
   modal(`<h2>FINANZAS DEL MUNICIPIO</h2>
    <div class="cols"><div class="cuenta"><span class="t">Entradas de este mes, por recurso</span>${c.ing.map(x=>fila(...x)).join('')}</div>
    <div class="cuenta"><span class="t">Salidas</span>${c.gas.map(x=>fila(x[0],-x[1])).join('')}<span class="tot">Balance</span><span class="tot" style="color:${c.bal>=0?'var(--bien)':'var(--mal)'}">${c.bal>=0?'+':''}${dinero(c.bal)}</span></div></div>
    <div class="cuenta"><span class="t">Lo que se espera de cada edificio el mes que entra</span></div>${tablaEdificios()}
    <div class="fila"><button class="btn" id="fiCred">Pedir crédito</button><button class="btn" id="fiCom">Comercio</button><button class="btn-sol btn" id="mCerrar">Cerrar</button></div>`);
-  $('mCerrar').onclick=cerrarModal; $('fiCred').onclick=()=>credito(finanzas); $('fiCom').onclick=()=>comercio(finanzas);
+  const fin_=()=>finanzas(volver); $('mCerrar').onclick=typeof volver==='function'?volver:cerrarModal; $('fiCred').onclick=()=>credito(fin_); $('fiCom').onclick=()=>comercio(fin_);
 }
 
 // ---------- crédito: si la aprobación es alta se autoriza solo; si no, se negocia con el cabildo ----------
@@ -2189,7 +2305,10 @@ $('pasar').onclick=async()=>{
   await new Promise(res=>reporte(r,res));
   for(const ev of r.eventos) await resolverReto(ev);
   if(S.mes<=36&&(S.mes-1)%12===0&&S.ramosAnio!==Math.floor((S.mes-1)/12)+1) await gobierno('fondo',true);
+  if(S.mes===30&&!S.campana) await iniciarCampana();
+  if(S.mes<=36&&Math.random()<probCatastrofe()){ await jugarCarta(CATAS[Math.floor(Math.random()*CATAS.length)],{titulo:'¡CATÁSTROFE!'}); reponerAgentes(); }
   if(S.mes<=36) await jugarCarta(sacarCarta());
+  if(S.campana&&S.mes>30&&S.mes<=36) await campana();
   hud(); efectos(); lista();
   pasando=false; $('pasar').disabled=false;
   if(S.mes>36) eleccion();
@@ -2215,6 +2334,9 @@ function reporte(r,listo){
   if((S.mes-1)%12===0&&S.mes<=36) chips.push(['','Es enero: toca repartir el fondo federal']);
   if(tieneTec('agua')&&S.eds.some(e=>e.t==='agua')&&c.cob.agua<.5) chips.push(['mal',`Agua potable: ${Math.round(c.cob.agua*100)}% de las casas`]);
   if(c.egrNec&&c.fEgr<1) chips.push(['mal',`Faltan egresados: ${c.egresados} de ${c.egrNec} para las fábricas`]);
+  const dan=S.eds.filter(e=>e.dano).length; if(dan) chips.push(['mal',`${dan} edificio${dan>1?'s':''} dañado${dan>1?'s':''}: repáralo${dan>1?'s':''} desde su ficha`]);
+  if(exito()>.45) chips.push(['','Vas muy bien: los golpes de la suerte se vuelven más frecuentes']);
+  if(S.mes>=27&&S.mes<30) chips.push(['',`En ${30-S.mes} mes${30-S.mes>1?'es':''} arranca la campaña: junta aprobación`]);
   if(!chips.length) chips.push(['bien','El pueblo va bien este mes']);
   const fila=(n,v)=>`<span>${n}</span><span>${dinero(v)}</span>`;
   modal(`<h2>INFORME DE ${MESES[(r.mes-1)%12].toUpperCase()} · AÑO ${Math.floor((r.mes-1)/12)+1}</h2>
@@ -2228,20 +2350,43 @@ function reporte(r,listo){
   $('mOk').onclick=()=>{cerrarModal(); if(listo) listo();};
   $('mOk').focus();
 }
-function eleccion(){
-  const gana=S.apr>=50;
-  const votos=clamp(Math.round(S.apr*.9+5+(S.pob>150?3:0)),5,95);
-  modal(`<h2>${gana?'¡GANASTE LA ELECCIÓN!':'PERDISTE LA ELECCIÓN'}</h2>
-  <p>Tu partido obtuvo el ${votos}% de los votos. ${gana?'El pueblo te da otro trienio para seguir trabajando.':'La oposición toma el palacio municipal. Puedes empezar un nuevo trienio desde cero.'}</p>
-  <p style="color:var(--tenue);font-size:13px">Habitantes: ${S.pob} · Caja: ${dinero(S.dinero)} · Edificios: ${S.eds.length}</p>
-  <div class="fila">${gana?'<button class="btn-sol btn" id="eSeg">Siguiente trienio</button>':''}<button class="btn" id="eNueva">Nueva partida</button></div>`);
-  if(gana) $('eSeg').onclick=()=>{S.mes=1;S.eleccion++;S.retos=[];guardar();cerrarModal();hud();efectos();aviso('Comienza tu siguiente trienio');};
-  $('eNueva').onclick=()=>{cerrarModal();iniciar(true);};
+// ---------- puntuación y Salón del legado ----------
+function puntuacion(){
+  const valor=S.eds.reduce((s,e)=>s+(D0(e).costo||0),0);
+  const P=[['Habitantes',S.pob*10],['Aprobación final',S.apr*20],['Obra construida',Math.round(valor/20)],['Caja',Math.round(clamp(S.dinero,-5000,20000)/10)],
+    ['Tecnologías',(S.tec?S.tec.hechas.length:0)*100],['Trienios ganados',(S.eleccion||0)*1500],['Delincuencia baja',Math.round((100-S.deli)*5)]];
+  return {P,total:Math.max(0,P.reduce((s,x)=>s+x[1],0))};
 }
+function leerLegado(){ try{return JSON.parse(lsGet('trienio.legado'))||[];}catch(e){return [];} }
+function tablaLegado(resaltar){ const L=leerLegado().sort((a,b)=>b.puntos-a.puntos).slice(0,10);
+  if(!L.length) return '<p style="color:var(--tenue)">Todavía no hay legados en este equipo.</p>';
+  return `<div class="legado">${L.map((x,n)=>`<div class="lg${x.id===resaltar?' yo':''}"><span class="pos">${n+1}</span><img alt="" src="${retrato(x.ret)}"><span class="q"><b>${esc(x.nombre)}</b><small>${x.trienios} trienio${x.trienios!==1?'s':''} · ${x.pob} habitantes · ${new Date(x.fecha).toLocaleDateString('es-MX')}</small></span><span class="pts">${x.puntos.toLocaleString('es-MX')}</span></div>`).join('')}</div>`; }
+function finDePartida(votos){
+  const {P,total}=puntuacion(); S.terminada=true;
+  const reg={id:Date.now().toString(36),nombre:perfil?perfil.nombre:'Sin nombre',ret:perfil?perfil.ret:1,puntos:total,pob:S.pob,apr:S.apr,trienios:(S.eleccion||0)+1,fecha:Date.now()};
+  const L=leerLegado(); L.push(reg); lsSet('trienio.legado',JSON.stringify(L.sort((a,b)=>b.puntos-a.puntos).slice(0,50)));
+  const lugar=leerLegado().findIndex(x=>x.id===reg.id)+1;
+  // la partida termina: se borra la partida guardada de este perfil
+  const Pf=pref(); for(let k=0;k<3;k++) lsDel(Pf+'save.'+k); lsDel(Pf+'slot');
+  modal(`<h2>PERDISTE LA ELECCIÓN</h2>
+  <p>Tu partido obtuvo el ${votos}% de los votos y la oposición toma el palacio municipal. Tu gobierno termina aquí, pero tu legado queda registrado.</p>
+  <div class="cols"><div class="cuenta"><span class="t">Tu puntuación</span>${P.map(([n,v])=>`<span>${n}</span><span>${v.toLocaleString('es-MX')}</span>`).join('')}<span class="tot">Total</span><span class="tot" style="color:var(--sol)">${total.toLocaleString('es-MX')}</span></div>
+  <div><div class="cuenta"><span class="t">Salón del legado · lugar ${lugar}</span></div>${tablaLegado(reg.id)}</div></div>
+  <div class="fila"><button class="btn" id="ePort">Ir a la portada</button><button class="btn-sol btn" id="eNueva">Nueva partida</button></div>`);
+  $('eNueva').onclick=()=>{cerrarModal();iniciar(true);};
+  $('ePort').onclick=()=>{cerrarModal();volverPortada();};
+}
+function verLegado(){ modal(`<h2>SALÓN DEL LEGADO</h2><p style="font-size:14px">Las mejores administraciones jugadas en este equipo. La puntuación se registra cuando una partida termina al perder la elección.</p>${tablaLegado()}<div class="fila"><button class="btn-sol btn" id="mCerrar">Volver</button></div>`); $('mCerrar').onclick=cerrarModal; }
 $('btnMenu').onclick=()=>{
   modal(`<h2>MENÚ</h2>${perfil?`<div class="perfiles"><div class="pf" aria-current="true"><img alt="" src="${retrato(perfil.ret)}"><span class="q"><b>${esc(perfil.nombre)}</b><small>Perfil en este equipo</small></span><button class="btn borrar" id="mPerfil">Cambiar perfil</button></div></div>`:''}<p>La partida se guarda sola cada mes y al construir.</p>
   <div class="cuenta"><span class="t">Cómo jugar</span></div>
-  <p style="font-size:14px">Arrastra para moverte y pellizca para acercar. Elige una pieza en el panel, toca el mapa para ubicarla y confirma con <b>Construir</b> o tocando dos veces el mismo lugar. Todo edificio necesita una calle al lado. Cubre las casas con salud, escuela y seguridad para subir la aprobación. La calle (en Infraestructura pública o con el botón Calle) se traza arrastrando, se aprueba con ✓ y Salir te regresa al mapa. El menú se divide en Vivienda, Infraestructura pública (calles, autobús, presa, servicios), Infraestructura social (escuela, salud, universidad, deporte), Producción, Comercio y turismo, e Industria. Lo que tiene candado se desbloquea en <b>Investigar</b>: cada mes llegan puntos (más con una universidad de investigación) y tú eliges qué tecnología sigue. Las fábricas necesitan egresados de la universidad. En <b>Gobierno</b> repartes cada enero el fondo federal entre 12 ramos (deporte, seguridad, cultura, tecnología, salud, campo, turismo, comercio, ganadería, vivienda, desarrollo social y juventud), ajustas el predial, las licencias y el hospedaje, y activas programas sociales. La presa solo va en el embalse de la sierra y riega una franja de 20 casillas hasta el mar. Las minas van sobre el monte: el oro paga mucho cada 6 meses, la plata cada 4, el cobre cada 2 y el zinc poco pero cada mes; las de oro y plata atraen a la maña. En Producción construyes parcelas y eliges qué sembrar; cada cultivo tiene su temporada. En Infraestructura pública compras rutas de autobús: dos paradas (A y B) y, por 20% más cada una, paradas C, D, E…; más autobuses por ruta dan mejor servicio y suben la aprobación. El tren de carga baja de la sierra hasta la estación junto a la playa, carga y regresa; en Comercio puedes mandar tus productos en él. Con <b>↻ Mapa</b> giras la vista para ver lo que tapan los edificios. Cada mes sacas una carta: el 60% son buenas y el dado (1·1·1·2·2·3) multiplica su efecto. En el mes 36 llega la elección.</p>
+  <details class="desg" open><summary>Tu meta</summary><p style="font-size:14px">Tienes 36 meses para hacer crecer tu municipio. Al empezar eliges a tu alcalde; cada personaje del partido tiene su propia ventaja. En el mes 30 arranca la campaña contra El Güero: eliges candidato (reelección una sola vez o alguien más del partido), gastas el fondo de campaña en mitines, radio, redes, colonias y un debate, y en el mes 36 se vota. La aprobación ayuda mucho, pero sin campaña puedes perder. Quien se reelige descansa un trienio y luego puede volver con derecho a otra reelección. Si pierdes, la partida termina y tu puntuación queda en el Salón del legado.</p></details>
+  <details class="desg"><summary>Moverte y construir</summary><p style="font-size:14px">Arrastra para moverte y pellizca para acercar. El panel <b>CONSTRUIR</b> de la derecha tiene seis pestañas; elige una pieza, toca el mapa y confirma con <b>Construir</b> o tocando dos veces el mismo lugar. Cada pieza dice su tamaño y lo que necesita. Todo edificio necesita una calle al lado: trázala con el botón <b>Calle</b> arrastrando, apruébala con ✓ y sal con Salir. Desde la ficha de un edificio puedes <b>Mover</b> (20% del precio) o <b>Demoler</b> (recuperas 25%). <b>↻ Mapa</b> gira la vista y <b>Capas</b> muestra el alcance de cada servicio.</p></details>
+  <details class="desg"><summary>Gente y aprobación</summary><p style="font-size:14px">La gente llega si hay casas libres y empleo. La aprobación sube si las casas tienen salud, escuela, seguridad, diversión, abasto, deporte y agua cerca, y baja con el desempleo, los malos olores, la delincuencia y la maña.</p></details>
+  <details class="desg"><summary>Dinero</summary><p style="font-size:14px">Toca la <b>Caja</b> para ver de dónde entra y a dónde se va. Entran participaciones, predial y lo que dejan los negocios; salen mantenimiento, calles, autobuses, programas y créditos.</p></details>
+  <details class="desg"><summary>Gobierno</summary><p style="font-size:14px">En <b>Gobierno</b> repartes cada enero el fondo federal entre 12 ramos, ajustas impuestos, activas programas sociales, pides crédito y mandas embarques por carretera, tren o barco.</p></details>
+  <details class="desg"><summary>Producción e investigación</summary><p style="font-size:14px">Cada cultivo tiene su temporada. La presa solo va en el embalse de la sierra y riega una franja de 20 casillas hasta el mar. Las minas van sobre el monte: el oro paga cada 6 meses, la plata cada 4, el cobre cada 2 y el zinc cada mes. Lo que tiene candado se desbloquea en <b>Investigar</b>; una universidad de investigación da más puntos y las fábricas necesitan sus egresados.</p></details>
+  <details class="desg"><summary>Cartas del mes</summary><p style="font-size:14px">Cada mes sacas una carta; el dado (1·1·1·2·2·3) multiplica su efecto. Las de mano se guardan en <b>Cartas</b>. Mientras mejor vas, más salen cartas malas y más probable es una catástrofe: terremoto, inundación del río o huracán. Los edificios dañados dejan de funcionar hasta que los repares desde su ficha.</p></details>
   <div class="fila"><button class="btn" id="mNueva">Nueva partida</button><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
   $('mCerrar').onclick=cerrarModal;
   if($('mPerfil')) $('mPerfil').onclick=()=>{guardar(); cerrarModal(); volverPortada(); elegirPerfil();};
@@ -2264,6 +2409,127 @@ const PERSONAJES=[null,
  {nom:'Rodrigo "El Güero" Arce Lizárraga',rol:'Oposición',fig:18}];
 const RET_ARCH=[0,10,9,8,7,6,5,4,1,3,2];   // personaje → archivo de retrato
 const retrato=n=>`sprites/ret-r${RET_ARCH[n||1]}.png`;
+// ---------- fase 4: el partido, la dificultad, las catástrofes, la campaña y la elección ----------
+// alcaldes posibles del partido (El Güero, el 10, es la oposición) y su ventaja propia
+const PARTIDO=[1,2,3,4,5,6,7,8,9];
+const PERK={1:'Ingeniero: las obras cuestan 5% menos',2:'Fiestero: aprobación +2 y la diversión pesa el doble',3:'Del campo: agricultura +10%',4:'Pescador: pesca y mar +10%',
+ 5:'Empresaria: comercio y turismo +10%',6:'Sindicalista: el desempleo pesa 20% menos',7:'Sacerdote: delincuencia −5',8:'Doctora: aprobación +3 si hay centro de salud',9:'Enlace federal: participaciones +8%'};
+const perk=n=>!!S&&S.alcalde===n;
+const corto=n=>PERSONAJES[n].nom.replace(/^(Ing\.|Lic\.|Dra\.|Don|Doña|Padre) /,'').split(' ').slice(0,2).join(' ');
+function quitarAlcaldeCaminante(){ for(let q=agentes.length-1;q>=0;q--) if(agentes[q].alc) agentes.splice(q,1); }
+function trienioAct(){return (S.eleccion||0)+1;}
+// elegir personaje: al iniciar partida o como candidato
+function elegirPersonaje({titulo,texto,lista,motivo,etiqueta,obligado,inicial}){ return new Promise(fin=>{
+  let sel=(inicial&&!motivo(inicial))?inicial:(lista.find(n=>!motivo(n))||lista[0]);
+  const pinta=()=>{ const P=PERSONAJES[sel], no=motivo(sel);
+    modal(`<h2>${titulo}</h2><p style="font-size:14px">${texto}</p>
+     <div class="alcaldes">${lista.map(n=>{const m=motivo(n); return `<button data-f="${n}" aria-pressed="${n===sel}" ${m?'style="opacity:.45"':''} title="${esc(PERSONAJES[n].nom)}"><img alt="" src="${retrato(n)}"><span>${esc(corto(n))}</span>${etiqueta&&etiqueta(n)?`<span style="color:var(--sol)">${etiqueta(n)}</span>`:''}</button>`;}).join('')}</div>
+     <div class="mini" style="flex-direction:row;gap:10px;align-items:center"><img alt="" src="${retrato(sel)}" style="width:56px;height:56px;object-fit:cover"><span style="display:flex;flex-direction:column;gap:2px"><b>${esc(P.nom)}</b><span>${esc(P.rol)}</span><span style="color:var(--bien)">${PERK[sel]}</span>${no?`<span style="color:var(--mal)">${no}</span>`:''}</span></div>
+     <div class="fila">${obligado?'':'<button class="btn" id="pjNo">Cancelar</button>'}<button class="btn-sol btn" id="pjOk" ${no?'disabled':''}>Elegir a ${esc(corto(sel))}</button></div>`);
+    $('modal').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{sel=+b.dataset.f; pinta();});
+    if($('pjNo')) $('pjNo').onclick=()=>{cerrarModal(); fin(null);};
+    $('pjOk').onclick=()=>{cerrarModal(); fin(sel);}; };
+  pinta(); }); }
+async function elegirAlcaldeInicial(){
+  const n=await elegirPersonaje({titulo:'¿QUIÉN SERÁ TU ALCALDE?',texto:'Elige al presidente municipal de tu partido. Cada uno tiene su propia ventaja durante su gobierno.',lista:PARTIDO,motivo:()=>'',obligado:true});
+  S.alcalde=n; S.hist={[n]:{cons:1,ultimo:1}}; hud(); quitarAlcaldeCaminante(); reponerAgentes(); guardar(); }
+// dificultad: mientras mejor vas, más pesan las cartas malas y más probable es una catástrofe
+function exito(){ return clamp((S.apr-50)/35,0,1)*.6+clamp(S.dinero/2500,0,1)*.4; }
+function pesosCartas(){ const x=exito(), malas=['retencion','peticion','contratiempo'];
+  return PESOS.map(([c,w])=>[c, malas.includes(c)?w*(1+1.2*x):w*(1-.4*x)]); }
+function probCatastrofe(){ if(S.mes<4) return 0; const m=((S.mes-1)%12)+1; return .03+.08*exito()+((m>=8&&m<=10)?.03:0); }
+// edificios dañados: dejan de funcionar hasta repararlos
+function dañar(lista,n){ const c=lista.filter(e=>!e.dano&&e.t!=='palacio'&&e.t!=='presa'&&e.t!=='parcela'); const out=[];
+  for(let k=0;k<n&&c.length;k++){ const e=c.splice(Math.floor(Math.random()*c.length),1)[0]; e.dano=true; out.push(nombreDe(e)); } limpiarCacheD(); return out; }
+const costoReparar=e=>Math.max(10,Math.round((D0(e).costo||0)*.3));
+const cercaRio=(e,r)=>{const c=centro(e); for(let y=Math.max(0,Math.floor(c[1]-r-2));y<=Math.min(N-1,c[1]+r+2);y++)for(let x=Math.max(0,Math.floor(c[0]-r-2));x<=Math.min(N-1,c[0]+r+2);x++) if(RIO[idx(x,y)]&&dist([x+.5,y+.5],c)<=r+1.5) return true; return false;};
+const CATAS=[
+ {id:'k1',cat:'catastrofe',nom:'Terremoto',txt:'Un sismo sacude la región a media noche.',ef:'Se dañan 2 × dado edificios: dejan de funcionar hasta repararlos.',
+  ap:d=>{const l=dañar(S.eds,2*d); S.apr=clamp(S.apr-d,1,99); return l.length?`Se dañaron: ${l.join(', ')}. Repáralos desde su ficha. Aprobación −${d}.`:'Por suerte no hubo daños.';}},
+ {id:'k2',cat:'catastrofe',nom:'Se desborda el río',txt:'Las lluvias llenan el cauce y el agua sale a las parcelas.',ef:'Edificios junto al río se dañan y los campos rinden menos 1 + dado meses. La presa ayuda a contenerlo.',
+  ap:d=>{const presa=S.eds.some(e=>e.t==='presa'); const n=Math.round((presa?1:2)*d); const l=dañar(S.eds.filter(e=>cercaRio(e,2)),n);
+   S.efectos.push({tipo:'inundacion',nom:'Inundación',meses:1+d}); return `${presa?'La presa contuvo parte del agua. ':''}${l.length?`Se dañaron: ${l.join(', ')}. `:''}Los campos rinden 60% durante ${1+d} meses.`;}},
+ {id:'k3',cat:'catastrofe',nom:'Huracán categoría 4',txt:'El huracán toca tierra frente al municipio.',ef:'La costa sin ingresos 1 + dado meses y se dañan dado edificios de la costa.',
+  ap:d=>{const cost=S.eds.filter(e=>{const x=D(e); return x.suelo||x.turismo||e.t==='congeladora'||e.t==='granja';}); const l=dañar(cost.length?cost:S.eds,d);
+   S.efectos.push({tipo:'huracan',nom:'Huracán',meses:1+d}); S.apr=clamp(S.apr-d,1,99); return `La costa no produce por ${1+d} meses.${l.length?` Se dañaron: ${l.join(', ')}.`:''}`;}}];
+// campaña: arranca en el mes 30 con el candidato del partido
+const ACC=[
+ ['mitin','Mitin en la plaza',40,4,'Banda, templete y tortas.'],
+ ['radio','Spots en la radio',55,5,'Suenan en la Regional todo el mes.'],
+ ['redes','Campaña en redes',30,3,'Videos, transmisiones y memes.'],
+ ['colonias','Recorrido por colonias',25,'col','Casa por casa: +1 por cada 4 casas (hasta +6).'],
+ ['bardas','Bardas y lonas',20,2,'Que se vea el nombre por todos lados.'],
+ ['recaudar','Comida de recaudación',0,0,'Con militantes y simpatizantes: +$90 mil al fondo.'],
+ ['debate','Debate contra El Güero',0,'dado','Una sola vez, desde el mes 34. Arriesgado: el dado decide.']];
+function puntosAcc(a){ if(a[3]==='col') return Math.min(6,Math.max(1,Math.round(S.eds.filter(e=>D(e).casas).length/4))); return a[3]; }
+function votacion(suerte){ const c=S.campana, reel=c.cand===S.alcalde;
+  let tu=S.apr*(reel?.7:.6)+15+c.pts+(reel?3:2), rival=(100-S.apr)*.5+25+c.rival;
+  if(suerte){ tu*=1+(Math.random()-.5)*.16; rival*=1+(Math.random()-.5)*.16; }
+  return Math.round(clamp(tu/(tu+rival)*100,5,95)); }
+function elegibles(n){ const h=(S.hist||{})[n]||{}, t=trienioAct();
+  if(n===S.alcalde) return (h.cons||1)>=2?'Ya se reeligió: debe descansar un trienio':'';
+  if(h.ultimo!=null&&h.ultimo>=t) return 'Gobernó este trienio';
+  return ''; }
+async function iniciarCampana(){
+  const reel=elegibles(S.alcalde)==='';
+  const n=await elegirPersonaje({titulo:'¿QUIÉN SERÁ EL CANDIDATO?',obligado:true,lista:PARTIDO,motivo:elegibles,inicial:S.alcalde,etiqueta:k=>k===S.alcalde?'Reelección':'',
+    texto:`Empieza la campaña: tienes 7 meses, de junio a diciembre del año 3, y la elección es al cerrar diciembre. ${reel?'Puedes ir a la reelección (una sola vez) o postular a otra persona del partido.':'Tu alcalde ya se reeligió y debe descansar un trienio: elige a otra persona del partido.'} Quien reelige suma la experiencia; una cara nueva depende un poco menos de la aprobación.`});
+  S.campana={cand:n,fondo:Math.round(150+S.apr*3),pts:0,rival:Math.round(8+Math.max(0,S.apr-50)*.2),hechas:[],mesH:S.mes,debate:false,enc:null};
+  guardar(); efectos(); await campana(); }
+function campana(){ return new Promise(fin=>{
+  const c=S.campana; if(!c) return fin();
+  if(c.mesH!==S.mes){ c.hechas=[]; c.mesH=S.mes; }
+  if(!c.enc||c.enc.mes!==S.mes) c.enc={mes:S.mes,v:clamp(votacion(false)+Math.round((Math.random()-.5)*8),5,95)};
+  const pinta=()=>{ const P=PERSONAJES[c.cand], faltan=37-S.mes;
+    modal(`<h2>CAMPAÑA · ${esc(corto(c.cand)).toUpperCase()} VS EL GÜERO</h2>
+     <div class="cols"><div class="mini" style="flex-direction:row;gap:10px;align-items:center"><img alt="" src="${retrato(c.cand)}" style="width:52px;height:52px;object-fit:cover"><span style="display:flex;flex-direction:column"><b>${esc(P.nom)}</b><span>${c.cand===S.alcalde?'Va por la reelección':'Candidato del partido'}</span></span></div>
+     <div class="mini" style="flex-direction:row;gap:10px;align-items:center"><img alt="" src="${retrato(10)}" style="width:52px;height:52px;object-fit:cover"><span style="display:flex;flex-direction:column"><b>${esc(PERSONAJES[10].nom)}</b><span>Oposición · su campaña crece cada mes</span></span></div></div>
+     <div class="cuenta"><span>Encuesta de este mes (±4)</span><span><b style="color:${c.enc.v>=50?'var(--bien)':'var(--mal)'}">${c.enc.v}% contra ${100-c.enc.v}%</b></span>
+      <span>Fuerza de tu campaña / la del Güero</span><span>${Math.round(c.pts)} / ${Math.round(c.rival)}</span><span>Fondo de campaña del partido</span><span><b>${dinero(c.fondo)}</b></span><span>Faltan</span><span>${faltan} mes${faltan!==1?'es':''} · la aprobación también cuenta</span></div>
+     <div class="mano">${ACC.map(a=>{const [k,n,cst,,txt]=a, ya=c.hechas.includes(k), deb=k==='debate'&&(c.debate||S.mes<34), pts=puntosAcc(a);
+       const dis=ya||deb||c.fondo<cst; return `<div class="mini"><b>${n}</b><span>${txt}</span><span>${cst?dinero(cst)+' · ':''}${k==='recaudar'?'':k==='debate'?'−3, +4 o +9':'+'+pts+' de campaña'}</span>
+       <button class="btn${dis?'':' btn-sol'}" data-acc="${k}" ${dis?'disabled':''}>${ya?'Hecho este mes':k==='debate'&&c.debate?'Ya hubo debate':k==='debate'&&S.mes<34?'Desde el mes 34':c.fondo<cst?'Sin fondo':'Hacerlo'}</button></div>`;}).join('')}</div>
+     <div class="resultado" id="resu" style="align-self:center"></div>
+     <div class="fila"><button class="btn-sol btn" id="cmOk">Listo</button></div>`);
+    $('modal').querySelectorAll('[data-acc]').forEach(b=>b.onclick=async()=>{ const a=ACC.find(x=>x[0]===b.dataset.acc), k=a[0];
+      c.fondo-=a[2]; c.hechas.push(k);
+      if(k==='recaudar'){ c.fondo+=90; aviso('Entraron $90 mil al fondo de campaña'); }
+      else if(k==='debate'){ c.debate=true; modal(`<h2>DEBATE</h2><div class="mesa">${htmlDado()}</div><div class="resultado" id="resu"></div><div class="fila" id="acc"><button class="btn-sol btn" id="bTirar">Tirar dado</button></div>`); caraDado($('dado'),1);
+        await new Promise(r=>$('bTirar').onclick=async()=>{ $('bTirar').disabled=true; const d=await tirarDado(); const v=[-3,4,9][d-1]; c.pts+=v;
+          $('resu').innerHTML=`Dado: <b>${d}</b>. ${v<0?'El Güero te dejó sin palabras: −3 de campaña.':v<9?'Buen debate: +4 de campaña.':'¡Lo barriste! +9 de campaña.'}`; $('acc').innerHTML='<button class="btn-sol btn" id="bOk">Continuar</button>'; $('bOk').onclick=r; }); }
+      else { const p=puntosAcc(a); c.pts+=p; aviso(`${a[1]}: +${p} de campaña`); }
+      c.enc.v=clamp(votacion(false)+Math.round((Math.random()-.5)*8),5,95); guardar(); efectos(); pinta(); });
+    $('cmOk').onclick=()=>{cerrarModal(); efectos(); fin();}; };
+  pinta(); }); }
+function avanzarCampana(){ const c=S.campana; if(!c) return; c.rival+=2+Math.max(0,S.apr-55)*.15; c.pts*=.97; }
+// noche electoral
+function eleccion(){
+  if(!S.campana){ S.campana={cand:S.alcalde,fondo:0,pts:0,rival:14,hechas:[],mesH:S.mes,debate:false}; }
+  const c=S.campana, v=votacion(true), gana=v>50||(v===50&&Math.random()<.5);
+  modal(`<h2>NOCHE ELECTORAL</h2><p>Se cuentan las casillas…</p>
+   <div class="conteo"><div class="cf"><img alt="" src="${retrato(c.cand)}"><b>${esc(corto(c.cand))}</b><span class="br"><i id="b1"></i></span><span id="p1">0%</span></div>
+   <div class="cf"><img alt="" src="${retrato(10)}"><b>El Güero</b><span class="br"><i id="b2" style="background:#8C3B2A"></i></span><span id="p2">0%</span></div></div>
+   <div class="fila" id="acc"></div>`);
+  const t0=performance.now(), dur=3200;
+  const paso=()=>{ const k=Math.min(1,(performance.now()-t0)/dur), ruido=(1-k)*Math.sin(k*20)*6;
+    const a=clamp(v+ruido,0,100)*k, b=(100-clamp(v+ruido,0,100))*k; $('b1').style.width=a+'%'; $('b2').style.width=b+'%';
+    $('p1').textContent=Math.round(a)+'%'; $('p2').textContent=Math.round(b)+'%';
+    if(k<1) requestAnimationFrame(paso); else setTimeout(()=>resultadoEleccion(v,gana),500); };
+  requestAnimationFrame(paso); }
+function resultadoEleccion(v,gana){
+  const c=S.campana, t=trienioAct();
+  if(!gana){ S.campana=null; return finDePartida(v); }
+  const reel=c.cand===S.alcalde; S.hist=S.hist||{};
+  if(reel) S.hist[c.cand]=S.hist[c.cand]||{cons:1}, S.hist[c.cand].cons=(S.hist[c.cand].cons||1)+1; else S.hist[c.cand]={cons:1};
+  S.hist[c.cand].ultimo=t+1; const antes=S.alcalde; S.alcalde=c.cand;
+  modal(`<h2>¡GANÓ ${esc(corto(c.cand)).toUpperCase()}!</h2>
+   <p>El partido obtuvo el ${v}% de los votos. ${reel?`${esc(PERSONAJES[c.cand].nom)} gobernará un segundo trienio. Será su última reelección: después tendrá que descansar un trienio.`:`${esc(PERSONAJES[c.cand].nom)} toma el palacio municipal${antes?` y ${esc(corto(antes))} deja el cargo`:''}.`}</p>
+   <p style="font-size:14px;color:var(--bien)">${PERK[c.cand]}</p>
+   <p style="color:var(--tenue);font-size:13px">Habitantes: ${S.pob} · Caja: ${dinero(S.dinero)} · Edificios: ${S.eds.length} · Puntuación hasta hoy: ${puntuacion().total.toLocaleString('es-MX')}</p>
+   <div class="fila"><button class="btn-sol btn" id="eSeg">Empezar el trienio ${t+1}</button></div>`);
+  $('eSeg').onclick=()=>{ S.mes=1; S.eleccion=(S.eleccion||0)+1; S.retos=[]; S.campana=null; S.ramosAnio=0; guardar(); cerrarModal(); hud(); efectos(); quitarAlcaldeCaminante(); reponerAgentes();
+    gobierno('fondo',true).then(()=>aviso(`Comienza el trienio ${t+1}`,3000)); };
+}
 let PERFILES=[], perfil=null;
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -2331,7 +2597,7 @@ function iniciar(nueva){
   if(nueva){occ=new Int32Array(N*N); nuevaPartida(); guardar();}
   $('portada').hidden=true; document.body.classList.remove('en-portada'); ponerModo('ver'); cat='vivienda'; pestanas(); lista(); recalcular(); hud();
   cam.z=.55; centrarEn(19,18); agentes.length=0; reponerAgentes(); efectos(); pedir();
-  if(nueva) setTimeout(()=>gobierno('fondo',true).then(()=>aviso('Construye casas junto a las calles y negocios para dar empleo',4200)),400);
+  if(nueva) setTimeout(()=>elegirAlcaldeInicial().then(()=>gobierno('fondo',true)).then(()=>aviso('Construye casas junto a las calles y negocios para dar empleo',4200)),400);
   if(Radio.quiereSonar()&&!Radio.on) try{Radio.encender();}catch(e){}
 }
 function cargarSprites(){
@@ -2351,7 +2617,8 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+$('pLegado').onclick=()=>verLegado();
 $('pCont').onclick=()=>conPerfil(()=>{ guardada=cargar(); if(!guardada) return refrescarPortada(); S=guardada; completarEstado(); reconstruirOcc(); iniciar(false);});
 $('pNueva').onclick=()=>conPerfil(()=>{ if(cargar()){ modal(`<h2>NUEVA PARTIDA</h2><p>${esc(perfil.nombre)}, ya tienes una partida en ${detPartida(cargar())}. Si empiezas otra, se reemplaza.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Empezar de nuevo</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>{cerrarModal();iniciar(true);}; } else iniciar(true); });
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&S&&$('portada').hidden) guardar();});
