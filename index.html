@@ -376,7 +376,7 @@ const DEF={
  iglesia:{nom:'Parroquia de San Isidro',cat:'social',spr:'edif-iglesia-a',A:3,B:3,costo:150,mant:0,empleos:2,unico:true,lote:'plaza',fe:true},
  panteon:{nom:'Panteón',cat:'publica',spr:'edif-panteon-a',A:3,B:3,costo:50,mant:1,empleos:3,unico:true},
  estadio:{nom:'Estadio El Diamante',cat:'social',spr:'edif-estadio-a',A:6,B:6,costo:550,mant:8,empleos:20,ingreso:6,serv:'diversion',radio:30,unico:true},
- bodega:{nom:'Bodega de granos',cat:'produccion',spr:'edif-bodega-a',A:2,B:4,costo:180,mant:2,empleos:15,ingreso:8,campo:true,lote:'ind'},
+ bodega:{nom:'Bodega de granos',cat:'produccion',spr:'edif-bodega-a',A:2,B:3,costo:180,mant:2,empleos:15,ingreso:8,campo:true,lote:'ind'},
  empacadora:{nom:'Empacadora',cat:'industria',spr:'edif-empacadora-a',A:6,B:2,costo:420,mant:4,empleos:80,ingreso:22,campo:true,lote:'ind'},
  presa:{nom:'Presa',cat:'publica',spr:'edif-presa-a',trasera:'edif-presa-b',A:5,B:3,costo:750,mant:6,empleos:10,presa:true,desc:'Va en el embalse de la sierra. Riega una franja de 20 casillas desde la presa hasta el mar. Máximo 3 en todo el municipio.'},
  mina:{nom:'Mina',cat:'produccion',spr:'edif-mina-oro',A:3,B:3,costo:220,mant:2,empleos:18,mina:true,lote:'roca',desc:'Va sobre el monte. Elige el mineral: oro, plata, cobre o zinc.'},
@@ -1000,6 +1000,7 @@ function texDe(i,j,a,b){
     if(e.t==='presa') return [TEX[(t==='monte'?'temporal':t)+v]||TEX['temporal'+v],0];
     if(e.t==='parcela'&&brote(e)){const tm=TEX['cult_'+e.cult+'0']; return [tm,tm.alto];}
     const l=D(e).lote||'patio'; return [TEX['lote-'+l],0];}
+  if(t==='tierra'&&j<N){ for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){ const x=i+dx,y=j+dy; if(!dentro(x,y)) continue; const o2=occ[idx(x,y)]; if(o2){ const e2=S.eds.find(z=>z.id===o2); if(e2&&(e2.t==='mina'||e2.t==='minaind')) return [TEX['lote-roca'],0]; } } }
   if(t==='monte'){ const h=((i*73856093)^(j*19349663))>>>0; const n=j<40?(h%3===0?'monte-sierra':'monte-verde'):(h%7===0?'monte-sierra':(h%5<2?'monte-verde':'monte-desierto')); const im=IMG[n]; if(im) return [im,im.height-64]; return [TEX['monte'+v],40]; }
   return [TEX[t+v],0];
 }
@@ -1042,7 +1043,7 @@ function rangoVisible(){
   return [Math.max(0,Math.min(...is)-2),Math.min(N-1,Math.max(...is)+2),Math.max(0,Math.min(...js)-2),Math.min(N-1,Math.max(...js)+8)];
 }
 // imágenes más anchas que su huella: cuánto se recorren a la izquierda
-const SPR_DX={'edif-bodega-a':-36};
+const SPR_DX={};
 // geometría de un edificio en la vista actual: qué imagen, si va espejada y dónde
 function geo(e){
   const d=D(e); if(!d.spr) return null; const [A,B]=huella(d,e.f); const c=cajaV(e.i,e.j,A,B); const Av=c.i1-c.i0;
@@ -1056,7 +1057,7 @@ function geo(e){
   return {im,nombre,mir,x:bx-Av*64+(SPR_DX[nombre]||0),y:by-im.height,c};
 }
 // letreros: zona del letrero en cada imagen (-a), texto original y color de letra. Muestran el nombre que le pongas al edificio
-const LETRERO={"aserradero":[[66,196],[242,281],16,"ASERRADERO EL PINABETE","#814632"],"bodega":[[61,226],[219,305],18,"BODEGA LA ESPERANZA","#864834"],"cafe":[[68,126],[98,120],15,"CAFÉ","#f4dcb0"],"clinica":[[50,120],[125,156],11,"Centro de salud","#f2f2ea"],"comandancia":[[64,126],[132,161],9,"COMANDANCIA","#2f4a86"],"congeladora":[[27,219],[217,312],15,"CONGELADORA MAR DE CORTÉS","#a53e37"],"empacadora":[[28,219],[188,297],15,"EMPACADORA VALLE VERDE","#a53e37"],"engorda":[[81,240],[236,314],12,"CORRAL LOS ÁLAMOS","#3a6a3c"],"escuela":[[28,226],[202,310],15,"ESC. PRIM. NIÑOS HÉROES","#a53e37"],"estadio":[[131,482],[284,557],16,"ESTADIO EL DIAMANTE","#a53e37"],"hotel":[[155,218],[306,291],17,"HOTEL PLAYA DORADA","#6e402e"],"iglesia":[[89,326],[171,366],15,"SAN ISIDRO","#904535"],"kiosco":[[19,206],[135,264],13,"PLAZUELA LOS ÁLAMOS","#a53e37"],"mercado":[[120,241],[213,277],9,"MERCADO MUNICIPAL","#b45f54"],"minisuper":[[26,189],[118,227],10,"MINI SÚPER","#c1534b"],"muelle":[[21,369],[203,463],11,"COOP. PESCADORES UNIDOS","#a53e37"],"palacio":[[39,223],[163,284],11,"H. AYUNTAMIENTO","#a23831"],"palapa":[[30,191],[123,243],10,"MARISCOS LA GÜERA","#a53e37"],"presa":[[31,206],[183,273],16,"PRESA EL MEZQUITAL","#6d4735"],"rastro":[[21,161],[139,220],12,"RASTRO MUNICIPAL","#598760"],"sushi":[[41,187],[66,199],14,"KIKO","#f3e2d0"],"veterinaria":[[10,151],[60,172],18,"VETERINARIA","#3b5a96"],"agro":[[125,282],[315,371],14,"AGROINDUSTRIAL DEL VALLE","#34562c"],"ecoturismo":[[142,188],[173,188],13,"ECO","#5f6037"],"agua":[[178,204],[276,238],29,"JAPAM","#dbe3f1"],"fabrica-alimentos":[[178,230],[276,265],28,"ALIMENTOS","#ddeae0"],"fabrica-textil":[[178,230],[276,265],28,"TEXTIL","#ebe3ef"],"fabrica-materiales":[[178,230],[276,265],28,"MATERIALES","#f2e6dd"],"fabrica-ensambladora":[[178,230],[276,265],28,"ENSAMBLADORA","#dae2f0"],"prision":[[35,113],[108,145],23,"PRISIÓN","#ece6dc"]};
+const LETRERO={"aserradero":[[66,196],[242,281],16,"ASERRADERO EL PINABETE","#814632"],"bodega":[[33.9,72.8],[173.8,137.8],14.2,"BODEGA LA ESPERANZA","#864834"],"cafe":[[68,126],[98,120],15,"CAFÉ","#f4dcb0"],"clinica":[[50,120],[125,156],11,"Centro de salud","#f2f2ea"],"comandancia":[[64,126],[132,161],9,"COMANDANCIA","#2f4a86"],"congeladora":[[27,219],[217,312],15,"CONGELADORA MAR DE CORTÉS","#a53e37"],"empacadora":[[28,219],[188,297],15,"EMPACADORA VALLE VERDE","#a53e37"],"engorda":[[81,240],[236,314],12,"CORRAL LOS ÁLAMOS","#3a6a3c"],"escuela":[[28,226],[202,310],15,"ESC. PRIM. NIÑOS HÉROES","#a53e37"],"estadio":[[131,482],[284,557],16,"ESTADIO EL DIAMANTE","#a53e37"],"hotel":[[155,218],[306,291],17,"HOTEL PLAYA DORADA","#6e402e"],"iglesia":[[89,326],[171,366],15,"SAN ISIDRO","#904535"],"kiosco":[[19,206],[135,264],13,"PLAZUELA LOS ÁLAMOS","#a53e37"],"mercado":[[120,241],[213,277],9,"MERCADO MUNICIPAL","#b45f54"],"minisuper":[[26,189],[118,227],10,"MINI SÚPER","#c1534b"],"muelle":[[21,369],[203,463],11,"COOP. PESCADORES UNIDOS","#a53e37"],"palacio":[[39,223],[163,284],11,"H. AYUNTAMIENTO","#a23831"],"palapa":[[30,191],[123,243],10,"MARISCOS LA GÜERA","#a53e37"],"presa":[[31,206],[183,273],16,"PRESA EL MEZQUITAL","#6d4735"],"rastro":[[21,161],[139,220],12,"RASTRO MUNICIPAL","#598760"],"sushi":[[41,187],[66,199],14,"KIKO","#f3e2d0"],"veterinaria":[[10,151],[60,172],18,"VETERINARIA","#3b5a96"],"agro":[[125,282],[315,371],14,"AGROINDUSTRIAL DEL VALLE","#34562c"],"ecoturismo":[[142,188],[173,188],13,"ECO","#5f6037"],"agua":[[178,204],[276,238],29,"JAPAM","#dbe3f1"],"fabrica-alimentos":[[178,230],[276,265],28,"ALIMENTOS","#ddeae0"],"fabrica-textil":[[178,230],[276,265],28,"TEXTIL","#ebe3ef"],"fabrica-materiales":[[178,230],[276,265],28,"MATERIALES","#f2e6dd"],"fabrica-ensambladora":[[178,230],[276,265],28,"ENSAMBLADORA","#dae2f0"],"prision":[[35,113],[108,145],23,"PRISIÓN","#ece6dc"]};
 function dibujarLetrero(e,q,sx,sy){
   const m=/^edif-(.+)-([af])$/.exec(q.nombre); if(!m) return; const L=LETRERO[m[1]]; if(!L) return;
   const z=cam.z, [p1,p2,h,txt,col]=L, W=q.im.width, esp=(m[2]==='f')!==!!q.mir;
