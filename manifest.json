@@ -8,7 +8,6 @@
  "scope": "./",
  "display": "standalone",
  "display_override": [
-  "fullscreen",
   "standalone"
  ],
  "orientation": "landscape",
@@ -33,5 +32,11 @@
    "type": "image/png",
    "purpose": "maskable"
   }
+ ],
+ "screenshots": [],
+ "categories": [
+  "games",
+  "simulation",
+  "strategy"
  ]
 }

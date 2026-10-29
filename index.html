@@ -49,6 +49,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 #hud .mes{margin-left:auto;text-align:right;line-height:1.1}
 #hud .mes b{font-size:14px} #hud .mes small{display:block;font-size:11px;color:var(--tenue)}
 #btnMenu{width:38px;min-height:34px;padding:0}
+#hud .badge{display:inline-block;min-width:16px;height:16px;line-height:16px;margin-left:5px;background:var(--sol);color:var(--suelo);font-size:10px;border-radius:8px;padding:0 4px;vertical-align:1px}
 #hud .hb{min-height:32px;padding:0 10px;font-size:13px;flex:none}
 #hud .stat.clic{cursor:pointer;border-bottom:2px dotted var(--borde)}
 .chips .opc{cursor:pointer;text-align:left;font-family:var(--f-body);color:var(--crema)} .chips .opc[aria-pressed="true"]{border-color:var(--sol);background:#4A3A1E;color:var(--sol)} .chips .opc:disabled{opacity:.45;cursor:not-allowed}
@@ -214,19 +215,25 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
 @media (max-width:980px){#hud .logo,#hud .stat small.et{display:none} #hud{gap:10px} .barra{width:44px}}
 @media (max-height:420px){#herr button{min-width:38px;height:38px;font-size:12px;padding:0 7px} #herr{max-width:calc(100vw - 273px - 160px - 16px)} #pasar{height:40px;padding:0 12px;font-size:13px} .caja{padding:10px 14px;gap:7px;font-size:14px} .cuenta{font-size:13px} .chip{font-size:12px} #modal .btn{min-height:36px} #panel{width:200px} #panel .tabs button{height:46px} .item .nom{font-size:12.5px} .item .det{font-size:11px} .item{padding:3px;gap:6px} #pasar{right:calc(273px + env(safe-area-inset-right,0px))} #colocar{max-width:calc(100vw - 250px)} .item{grid-template-columns:44px 1fr} .item img{width:44px;height:38px}}
 @media (prefers-reduced-motion:reduce){#panel,#pasar{transition:none}}
-#radio{position:absolute;right:calc(287px + env(safe-area-inset-right,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 54px);z-index:4;display:flex;align-items:center;gap:3px;background:#2A2018;border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px #6B4E31;padding:4px 5px;transition:right .2s;max-width:250px}
-body.panel-cerrado #radio{right:max(12px,env(safe-area-inset-right,0px))}
+@media (min-width:1200px) and (min-height:640px){
+ #panel{width:372px} #lista{display:grid!important;grid-template-columns:1fr 1fr;align-content:start}
+ .item{grid-template-columns:1fr!important;justify-items:center;text-align:center;padding:6px} .item img{width:100%!important;height:64px!important} .item>span{align-items:center}
+ #pasar{right:calc(455px + env(safe-area-inset-right,0px))!important} #herr{max-width:calc(100vw - 455px - 190px)} #colocar{max-width:calc(100vw - 520px)}
+ #panel .tabs button{height:58px;font-size:11px} .caja{width:min(720px,100%)}}
+#radio{flex:none;display:flex;align-items:center;gap:2px;background:#2A2018;border:2px solid var(--hondo);box-shadow:inset 0 0 0 2px #6B4E31;padding:3px 4px;margin-left:4px}
 body.en-portada #radio{visibility:hidden}
-#radio .ant{position:absolute;right:16px;top:-16px;width:3px;height:14px;background:#8C8C8C;transform:rotate(18deg)}
-#radio .info{display:flex;flex-direction:column;align-items:flex-start;min-width:0;width:118px;background:#11160F;border:2px solid #000;padding:2px 6px;text-align:left;color:#9BE08A;cursor:pointer}
-#radio .est{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#F2B233}
-#radio .can{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-#radio button:not(.info){width:30px;height:30px;padding:0;background:var(--panel2);border:2px solid var(--hondo);font-size:13px;color:var(--crema)}
+#herr #radio button{min-width:0;box-shadow:none}
+#herr #radio .info{display:flex;flex-direction:column;align-items:flex-start;width:104px;height:36px;justify-content:center;background:#11160F;border:2px solid #000;padding:0 6px;text-align:left;color:#9BE08A;cursor:pointer;line-height:1.1}
+#radio .est{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#F2B233}
+#radio .can{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#herr #radio button:not(.info){width:28px;height:36px;padding:0;background:var(--panel2);border:2px solid var(--hondo);font-size:12px;color:var(--crema)}
 #radio.sonando .info{box-shadow:0 0 6px rgba(155,224,138,.35)}
-@media (max-height:420px){#radio{right:calc(273px + env(safe-area-inset-right,0px))}}
+@media (max-height:420px){#herr #radio .info{width:88px;height:30px} #herr #radio button:not(.info){height:30px;width:25px} #rAnt{display:none}}
 #capas{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 52px);z-index:6;background:var(--suelo);border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);padding:8px;max-width:min(560px,calc(100vw - 290px));display:flex;flex-direction:column;gap:6px}
 #capas .chip{cursor:pointer;font-family:var(--f-body);color:var(--crema)} #capas small{font-size:12px;color:var(--tenue)}
 body.con-capas #efectos{visibility:hidden}
+#tip{position:absolute;z-index:7;pointer-events:none;background:rgba(20,17,13,.94);border:2px solid var(--borde);padding:4px 8px;display:flex;flex-direction:column;font-size:13px;line-height:1.25;max-width:240px}
+#tip small{color:var(--tenue);font-size:11.5px}
 #herr .badge{display:inline-block;min-width:18px;height:18px;line-height:18px;margin-left:6px;background:var(--sol);color:var(--suelo);font-size:11px;border-radius:9px;padding:0 4px}
 #efectos{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 52px);z-index:4;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100vw - 300px);pointer-events:none}
 #efectos span{font-size:12px;padding:2px 7px;background:rgba(30,26,22,.92);border:2px solid var(--borde);white-space:nowrap}
@@ -268,7 +275,7 @@ body.con-capas #efectos{visibility:hidden}
     <span class="stat clic" id="sPob" role="button" tabindex="0" title="Ver la población"><small class="et">Habitantes</small><b id="hPob">0</b><small id="hCap"></small></span>
     <span class="stat" title="Empleos ocupados / disponibles"><small class="et">Empleo</small><b id="hEmp">0%</b></span>
     <span class="stat"><small class="et">Aprob.</small><span class="barra"><i id="hAprBar"></i></span><b id="hApr">50%</b></span>
-    <button class="btn hb" id="bGob">Gobierno</button>
+    <button class="btn hb" id="bGob" title="Gobierno (G)">Gobierno<span class="badge" id="bInv" hidden></span></button>
     <span class="mes"><b id="hMes">Enero · Año 1</b><small id="hTurno">Mes 1 de 36</small></span>
     <button class="btn" id="btnMenu" aria-label="Menú">≡</button>
   </header>
@@ -280,23 +287,21 @@ body.con-capas #efectos{visibility:hidden}
   </aside>
 
   <div id="herr" role="toolbar" aria-label="Herramientas">
-    <button id="tVer" aria-pressed="true">Ver</button>
-    <button id="tCalle" aria-pressed="false">Calle</button>
-    <button id="tDem" aria-pressed="false">Demoler</button>
-    <button id="tRot" aria-label="Girar el mapa" title="Girar el mapa">↻ Mapa</button>
-    <button id="tCapas" aria-pressed="false">Capas</button>
-    <button id="tCartas" aria-pressed="false">Cartas<span class="badge" id="bCartas" hidden>0</span></button>
+    <button id="tVer" title="Ver (Esc)" aria-pressed="true">Ver</button>
+    <button id="tCalle" title="Calle (C)" aria-pressed="false">Calle</button>
+    <button id="tDem" title="Demoler (X)" aria-pressed="false">Demoler</button>
+    <button id="tRot" aria-label="Girar el mapa" title="Girar el mapa (Q / E)">↻</button>
+    <button id="tCartas" title="Cartas (K)" aria-pressed="false">Cartas<span class="badge" id="bCartas" hidden>0</span></button>
     <button id="tCamp" hidden>Campaña</button>
-    <button id="tInv" aria-pressed="false">Investigar<span class="badge" id="bInv" hidden></span></button>
+    <button id="tCapas" hidden aria-pressed="false">Capas</button><button id="tInv" hidden>Investigar</button>
+    <div id="radio" role="group" aria-label="Radio">
+      <button id="rEst" class="info" title="Cambiar de estación"><span class="est">Regional</span><span class="can">—</span></button>
+      <button id="rAnt" aria-label="Canción anterior">⏮</button><button id="rPlay" aria-label="Tocar música">▶</button><button id="rSig" aria-label="Siguiente canción">⏭</button>
+    </div>
   </div>
-  <div id="radio" role="group" aria-label="Radio">
-    <span class="ant" aria-hidden="true"></span>
-    <button id="rEst" class="info" title="Cambiar de estación"><span class="est">Regional</span><span class="can">—</span></button>
-    <button id="rAnt" aria-label="Canción anterior">⏮</button><button id="rPlay" aria-label="Tocar música">▶</button><button id="rSig" aria-label="Siguiente canción">⏭</button>
-  </div>
-  <button id="pasar" class="btn-sol">PASAR MES ▸</button>
+  <button id="pasar" class="btn-sol" title="Pasar mes (Espacio)">PASAR MES ▸</button>
 
-  <div id="capas" hidden><div class="chips" id="capasChips"></div><small id="capasTxt"></small></div>
+  <div id="capas" hidden><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px;color:var(--sol)">CAPAS</b><button class="btn" id="capasX" style="min-height:28px;padding:0 10px">✕ Cerrar</button></div><div class="chips" id="capasChips"></div><small id="capasTxt"></small></div>
   <div id="colocar" hidden>
     <button class="btn" id="cGirar">Girar</button>
     <span class="msg" id="cMsg"></span>
@@ -308,6 +313,7 @@ body.con-capas #efectos{visibility:hidden}
   <div id="efectos" aria-live="polite"></div>
   <div id="mesBanner" hidden></div>
   <div id="aviso" hidden role="status"></div>
+  <div id="tip" hidden></div>
   <div id="modal" class="velo" hidden></div>
 
   <section id="portada">
@@ -322,8 +328,9 @@ body.con-capas #efectos{visibility:hidden}
         <button class="btn" id="pNueva">NUEVA PARTIDA</button>
         <button class="btn" id="pLegado">SALÓN DEL LEGADO</button>
         <button class="btn" id="pCuenta">CUENTA <span>…</span></button>
+        <button class="btn" id="pInstalar" hidden>INSTALAR <span>En este equipo</span></button>
       </div>
-      <small style="color:var(--tenue)">Versión 0.7 · prueba</small>
+      <small style="color:var(--tenue)">Versión 0.8 · prueba</small>
     </div>
   </section>
   <div id="tour" hidden><div class="blq"></div><div class="blq"></div><div class="blq"></div><div class="blq"></div><div id="tourAro"></div>
@@ -376,7 +383,7 @@ const DEF={
  engorda:{nom:'Corral de engorda',cat:'produccion',spr:'edif-engorda-a',A:4,B:4,costo:260,mant:2,empleos:20,ingreso:14,contamina:6,lote:'tierra'},
  rastro:{nom:'Rastro municipal',cat:'industria',spr:'edif-rastro-a',A:4,B:3,costo:230,mant:3,empleos:25,ingreso:12,necesita:'engorda',contamina:4,lote:'ind'},
  veterinaria:{nom:'Veterinaria',cat:'produccion',spr:'edif-veterinaria-a',A:2,B:2,costo:95,mant:1,empleos:6,ingreso:3},
- aserradero:{nom:'Aserradero',cat:'industria',spr:'edif-aserradero-a',A:3,B:3,costo:190,mant:2,empleos:20,ingreso:10,monte:true,lote:'tierra'},
+ aserradero:{nom:'Aserradero',cat:'produccion',spr:'edif-aserradero-a',A:3,B:3,costo:190,mant:2,empleos:20,ingreso:10,monte:true,lote:'tierra'},
  muelle:{nom:'Muelle pesquero',cat:'produccion',spr:'edif-muelle-a',A:4,B:4,costo:240,mant:3,empleos:40,ingreso:10,suelo:'mar'},
  congeladora:{nom:'Congeladora',cat:'industria',spr:'edif-congeladora-a',A:6,B:2,costo:420,mant:4,empleos:70,ingreso:20,necesita:'muelle',lote:'ind'},
  granja:{nom:'Granja acuícola',cat:'produccion',spr:'edif-granja-a',A:4,B:4,costo:280,mant:2,empleos:25,ingreso:15,suelo:'costa',contamina:3},
@@ -648,13 +655,16 @@ function completarEstado(){
 function costoDe(tipo){return tipo==='parcela'?CULT[selCult].costo:DEF[tipo].costo;}
 function costoReal(tipo){let c=costoDe(tipo); if(tipo!=='calle'&&perk(1)) c=Math.round(c*.95); if(tipo!=='calle'&&S.eds.some(e=>e.t==='fabrica'&&e.rub==='materiales')) c=Math.round(c*.92); const b=S.bono; if(!b||tipo==='calle') return c; if(b.tipo==='gratis') return c<=b.tope?0:c-b.tope; if(b.tipo==='desc') return Math.round(c*(1-b.pct)); return c;}
 // ---------- reglas de colocación ----------
+// edificios especiales (iglesia, estadio, panteón…): uno por cada región de 40 × 40 donde tengas terreno
+function maxUnico(){ const r=new Set(['12']); for(const id of (S&&S.bloques)||[]) r.add(id.slice(0,2)); return r.size; }
+const cuantos=t=>S.eds.filter(e=>e.t===t).length;
 function huella(d,flip){return flip?[d.B,d.A]:[d.A,d.B];}
 function puede(tipo,i,j,flip){
   const d=DEF[tipo]; const [A,B]=huella(d,flip);
   if(d.tec && !tieneTec(d.tec)) return 'Primero investiga: '+tecPor(d.tec).nom;
   if(d.presa){ if(S.eds.filter(e=>e.t==='presa').length>=MAX_PRESAS) return `Máximo ${MAX_PRESAS} presas`;
     if(flip||!(S.embalses||[]).some(e=>e.i===i&&e.j===j)) return 'La presa va en el embalse marcado'; }
-  if(d.unico && S.eds.some(e=>e.t===tipo)) return 'Solo puede haber uno';
+  if(d.unico && cuantos(tipo)>=maxUnico()) return maxUnico()>1?`Máximo ${maxUnico()}: uno por cada región de tu municipio`:'Solo uno por región: compra más terreno para poner otro';
   if(S.dinero<(mov?mov.c:costoReal(tipo))) return 'No alcanza el dinero';
   let playa=0, mar=0, tierra=0, monte=0, rio=0, costaCerca=false;
   for(let a=0;a<A;a++)for(let b=0;b<B;b++){
@@ -998,7 +1008,7 @@ function brote(e){const cu=CULT[e.cult]; return cu.madura?(S.mes-e.sem<cu.madura
 // ---------- cámara y lienzo ----------
 const cv=$('mapa'), g=cv.getContext('2d');
 let DPR=1, VW=0, VH=0;
-const cam={x:0,y:0,z:.55}, ZMIN=.3;
+const cam={x:0,y:0,z:.55}, ZMIN=(matchMedia('(pointer:fine)').matches&&innerWidth>=1100)?.2:.3;
 function ajustar(){DPR=Math.min(2,window.devicePixelRatio||1);VW=cv.clientWidth;VH=cv.clientHeight;cv.width=Math.round(VW*DPR);cv.height=Math.round(VH*DPR);pedir();}
 window.addEventListener('resize',ajustar);
 function topW(a,b){return [X0+(a-b)*64, Y0+(a+b)*32];}          // vértice superior de la casilla (a,b) de la vista
@@ -1045,6 +1055,19 @@ function geo(e){
   const [bx,by]=topW(c.i1,c.j1);
   return {im,nombre,mir,x:bx-Av*64+(SPR_DX[nombre]||0),y:by-im.height,c};
 }
+// letreros: zona del letrero en cada imagen (-a), texto original y color de letra. Muestran el nombre que le pongas al edificio
+const LETRERO={"aserradero":[[66,196],[242,281],16,"ASERRADERO EL PINABETE","#814632"],"bodega":[[61,226],[219,305],18,"BODEGA LA ESPERANZA","#864834"],"cafe":[[68,126],[98,120],15,"CAFÉ","#f4dcb0"],"clinica":[[50,120],[125,156],11,"Centro de salud","#f2f2ea"],"comandancia":[[64,126],[132,161],9,"COMANDANCIA","#2f4a86"],"congeladora":[[27,219],[217,312],15,"CONGELADORA MAR DE CORTÉS","#a53e37"],"empacadora":[[28,219],[188,297],15,"EMPACADORA VALLE VERDE","#a53e37"],"engorda":[[81,240],[236,314],12,"CORRAL LOS ÁLAMOS","#3a6a3c"],"escuela":[[28,226],[202,310],15,"ESC. PRIM. NIÑOS HÉROES","#a53e37"],"estadio":[[131,482],[284,557],16,"ESTADIO EL DIAMANTE","#a53e37"],"hotel":[[155,218],[306,291],17,"HOTEL PLAYA DORADA","#6e402e"],"iglesia":[[89,326],[171,366],15,"SAN ISIDRO","#904535"],"kiosco":[[19,206],[135,264],13,"PLAZUELA LOS ÁLAMOS","#a53e37"],"mercado":[[120,241],[213,277],9,"MERCADO MUNICIPAL","#b45f54"],"minisuper":[[26,189],[118,227],10,"MINI SÚPER","#c1534b"],"muelle":[[21,369],[203,463],11,"COOP. PESCADORES UNIDOS","#a53e37"],"palacio":[[39,223],[163,284],11,"H. AYUNTAMIENTO","#a23831"],"palapa":[[30,191],[123,243],10,"MARISCOS LA GÜERA","#a53e37"],"presa":[[31,206],[183,273],16,"PRESA EL MEZQUITAL","#6d4735"],"rastro":[[21,161],[139,220],12,"RASTRO MUNICIPAL","#598760"],"sushi":[[41,187],[66,199],14,"KIKO","#f3e2d0"],"veterinaria":[[10,151],[60,172],18,"VETERINARIA","#3b5a96"],"agro":[[125,282],[315,371],14,"AGROINDUSTRIAL DEL VALLE","#34562c"],"ecoturismo":[[142,188],[173,188],13,"ECO","#5f6037"],"agua":[[178,204],[276,238],29,"JAPAM","#dbe3f1"],"fabrica-alimentos":[[178,230],[276,265],28,"ALIMENTOS","#ddeae0"],"fabrica-textil":[[178,230],[276,265],28,"TEXTIL","#ebe3ef"],"fabrica-materiales":[[178,230],[276,265],28,"MATERIALES","#f2e6dd"],"fabrica-ensambladora":[[178,230],[276,265],28,"ENSAMBLADORA","#dae2f0"],"prision":[[35,113],[108,145],23,"PRISIÓN","#ece6dc"]};
+function dibujarLetrero(e,q,sx,sy){
+  const m=/^edif-(.+)-([af])$/.exec(q.nombre); if(!m) return; const L=LETRERO[m[1]]; if(!L) return;
+  const z=cam.z, [p1,p2,h,txt,col]=L, W=q.im.width, esp=(m[2]==='f')!==!!q.mir;
+  if(h*z<5) return;
+  let a=esp?[W-1-p1[0],p1[1]]:p1, b=esp?[W-1-p2[0],p2[1]]:p2; if(a[0]>b[0]) [a,b]=[b,a];
+  const A=[sx+a[0]*z,sy+a[1]*z], B=[sx+b[0]*z,sy+b[1]*z], dx=B[0]-A[0], dy=B[1]-A[1], len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len;
+  const texto=(e.nombre||txt).toUpperCase();
+  g.save(); g.font='800 20px Montserrat, system-ui, sans-serif'; const tw=g.measureText(texto).width;
+  const alto=h*z*.62, ky=alto/15, kx=Math.min(ky*1.05,len*.9/tw), ox=(len-tw*kx)/2;
+  g.setTransform(DPR*ux*kx, DPR*uy*kx, 0, DPR*ky, DPR*(A[0]+ux*ox), DPR*(A[1]+uy*ox+h*z*.5));
+  g.textBaseline='middle'; g.fillStyle=col; g.fillText(texto,0,0); g.restore(); }
 function dibujarSprite(e,alfa){
   if(e.t==='parcela'&&!e.fant&&brote(e)) return;      // recién sembrada: solo brotes en el suelo
   const q=geo(e); if(!q) return; const {im}=q;
@@ -1053,6 +1076,7 @@ function dibujarSprite(e,alfa){
   if(q.mir){g.save();g.translate(sx+im.width*cam.z,sy);g.scale(-1,1);g.drawImage(im,0,0,im.width*cam.z,im.height*cam.z);g.restore();}
   else g.drawImage(im,sx,sy,im.width*cam.z,im.height*cam.z);
   g.globalAlpha=1;
+  if(!e.fant) dibujarLetrero(e,q,sx,sy);
   if(e.dano&&!e.fant){ const z=cam.z, [A,B]=huella(D(e),e.f); const [px,py]=aPantalla(...proj(e.i+A/2,e.j+B/2)); const y=sy+Math.min(40*z,im.height*z*.25);
     g.fillStyle='rgba(40,30,25,.35)'; for(let k=0;k<6;k++){ const r=(8+((k*37)%11))*z; g.beginPath(); g.ellipse(px+((k*53)%40-20)*z, py-(10+k*6)*z, r*1.4, r, 0,0,7); g.fill(); }
     g.fillStyle='#14202B'; g.beginPath(); g.moveTo(px,y-16*z-2); g.lineTo(px+14*z+2,y+8*z); g.lineTo(px-14*z-2,y+8*z); g.closePath(); g.fill();
@@ -1131,6 +1155,7 @@ function dibujar(){
     else dibujarSprite(e);
   }
   dibujarCapa(true);
+  if(hoverE&&hoverE!==elegido&&modo==='ver'&&S.eds.includes(hoverE)){const [A,B]=huella(D(hoverE),hoverE.f);for(let a=0;a<A;a++)for(let b=0;b<B;b++) romboPantalla(hoverE.i+a,hoverE.j+b,'rgba(255,255,255,.10)','rgba(255,255,255,.55)');}
   if(modo==='ver'&&!trans) letrerosVenta();
   if(elegido){const [A,B]=huella(D(elegido),elegido.f);for(let a=0;a<A;a++)for(let b=0;b<B;b++) romboPantalla(elegido.i+a,elegido.j+b,null,'rgba(242,178,51,.9)');}
   if(trans){const p=clamp((performance.now()-trans.t0)/trans.dur,0,1); const a=Math.sin(Math.PI*p)*.5; g.fillStyle=`rgba(10,18,52,${a})`; g.fillRect(0,0,VW,VH);
@@ -1146,6 +1171,7 @@ const CAPAS=[
  ['luz','Sin apagón','#F6E27A','Lo que protege la subestación.'],['agri','Agrícola','#8CC456','Bodega o empacadora cerca: las parcelas rinden más.'],
  ['gana','Ganadera','#D9A066','Veterinaria y sorgo cerca: el corral rinde más.'],['trans','Transporte','#E8E0D0','A 5 casillas de una parada de autobús.']];
 let capa=null;
+$('capasX')&&($('capasX').onclick=()=>$('tCapas').onclick());
 $('tCapas').onclick=()=>{ const el=$('capas'); el.hidden=!el.hidden; $('tCapas').setAttribute('aria-pressed',String(!el.hidden)); if(el.hidden){capa=null; document.body.classList.remove('con-capas');} else { if(!capa) capa='salud'; document.body.classList.add('con-capas'); pintaCapas(); } pedir(); };
 function pintaCapas(){ $('capasChips').innerHTML=CAPAS.map(([k,n,c])=>`<button class="chip opc" data-capa="${k}" aria-pressed="${k===capa}" style="${k===capa?`border-color:${c};color:${c}`:''}">${n}</button>`).join('');
   const C=CAPAS.find(x=>x[0]===capa); $('capasTxt').textContent=C?C[3]+' Las casas sin cobertura se marcan en rojo.':'';
@@ -1460,27 +1486,71 @@ function edificioEn(sx,sy){
 const ptr=new Map(); let gesto=null;
 cv.addEventListener('pointerdown',ev=>{
   cv.setPointerCapture(ev.pointerId); ptr.set(ev.pointerId,{x:ev.offsetX,y:ev.offsetY});
-  if(ptr.size===1){gesto={tipo:'uno',x0:ev.offsetX,y0:ev.offsetY,cx:cam.x,cy:cam.y,mov:false,pinta:modo==='calle'};
-    if(gesto.pinta){tocoProp=null;pintadas=0;ultimaCalle=null;pintarCalle(ev.offsetX,ev.offsetY);}}
-  else if(ptr.size===2){ if(gesto&&gesto.pinta&&pintadas<=1&&ultimaCalle!=null){prop.delete(ultimaCalle);barraCalles();} const [a,b]=[...ptr.values()];gesto={tipo:'dos',d0:Math.hypot(a.x-b.x,a.y-b.y),z0:cam.z,m:[(a.x+b.x)/2,(a.y+b.y)/2],w:aMundo((a.x+b.x)/2,(a.y+b.y)/2)};}
+  esMouse=ev.pointerType==='mouse'; ocultarTip();
+  if(ptr.size===1&&esMouse&&ev.button!==0){ gesto={tipo:'uno',x0:ev.offsetX,y0:ev.offsetY,cx:cam.x,cy:cam.y,mov:true,pinta:false}; cv.style.cursor='grabbing'; return; }
+  if(ptr.size===1){gesto={tipo:'uno',x0:ev.offsetX,y0:ev.offsetY,cx:cam.x,cy:cam.y,mov:false,pinta:modo==='calle'&&esMouse};
+    if(gesto.pinta){tocoProp=null;pintadas=0;ultimaCalle=null;pintarCalle(ev.offsetX,ev.offsetY);}
+    else if(modo==='calle'){ const g0=gesto, x=ev.offsetX, y=ev.offsetY; clearTimeout(tCalle); tCalle=setTimeout(()=>{ if(gesto!==g0||g0.mov||ptr.size!==1) return;
+      g0.pinta=true; tocoProp=null;pintadas=0;ultimaCalle=null; try{navigator.vibrate&&navigator.vibrate(30);}catch(e){} pintarCalle(x,y); pedir(); },500); }}
+  else if(ptr.size===2){ clearTimeout(tCalle); if(gesto&&gesto.pinta&&pintadas<=1&&ultimaCalle!=null){prop.delete(ultimaCalle);barraCalles();} const [a,b]=[...ptr.values()];gesto={tipo:'dos',d0:Math.hypot(a.x-b.x,a.y-b.y),z0:cam.z,m:[(a.x+b.x)/2,(a.y+b.y)/2],w:aMundo((a.x+b.x)/2,(a.y+b.y)/2)};}
 });
 cv.addEventListener('pointermove',ev=>{
-  if(!ptr.has(ev.pointerId)) return; ptr.set(ev.pointerId,{x:ev.offsetX,y:ev.offsetY});
+  if(!ptr.has(ev.pointerId)){ if(ev.pointerType==='mouse') hover(ev.offsetX,ev.offsetY); return; } ptr.set(ev.pointerId,{x:ev.offsetX,y:ev.offsetY});
   if(!gesto) return;
   if(gesto.tipo==='uno'){const dx=ev.offsetX-gesto.x0,dy=ev.offsetY-gesto.y0;
     if(gesto.pinta){pintarCalle(ev.offsetX,ev.offsetY);return;}
-    if(Math.hypot(dx,dy)>8) gesto.mov=true;
+    if(Math.hypot(dx,dy)>8){ gesto.mov=true; clearTimeout(tCalle); }
     if(gesto.mov){cam.x=gesto.cx-dx/cam.z;cam.y=gesto.cy-dy/cam.z;limitar();pedir();}}
   else if(gesto.tipo==='dos'&&ptr.size>=2){const [a,b]=[...ptr.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);const m=[(a.x+b.x)/2,(a.y+b.y)/2];
     cam.z=clamp(gesto.z0*d/gesto.d0,ZMIN,1.6);cam.x=gesto.w[0]-m[0]/cam.z;cam.y=gesto.w[1]-m[1]/cam.z;limitar();pedir();}
 });
-const fin=ev=>{ if(!ptr.has(ev.pointerId)) return; ptr.delete(ev.pointerId);
-  if(gesto&&gesto.tipo==='uno'&&!gesto.mov&&!gesto.pinta&&ptr.size===0) tocar(ev.offsetX,ev.offsetY);
+let tCalle=0;
+const fin=ev=>{ if(!ptr.has(ev.pointerId)) return; ptr.delete(ev.pointerId); clearTimeout(tCalle);
+  if(gesto&&gesto.tipo==='uno'&&!gesto.mov&&!gesto.pinta&&ptr.size===0&&modo==='calle'){ aviso('Mantén el dedo medio segundo sobre una casilla y luego arrastra para trazar',2800); gesto=null; return; }
+  cv.style.cursor='';
+  if(gesto&&gesto.tipo==='uno'&&!gesto.mov&&!gesto.pinta&&ptr.size===0){ tocar(ev.offsetX,ev.offsetY);
+    // con mouse basta un clic para construir: la pieza ya seguía al cursor
+    if(esMouse&&modo==='construir'&&fant&&!fant.motivo) $('cOk').click(); }
   if(gesto&&gesto.pinta&&ptr.size===0){ if(tocoProp!=null&&pintadas===0){prop.delete(tocoProp);barraCalles();pedir();} ultimaCalle=null;tocoProp=null;}
   if(gesto&&gesto.pinta&&ptr.size===1){ /* segundo dedo: deja de pintar */ }
   if(ptr.size===0) gesto=null; else if(ptr.size===1&&gesto&&gesto.tipo==='dos'){const [p]=[...ptr.values()];gesto={tipo:'uno',x0:p.x,y0:p.y,cx:cam.x,cy:cam.y,mov:true,pinta:false};}
 };
 cv.addEventListener('pointerup',fin); cv.addEventListener('pointercancel',fin);
+cv.addEventListener('contextmenu',ev=>ev.preventDefault());
+cv.addEventListener('pointerleave',()=>{ ocultarTip(); hoverE=null; });
+// ---------- PC: mouse encima y teclado ----------
+let esMouse=false, hoverE=null;
+function ocultarTip(){ const t=$('tip'); if(t) t.hidden=true; }
+function hover(sx,sy){ if(!S||!$('portada').hidden||!$('modal').hidden) return;
+  if(modo==='construir'&&sel&&!mov){ const [ti,tj]=casillaEn(sx,sy); const [A,B]=huella(DEF[sel],fant?fant.flip:false);
+    const ni=ti-Math.floor((A-1)/2), nj=tj-Math.floor((B-1)/2); if(!fant||fant.i!==ni||fant.j!==nj){ fant={i:ni,j:nj,flip:fant?fant.flip:false}; validarFant(); } ocultarTip(); return; }
+  if(modo==='calle'||modo==='ruta'){ ocultarTip(); return; }
+  const e=edificioEn(sx,sy); hoverE=e; const t=$('tip');
+  if(e){ const d=D(e); t.innerHTML=`<b>${esc(nombreDe(e))}</b>${e.nombre?`<small>${esc(d.nom)}</small>`:''}${e.dano?'<small style="color:var(--mal)">Dañado</small>':''}`; t.hidden=false;
+    t.style.left=Math.min(sx+16,cv.clientWidth-t.offsetWidth-8)+'px'; t.style.top=Math.max(50,sy-10-t.offsetHeight)+'px'; cv.style.cursor='pointer'; }
+  else { t.hidden=true; const [i,j]=casillaEn(sx,sy); cv.style.cursor=(dentro(i,j)&&!propio(i,j))?'help':''; } }
+const TECLAS={c:'tCalle',x:'tDem',l:'tCapas',i:'tInv',g:'bGob',k:'tCartas'};
+document.addEventListener('keydown',ev=>{
+  if(!S||!$('portada').hidden||ev.ctrlKey||ev.metaKey||ev.altKey) return;
+  const tg=ev.target; if(tg&&(tg.tagName==='INPUT'||tg.tagName==='TEXTAREA')) return;
+  const k=ev.key.toLowerCase();
+  if(k==='escape'){ if(TOUR.on) return; if(!$('modal').hidden){ const c=$('modal').querySelector('#mCerrar,#gCerrar,#cmOk,#tNo,#pjNo,#mNo,#bNo'); if(c) c.click(); return; }
+    if(modo!=='ver'){ $('cNo').click(); return; } if(!$('ficha').hidden){ const f=$('fCerrar'); if(f) f.click(); } return; }
+  if(!$('modal').hidden){ if(k==='enter'){ const b=$('modal').querySelector('.btn-sol:not([disabled])'); if(b){ ev.preventDefault(); b.click(); } } return; }
+  if(TOUR.on) return;
+  const P=48/cam.z, mover=(dx,dy)=>{ cam.x+=dx; cam.y+=dy; limitar(); pedir(); ev.preventDefault(); };
+  if(k==='arrowleft'||k==='a') return mover(-P,0); if(k==='arrowright'||k==='d') return mover(P,0);
+  if(k==='arrowup'||k==='w') return mover(0,-P); if(k==='arrowdown'||k==='s') return mover(0,P);
+  if(k==='+'||k==='='||k==='-'||k==='_'){ const z0=cam.z, cx=VW/2, cy=VH/2, w=aMundo(cx,cy); cam.z=clamp(cam.z*(k==='-'||k==='_'?1/1.15:1.15),ZMIN,1.6); cam.x=w[0]-cx/cam.z; cam.y=w[1]-cy/cam.z; limitar(); pedir(); return; }
+  if(k==='enter'&&!$('colocar').hidden&&!$('cOk').disabled){ ev.preventDefault(); return $('cOk').click(); }
+  if(k==='r'&&modo==='construir') return $('cGirar').click();
+  if(k==='q'||k==='e'){ girarMapa(); if(k==='q'){ girarMapa(); girarMapa(); } return; }
+  if(k===' '){ ev.preventDefault(); return $('pasar').click(); }
+  if(k==='f11'){ ev.preventDefault(); return pantallaCompleta(); }
+  if(/^[1-6]$/.test(k)){ const c=CATS[+k-1]; if(c){ if($('panel').classList.contains('cerrado')) $('tirador').click(); cat=c[0]; pestanas(); lista(); } return; }
+  if(TECLAS[k]){ const b=$(TECLAS[k]); if(b&&(!b.hidden||k==='l'||k==='i')) b.onclick?b.onclick():b.click(); }
+});
+function pantallaCompleta(){ try{ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }catch(e){} }
 cv.addEventListener('wheel',ev=>{ev.preventDefault();const w=aMundo(ev.offsetX,ev.offsetY);cam.z=clamp(cam.z*(ev.deltaY<0?1.12:1/1.12),ZMIN,1.6);cam.x=w[0]-ev.offsetX/cam.z;cam.y=w[1]-ev.offsetY/cam.z;limitar();pedir();},{passive:false});
 
 let ultimaCalle=null; const prop=new Set(); let tocoProp=null, pintadas=0;
@@ -1501,7 +1571,7 @@ function barraCalles(){
   const n=prop.size, c=costoCalles();
   $('cMsg').className='msg'+(n&&S.dinero<c?' mal':'');
   const np=[...prop].filter(k=>RIO[k]).length;
-  $('cMsg').textContent=n?`${n} tramo${n>1?'s':''}${np?` (${np} de puente)`:''} · ${c?dinero(c):'gratis'}${S.callesGratis?` (${Math.min(n,S.callesGratis)} gratis por carta)`:''}`:'Arrastra sobre el mapa para trazar';
+  $('cMsg').textContent=n?`${n} tramo${n>1?'s':''}${np?` (${np} de puente)`:''} · ${c?dinero(c):'gratis'}${S.callesGratis?` (${Math.min(n,S.callesGratis)} gratis por carta)`:''}`:(esMouse?'Arrastra sobre el mapa para trazar':'Mantén el dedo ½ s y arrastra');
   $('cOk').textContent='✓ Aprobar'; $('cNo').textContent=n?'✗ Descartar':'Salir';
   $('cOk').disabled=!n||S.dinero<c;
 }
@@ -1686,7 +1756,7 @@ function ponerModo(m){
   $('tDem').setAttribute('aria-pressed',m==='demoler'?'true':'false');
   if(m!=='ruta') borr=null;
   if(m!=='ver'){elegido=null;rutaSel=null;$('ficha').hidden=true;}
-  if(m==='calle') aviso('Arrastra para trazar. ✓ aprueba, ✗ descarta y Salir regresa al mapa',3800);
+  if(m==='calle') aviso(esMouse?'Arrastra para trazar (clic derecho mueve el mapa). ✓ aprueba, ✗ descarta y Salir regresa':'Mueve el mapa normal. Para trazar, mantén el dedo medio segundo y arrastra. ✓ aprueba y Salir regresa',4200);
   if(m==='demoler') aviso('Toca un edificio o una calle para quitarlo');
   lista(); pedir();
 }
@@ -1712,18 +1782,25 @@ function requisitos(k,d){ const r=[];
   if(d.suelo==='mar') r.push('En el mar, junto a la playa'); else if(d.suelo==='costa') r.push('En la costa'); else if(d.suelo==='playa') r.push('Sobre la arena');
   if(d.mina) r.push('Sobre el monte'); if(d.bosque) r.push('Junto al bosque'); if(d.monte) r.push('Junto al monte'); if(d.presa) r.push('Solo en el embalse');
   if(d.agri) r.push('Tierra de cultivo'); if(d.agroind) r.push('Tierra de riego'); if(d.necesita) r.push('Necesita '+DEF[d.necesita].nom.toLowerCase());
-  if(d.fabrica) r.push('Necesita egresados'); if(d.unico) r.push('Solo uno');
+  if(d.fabrica) r.push('Necesita egresados'); if(d.unico) r.push(S&&maxUnico()>1?`Hasta ${maxUnico()}`:'Uno por región');
   return r.join(' · '); }
+const ORDEN={vivienda:['humilde','media','buena','buenab','cuartos','vecindad','residencial'],
+ publica:['calle','autobus','comandancia','panteon','basura','agua','subestacion','presa','prision'],
+ social:['canchas','kiosco','escuela','clinica','iglesia','universidad','estadio'],
+ produccion:['parcela','aserradero','mina','muelle','engorda','granja','veterinaria','bodega','agro','minaind'],
+ comercio:['tacos','minisuper','malecon','palapa','cafe','sushi','mercado','ecoturismo','hotel'],
+ industria:['empacadora','rastro','congeladora','fabrica']};
 function lista(){
-  const tipos=Object.keys(DEF).filter(k=>DEF[k].cat===cat);
-  $('lista').innerHTML=tipos.map(k=>{const d=DEF[k];const usado=d.unico&&S&&S.eds.some(e=>e.t===k);
+  const O=ORDEN[cat]||[], pos=k=>{const n=O.indexOf(k); return n<0?100+(DEF[k].costo||0)/1000:n;};
+  const tipos=Object.keys(DEF).filter(k=>DEF[k].cat===cat).sort((a,b)=>pos(a)-pos(b));
+  $('lista').innerHTML=tipos.map(k=>{const d=DEF[k];const usado=d.unico&&S&&cuantos(k)>=maxUnico();
     const bloq=d.tec&&S&&!tieneTec(d.tec);
     const img=k==='parcela'?`<img alt="" src="sprites/cult-tomate.png">`:k==='mina'?`<img alt="" src="sprites/edif-mina-oro.png">`:d.icono?`<img alt="" src="sprites/${d.icono}.png">`:d.spr?`<img src="sprites/${d.spr}.png" alt="">`:`<img alt="" src="${TEX.calle10?TEX.calle10.toDataURL():''}">`;
     const activo=(k==='calle'&&modo==='calle')||(k==='autobus'&&modo==='ruta')||(sel===k);
     if(bloq) return `<button class="item bloq" data-t="${k}" data-bloq="1" title="${esc(d.desc||'')}">${img}<span><span class="nom">🔒 ${d.nom}</span><span class="det">Se investiga</span></span></button>`;
-    const req=requisitos(k,d).split(' · ').filter(x=>x&&x!=='Solo uno')[0]||'', tam='';
+    const req=requisitos(k,d).split(' · ').filter(x=>x&&!/^Hasta|^Uno por/.test(x))[0]||'', tam='';
     const dato=k==='parcela'?'Elige el cultivo':k==='calle'?'Arrastra para trazar':k==='autobus'?'Paradas sobre calles':detalle(d);
-    return `<button class="item${S&&S.dinero<d.costo?' caro':''}${k===SUG[cat]?' sug':''}" data-t="${k}" aria-pressed="${activo}" ${usado?'disabled':''} title="${esc(detalleLargo(d,k))}">${img}<span><span class="nom">${d.nom}</span><span class="det"><b class="pr">${usado?'Ya construido':(k==='parcela'?'Desde '+dinero(35):dinero(d.costo))}</b>${!usado&&dato?' · '+dato:''}</span>${req&&!usado?`<span class="req">${req}</span>`:''}</span></button>`;}).join('');
+    return `<button class="item${S&&S.dinero<d.costo?' caro':''}${k===SUG[cat]?' sug':''}" data-t="${k}" aria-pressed="${activo}" ${usado?'disabled':''} title="${esc(detalleLargo(d,k))}">${img}<span><span class="nom">${d.nom}</span><span class="det"><b class="pr">${usado?(maxUnico()<9?'Compra terreno para otro':'Ya tienes el máximo'):(k==='parcela'?'Desde '+dinero(35):dinero(d.costo))}</b>${!usado&&dato?' · '+dato:''}</span>${req&&!usado?`<span class="req">${req}</span>`:''}</span></button>`;}).join('');
   $('lista').querySelectorAll('.item').forEach(b=>b.onclick=()=>b.dataset.bloq?investigar(DEF[b.dataset.t].tec):elegirTipo(b.dataset.t));
   // jugadores nuevos: mientras no construyan nada, el panel late y sugiere por dónde empezar
   const nuevo=S&&!S.obras; $('panel').classList.toggle('nuevo',!!nuevo);
@@ -2059,7 +2136,7 @@ function gobierno(tab,obligado){ return new Promise(fin=>{
   let borr={...S.ramos};
   const pinta=()=>{
     const usadas=Object.values(borr).reduce((s,v)=>s+v,0), F=fondoFed();
-    const tabs=`<div class="chips">${[['fondo','Fondo federal'],['imp','Impuestos'],['prog','Programas sociales'],['terreno','Terreno'],['cred','Crédito'],['com','Comercio'],['fin','Finanzas']].map(([k,n])=>`<button class="chip opc" data-tab="${k}" aria-pressed="${k===tab}" ${obligado&&k!==tab?'disabled':''}>${n}</button>`).join('')}</div>`;
+    const tabs=`<div class="chips">${[['fondo','Fondo federal'],['inv','Investigación'],['capas','Capas del mapa'],['imp','Impuestos'],['prog','Programas sociales'],['terreno','Terreno'],['cred','Crédito'],['com','Comercio'],['fin','Finanzas']].map(([k,n])=>`<button class="chip opc" data-tab="${k}" aria-pressed="${k===tab}" ${obligado&&k!==tab?'disabled':''}>${n}</button>`).join('')}</div>`;
     let cuerpo='';
     if(tab==='fondo'){
       cuerpo=`<p style="font-size:14px">Este año llegan <b>${dinero(F)}</b> de la Federación. Solo pueden ir a estos 12 ramos, no a edificios ni a obra. ${puede?'Reparte las 20 partes (cada una es 5%, '+dinero(F/PARTES)+'): apostar fuerte a un ramo da más, pero repartir también suma.':`Ya se repartió el fondo del año ${anio}. El próximo reparto es en enero.`}</p>
@@ -2081,6 +2158,7 @@ function gobierno(tab,obligado){ return new Promise(fin=>{
       <div class="fila">${tab==='fondo'&&puede?`<button class="btn" id="gParejo">Repartir parejo</button><button class="btn-sol btn" id="gOk" ${usadas2<PARTES?'disabled':''}>Confirmar reparto</button>`:`<button class="btn-sol btn" id="gCerrar">Listo</button>`}</div>`,'ancha');
     const c1=document.querySelector('#modal .caja'); if(c1) c1.scrollTop=st;
     $('modal').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{ const t=b.dataset.tab; const volver=()=>{tab='fondo';pinta();};
+      if(t==='inv'){ cerrarModal(); return investigar(); } if(t==='capas'){ cerrarModal(); if($('capas').hidden) $('tCapas').onclick(); return; }
       if(t==='terreno') return mapaTerreno(volver); if(t==='cred') return credito(volver); if(t==='com') return comercio(volver); if(t==='fin') return finanzas(volver); tab=t; pinta();});
     $('modal').querySelectorAll('[data-mas]').forEach(b=>b.onclick=()=>{const k=b.dataset.mas; borr[k]=(borr[k]||0)+1; pinta();});
     $('modal').querySelectorAll('[data-menos]').forEach(b=>b.onclick=()=>{const k=b.dataset.menos; borr[k]=Math.max(0,(borr[k]||0)-1); pinta();});
@@ -2340,50 +2418,56 @@ const Radio=(()=>{
   const esc=S=>S.modo==='men'?MEN:MAY;
   function grado(S,d,oct){const e=esc(S); const k=((d%7)+7)%7, o=Math.floor(d/7); return S.tono+12*(oct+o)+e[k];}
   function acorde(S,deg,oct){return [0,2,4].map(i=>grado(S,deg+i,oct));}
-  // melodía: frase por sección, notas del acorde en tiempos fuertes y pasos por grado entre ellas
+  // melodía: frase por sección. Cada canción: intro, estrofas (A), coro (B), puente (C) y final, con variaciones y un cambio de tono al último coro
+  function frase(S,r,prog,var_){ const tonos=d=>[d,d+2,d+4]; let pos=7+(prog[0]%7)+(var_%2?2:0); const out=[];
+    const ritmos=S.ritmos; const motivo=[ritmos[Math.floor(r()*ritmos.length)],ritmos[Math.floor(r()*ritmos.length)]];
+    prog.forEach((ch,b)=>{ const rit=motivo[b%2]; const notas=[];
+      rit.forEach(([st,du],k)=>{ const fuerte=st%(S.spb/2)===0;
+        if(fuerte||r()<.35){ const ct=tonos(ch).flatMap(x=>[x+7,x+14]); pos=ct.reduce((a,c)=>Math.abs(c-pos)<Math.abs(a-pos)?c:a,ct[0]); if(r()<.3) pos=ct[Math.floor(r()*ct.length)]; }
+        else pos+=r()<.5?1:-1;
+        pos=Math.max(4,Math.min(16,pos));
+        if(b===prog.length-1&&k===rit.length-1) pos=7+(ch%7)===pos?pos:7;
+        notas.push([st,du,pos]); });
+      out.push(notas); });
+    return out; }
   function componer(S){
-    const r=rng(S.semilla), secc={};
-    const tonos=d=>[d,d+2,d+4];
-    for(const L of new Set(S.forma)){ const prog=S.prog[L]; let pos=7+ (prog[0]%7); const out=[];
-      const ritmos=S.ritmos; const motivo=[ritmos[Math.floor(r()*ritmos.length)],ritmos[Math.floor(r()*ritmos.length)]];
-      prog.forEach((ch,b)=>{ const rit=motivo[b%2]; const notas=[];
-        rit.forEach(([st,du],k)=>{ const fuerte=st%(S.spb/2)===0;
-          if(fuerte||r()<.35){ const ct=tonos(ch).flatMap(x=>[x+7,x+14]); pos=ct.reduce((a,c)=>Math.abs(c-pos)<Math.abs(a-pos)?c:a,ct[0]); if(r()<.3) pos=ct[Math.floor(r()*ct.length)]; }
-          else pos+=r()<.5?1:-1;
-          pos=Math.max(4,Math.min(16,pos));
-          if(b===prog.length-1&&k===rit.length-1) pos=7+(ch%7)===pos?pos:7;   // cierre sobre la tónica
-          notas.push([st,du,pos]); });
-        out.push(notas); });
-      secc[L]=out; }
-    return S.forma.split('').flatMap(L=>S.prog[L].map((ch,b)=>({ch,notas:secc[L][b]})));
-  }
+    const r=rng(S.semilla), memo={}, cuenta={};
+    const forma=S.forma, ultimoB=forma.lastIndexOf('B'); const res=[];
+    forma.split('').forEach((L,n)=>{
+      const base=L==='I'||L==='O'?'A':L, prog=S.prog[base]||S.prog.A; cuenta[L]=(cuenta[L]||0)+1; const v=(cuenta[L]-1)%3;
+      const key=base+v; if(!memo[key]) memo[key]=frase(S,r,prog,v);
+      const tr=n>=ultimoB-1&&ultimoB>forma.length*.6?2:0;          // modulación al final
+      prog.forEach((ch,b)=>res.push({ch,notas:L==='I'?[]:(L==='O'&&b>=prog.length-2?memo[key][b].slice(0,1):memo[key][b]),tr,sec:L})); });
+    return res; }
   // ---------- estaciones y canciones ----------
   const R8=[[[0,2],[2,2],[4,2],[6,2]],[[0,3],[3,1],[4,4]],[[0,2],[2,1],[3,1],[4,2],[6,2]],[[0,4],[4,2],[6,2]],[[1,1],[2,2],[4,1],[5,1],[6,2]]];
   const R16=[[[0,4],[4,4],[8,4],[12,4]],[[0,6],[6,2],[8,8]],[[0,2],[2,2],[4,4],[8,2],[10,2],[12,4]],[[0,8],[8,4],[12,4]],[[2,2],[4,2],[6,2],[8,6],[14,2]],[[0,3],[3,3],[6,2],[8,4],[12,4]]];
   const R6=[[[0,2],[2,1],[3,2],[5,1]],[[0,1],[1,1],[2,1],[3,3]],[[0,3],[3,2],[5,1]],[[0,2],[2,2],[4,2]]];
-  const ESTACIONES=[
-   {nom:'Regional',canciones:[
-     {nom:'Son de la Presa',tono:62,modo:'may',bpm:0,dur:.16,spb:6,semilla:11,forma:'AABA',prog:{A:[0,4,4,0,0,4,4,0],B:[3,0,4,0,3,0,4,0]},ritmos:R6,estilo:'son'},
-     {nom:'Huapango del Ejido',tono:57,modo:'may',dur:.15,spb:6,semilla:23,forma:'AABB',prog:{A:[0,3,4,0,0,3,4,0],B:[4,4,0,0,3,3,4,0]},ritmos:R6,estilo:'son'}]},
-   {nom:'Norteño',canciones:[
-     {nom:'Corrido del Trienio',tono:57,modo:'may',dur:.125,spb:8,semilla:7,forma:'AABA',prog:{A:[0,0,4,4,4,4,0,0],B:[3,3,0,0,4,4,0,0]},ritmos:R8,estilo:'norteno'},
-     {nom:'La Troca Colorada',tono:55,modo:'may',dur:.12,spb:8,semilla:41,forma:'ABAB',prog:{A:[0,0,3,3,4,4,0,0],B:[4,4,0,0,4,4,0,0]},ritmos:R8,estilo:'norteno'}]},
-   {nom:'Baladas',canciones:[
-     {nom:'Atardecer en Altata',tono:60,modo:'may',dur:.21,spb:16,semilla:5,forma:'AABA',prog:{A:[0,5,3,4,0,5,3,4],B:[3,4,2,5,3,4,0,0]},ritmos:R16,estilo:'balada'},
-     {nom:'Cartas al Cabildo',tono:57,modo:'men',dur:.22,spb:16,semilla:19,forma:'ABAB',prog:{A:[0,5,2,6,0,5,3,4],B:[5,2,3,4,5,2,6,0]},ritmos:R16,estilo:'balada'}]},
-   {nom:'Banda',canciones:[
-     {nom:'La Tambora de Elota',tono:58,modo:'may',dur:.13,spb:8,semilla:3,forma:'AABA',prog:{A:[0,0,4,4,4,4,0,0],B:[3,3,0,0,4,4,0,0]},ritmos:R8,estilo:'banda'},
-     {nom:'El Mezquital',tono:53,modo:'may',dur:.125,spb:8,semilla:77,forma:'ABAB',prog:{A:[0,4,4,0,0,4,4,0],B:[3,0,4,0,3,0,4,0]},ritmos:R8,estilo:'banda'}]},
-   {nom:'Pop',canciones:[
-     {nom:'Malecón de Noche',tono:60,modo:'may',dur:.145,spb:16,semilla:9,forma:'AABA',prog:{A:[0,4,5,3,0,4,5,3],B:[3,4,5,5,3,4,0,0]},ritmos:R16,estilo:'pop'},
-     {nom:'Verano en Mazatlán',tono:62,modo:'men',dur:.14,spb:16,semilla:31,forma:'ABAB',prog:{A:[0,5,2,6,0,5,2,6],B:[5,6,0,0,5,6,4,4]},ritmos:R16,estilo:'pop'}]},
-   {nom:'Rock',canciones:[
-     {nom:'Carretera Costera',tono:52,modo:'men',dur:.115,spb:16,semilla:13,forma:'AABA',prog:{A:[0,0,5,6,0,0,5,6],B:[3,3,4,4,5,5,6,6]},ritmos:R16,estilo:'rock'},
-     {nom:'Sin Pavimento',tono:57,modo:'may',dur:.11,spb:16,semilla:57,forma:'ABAB',prog:{A:[0,6,3,0,0,6,3,4],B:[3,4,0,0,3,4,6,6]},ritmos:R16,estilo:'rock'}]}];
+  const PROGS={may:{A:[[0,4,4,0,0,4,4,0],[0,3,4,0,0,3,4,0],[0,0,4,4,4,4,0,0],[0,5,3,4,0,5,3,4],[0,4,5,3,0,4,5,3],[0,0,3,3,4,4,0,0]],
+                    B:[[3,0,4,0,3,0,4,0],[4,4,0,0,3,3,4,0],[3,4,5,5,3,4,0,0],[3,3,0,0,4,4,0,0],[5,3,0,4,5,3,4,4]],
+                    C:[[5,5,3,3,4,4,4,4],[3,3,0,0,5,5,4,4],[1,4,0,5,1,4,4,4],[5,4,3,4,5,4,3,4]]},
+               men:{A:[[0,5,2,6,0,5,3,4],[0,0,5,6,0,0,5,6],[0,5,2,6,0,5,2,6],[0,3,4,0,0,3,4,4]],
+                    B:[[5,2,3,4,5,2,6,0],[5,6,0,0,5,6,4,4],[3,3,4,4,5,5,6,6],[2,5,0,0,3,4,0,0]],
+                    C:[[3,6,2,5,3,6,4,4],[5,5,6,6,3,3,4,4],[2,2,5,5,6,6,4,4]]}};
+  const EST=[
+   ['Regional','son',6,[.15,.17],[['Son de la Presa',62,'may',11],['Huapango del Ejido',57,'may',23],['Sones del Río Elota',60,'may',101],['Jarabe del Mezquite',55,'may',102],['Fandango en la Plazuela',59,'may',103]]],
+   ['Norteño','norteno',8,[.115,.13],[['Corrido del Trienio',57,'may',7],['La Troca Colorada',55,'may',41],['Corrido del Ejido',52,'may',201],['Polka del Tomatero',58,'may',202],['Redova del Cabildo',53,'may',203]]],
+   ['Cumbia','cumbia',8,[.13,.145],[['Cumbia de La Cruz',57,'may',301],['Cumbia del Camaronero',55,'men',302],['La Pollera del Mercado',60,'may',303],['Cumbia Sonidera del Malecón',53,'men',304],['Cumbia del Tomate',58,'may',305]]],
+   ['Baladas','balada',16,[.2,.23],[['Atardecer en Altata',60,'may',5],['Cartas al Cabildo',57,'men',19],['Luna sobre la Presa',55,'may',401],['Te espero en el Malecón',62,'may',402],['Lluvia de Temporal',57,'men',403]]],
+   ['Banda','banda',8,[.12,.135],[['La Tambora de Elota',58,'may',3],['El Mezquital',53,'may',77],['Marcha del Ayuntamiento',55,'may',501],['Banda del Puerto',60,'may',502],['Feria de San Isidro',57,'may',503]]],
+   ['Pop','pop',16,[.135,.15],[['Malecón de Noche',60,'may',9],['Verano en Mazatlán',62,'men',31],['Neón en la Plazuela',57,'may',601],['Selfie en el Kiosco',64,'may',602],['Brisa del Golfo',59,'men',603]]],
+   ['Rock','rock',16,[.105,.12],[['Carretera Costera',52,'men',13],['Sin Pavimento',57,'may',57],['Huracán Categoría 4',50,'men',701],['Ruta del Tren',55,'may',702],['Diésel y Polvo',52,'men',703]]]];
+  // forma larga para durar de 3 a 4 minutos según el tempo de cada género
+  function formaPara(seg){ const n=Math.max(7,Math.round(210/seg)); const pat=['A','A','B','A','B','C','B','A','A','B','B']; let f='I';
+    for(let k=0;f.length<n-1;k++) f+=pat[k%pat.length]; if(!f.includes('C')) f=f.slice(0,-1)+'C'; if(f[f.length-1]!=='B') f+='B'; return f+'O'; }
+  const ESTACIONES=EST.map(([nom,estilo,spb,[d0,d1],cs])=>({nom,canciones:cs.map(([cn,tono,modo,sem])=>{ const r=rng(sem*7+3), P=PROGS[modo], pick=a=>a[Math.floor(r()*a.length)];
+    const dur=+(d0+(d1-d0)*r()).toFixed(3), seg=dur*spb*8;
+    return {nom:cn,tono,modo,dur,spb,semilla:sem,estilo,ritmos:spb===6?R6:spb===8?R8:R16,prog:{A:pick(P.A),B:pick(P.B),C:pick(P.C)},forma:formaPara(seg)}; })}));
   const LISTA=ESTACIONES.flatMap((e,ei)=>e.canciones.map(c=>Object.assign(c,{est:e.nom,ei})));
   // ---------- arreglos por género ----------
   function tocar(t,S,b,st){
-    const B=mel[b%mel.length], ch=B.ch, A=acorde(S,ch,-1), d=S.dur, n=S.spb;
+    const B=mel[b%mel.length]; if(B.tr) S=Object.assign({},S,{tono:S.tono+B.tr}); const ch=B.ch, A=acorde(S,ch,-1), d=S.dur, n=S.spb;
+    if(B.sec==='O'&&b>=mel.length-2&&st>0) return;   // final: un acorde y se acaba
     const me=B.notas.find(x=>x[0]===st); const nota=me?grado(S,me[2],-1):null, mdur=me?me[1]*d:0;
     const tercera=me?grado(S,me[2]-2,-1):null;
     switch(S.estilo){
@@ -2420,6 +2504,14 @@ const Radio=(()=>{
       if([3,6,11,14].includes(st)) A.forEach(m=>voz(t,m+12,d*1.2,{tipo:'square',vol:.03,cut:2600,s:.2,r:.08,rev:.2}));
       if(nota) voz(t,nota+12,mdur,{tipo:'square',det:[-10,10],vol:.05,cut:3200,vib:6,s:.8,r:.1,rev:.25});
       break;
+    case 'cumbia':
+      golpe(t,'guiro',st%2?.08:.15);
+      if(st===0||st===4) voz(t,A[0]-12,d*1.8,{tipo:'triangle',vol:.3,cut:700,s:.5,r:.08});
+      if(st===3||st===7) voz(t,A[2]-12,d*1.2,{tipo:'triangle',vol:.22,cut:700,s:.5,r:.08});
+      if(st===2||st===6) A.forEach(m=>voz(t,m+12,d*1.4,{tipo:'square',det:[-6,6],vol:.03,cut:2000,s:.4,r:.06,rev:.15}));
+      if(st===0) golpe(t,'bombo',.5); if(st===4) golpe(t,'tambora',.4); if(st===6) golpe(t,'escoba',.12);
+      if(nota) voz(t,nota+12,mdur,{tipo:'square',det:[-8,8],vol:.055,cut:2600,vib:10,vf:6,s:.85,r:.07,rev:.2});
+      break;
     case 'rock':
       if(st===0||st===6||st===8) golpe(t,'bombo',.9); if(st===4||st===12) golpe(t,'tarola',.45); if(st%2===0) golpe(t,st===14?'abierto':'hat',.12);
       if(st%2===0){ const pm=st%4===2; [A[0]-12,A[0]-5,A[0]].forEach(m=>voz(t,m,d*(pm?.8:1.8),{tipo:'sawtooth',det:[-6,6],vol:.11,cut:5000,s:.8,r:.04,dist:true})); voz(t,A[0]-24,d*1.6,{tipo:'sawtooth',vol:.14,cut:500,s:.6,r:.05}); }
@@ -2432,7 +2524,7 @@ const Radio=(()=>{
     while(nextT<ctx.currentTime+.15){
       tocar(nextT,song,bar,paso);
       nextT+=song.dur; paso++;
-      if(paso>=song.spb){paso=0; bar++; if(bar>=mel.length){bar=0; vueltas++; if(vueltas>=2){siguiente(true);return;}}}
+      if(paso>=song.spb){paso=0; bar++; if(bar>=mel.length){ siguiente(true); return; }}
     }
   }
   function cargar(i){ idx=(i+LISTA.length)%LISTA.length; song=LISTA[idx]; mel=componer(song); bar=0; paso=0; vueltas=0; nextT=ctx?ctx.currentTime+.08:0; pintar(); try{localStorage.setItem('trienio.radio.idx',idx);}catch(e){} }
@@ -2550,9 +2642,7 @@ const PASOS=[
   txt:'Toca el mapa junto a una calle para ubicarla (verde: se puede; rojo: no). Para construir toca <b>dos veces</b> el mismo lugar o el botón <b>Construir</b>.',haz:()=>{ if(modo!=='construir') elegirTipo('humilde'); setTimeout(()=>{ if(fant&&!fant.motivo) $('cOk').click(); else aviso('Toca un lugar en verde junto a una calle'); },120); },listo:()=>(S.obras||0)>TOUR.base},
  {antes:()=>ponerModo('ver'),el:()=>rectDe('#tCalle'),txt:'¡Tu primera casa! Todo edificio necesita una calle al lado. Con <b>Calle</b> las trazas arrastrando el dedo y las apruebas con ✓.',boton:'Siguiente'},
  {el:()=>rectDe('#tabs'),txt:'Las seis pestañas laterales agrupan todo: vivienda, infraestructura pública, social, producción, comercio e industria. Lo que tiene 🔒 se desbloquea investigando.',boton:'Siguiente'},
- {el:()=>rectDe('#tCapas'),txt:'<b>Capas</b> te muestra hasta dónde llega cada servicio. Las casas sin cobertura se marcan en rojo.',boton:'Siguiente'},
- {el:()=>rectDe('#bGob'),txt:'En <b>Gobierno</b> repartes el fondo federal, ajustas impuestos, activas programas, pides crédito, vendes tu producción y compras terreno.',boton:'Siguiente'},
- {el:()=>rectDe('#tInv'),txt:'En <b>Investigar</b> eliges qué tecnología sigue: desbloquea edificios como el agua potable, la fábrica o la prisión.',boton:'Siguiente'},
+ {el:()=>rectDe('#bGob'),txt:'En <b>Gobierno</b> repartes el fondo federal, eliges qué <b>investigar</b>, ves las <b>capas</b> del mapa, ajustas impuestos y programas, pides crédito, vendes tu producción y compras terreno.',boton:'Siguiente'},
  {el:()=>rectDe('#pasar'),txt:'Cuando termines de construir, pasa el mes. Verás el informe, una carta de la suerte y cómo crece tu pueblo. ¡Suerte, alcalde!',haz:()=>{ terminarTour(); $('pasar').click(); },listo:()=>pasando,final:true}];
 function iniciarTour(){ if(TOUR.on) return; TOUR.on=true; TOUR.paso=0; const t=$('tour'); t.hidden=false; document.body.classList.add('en-tour'); mostrarPaso(); clearInterval(TOUR.iv); TOUR.iv=setInterval(tickTour,180); }
 function terminarTour(msg){ TOUR.on=false; clearInterval(TOUR.iv); $('tour').hidden=true; document.body.classList.remove('en-tour'); lsSet('trienio.tour','1'); if(msg) aviso(msg,3200); }
@@ -2665,14 +2755,18 @@ $('btnMenu').onclick=()=>{
   modal(`<h2>MENÚ</h2>${perfil?`<div class="perfiles"><div class="pf" aria-current="true"><img alt="" src="${retrato(perfil.ret)}"><span class="q"><b>${esc(perfil.nombre)}</b><small>Perfil en este equipo</small></span><button class="btn borrar" id="mPerfil">Cambiar perfil</button></div></div>`:''}<p>La partida se guarda sola cada mes y al construir.</p>
   <div class="cuenta"><span class="t">Cómo jugar</span></div>
   <details class="desg" open><summary>Tu meta</summary><p style="font-size:14px">Tienes 36 meses para hacer crecer tu municipio. Al empezar eliges a tu alcalde; cada personaje del partido tiene su propia ventaja. En el mes 30 arranca la campaña contra El Güero: eliges candidato (reelección una sola vez o alguien más del partido), gastas el fondo de campaña en mitines, radio, redes, colonias y un debate, y en el mes 36 se vota. La aprobación ayuda mucho, pero sin campaña puedes perder. Quien se reelige descansa un trienio y luego puede volver con derecho a otra reelección. Si pierdes, la partida termina y tu puntuación queda en el Salón del legado.</p></details>
-  <details class="desg"><summary>Moverte y construir</summary><p style="font-size:14px">Arrastra para moverte y pellizca para acercar. El panel <b>CONSTRUIR</b> de la derecha tiene seis pestañas; elige una pieza, toca el mapa y confirma con <b>Construir</b> o tocando dos veces el mismo lugar. Cada pieza dice su tamaño y lo que necesita. Todo edificio necesita una calle al lado: trázala con el botón <b>Calle</b> arrastrando, apruébala con ✓ y sal con Salir. Desde la ficha de un edificio puedes <b>Mover</b> (20% del precio) o <b>Demoler</b> (recuperas 25%). <b>↻ Mapa</b> gira la vista y <b>Capas</b> muestra el alcance de cada servicio.</p></details>
+  <details class="desg"><summary>Moverte y construir</summary><p style="font-size:14px">Arrastra para moverte y pellizca para acercar. El panel <b>CONSTRUIR</b> de la derecha tiene seis pestañas; elige una pieza, toca el mapa y confirma con <b>Construir</b> o tocando dos veces el mismo lugar. Cada pieza dice su tamaño y lo que necesita. Todo edificio necesita una calle al lado: trázala con el botón <b>Calle</b>: en la computadora arrastra con el mouse; en el celular mantén el dedo medio segundo sobre una casilla y luego arrastra (si arrastras sin esperar, solo mueves el mapa). Apruébala con ✓ y sal con Salir. Desde la ficha de un edificio puedes <b>Mover</b> (20% del precio) o <b>Demoler</b> (recuperas 25%). <b>↻</b> gira la vista y en <b>Gobierno › Capas</b> ves el alcance de cada servicio.</p></details>
   <details class="desg"><summary>Gente y aprobación</summary><p style="font-size:14px">La gente llega si hay casas libres y empleo. La aprobación sube si las casas tienen salud, escuela, seguridad, diversión, abasto, deporte y agua cerca, y baja con el desempleo, los malos olores, la delincuencia y la maña.</p></details>
   <details class="desg"><summary>Dinero</summary><p style="font-size:14px">Toca la <b>Caja</b> para ver de dónde entra y a dónde se va. Entran participaciones, predial y lo que dejan los negocios; salen mantenimiento, calles, autobuses, programas y créditos.</p></details>
   <details class="desg"><summary>Gobierno</summary><p style="font-size:14px">En <b>Gobierno</b> repartes cada enero el fondo federal entre 12 ramos, ajustas impuestos, activas programas sociales, pides crédito y mandas embarques por carretera, tren o barco.</p></details>
-  <details class="desg"><summary>Producción e investigación</summary><p style="font-size:14px">Cada cultivo tiene su temporada. Hay tres embalses, uno por río; la presa solo va en un embalse y riega una franja de 20 casillas hasta el mar. Tu municipio crece comprando terreno: toca la tierra oscura o ve a Gobierno › Terreno. Al fondo está la sierra, con minas de vetas más ricas y bosque para cabañas de ecoturismo. Las minas van sobre el monte: el oro paga cada 6 meses, la plata cada 4, el cobre cada 2 y el zinc cada mes. Lo que tiene candado se desbloquea en <b>Investigar</b>; una universidad de investigación da más puntos y las fábricas necesitan sus egresados.</p></details>
+  <details class="desg"><summary>Producción e investigación</summary><p style="font-size:14px">Cada cultivo tiene su temporada. Hay tres embalses, uno por río; la presa solo va en un embalse y riega una franja de 20 casillas hasta el mar. Tu municipio crece comprando terreno: toca la tierra oscura o ve a Gobierno › Terreno. Al fondo está la sierra, con minas de vetas más ricas y bosque para cabañas de ecoturismo. Las minas van sobre el monte: el oro paga cada 6 meses, la plata cada 4, el cobre cada 2 y el zinc cada mes. Lo que tiene candado se desbloquea en <b>Gobierno › Investigación</b>; una universidad de investigación da más puntos y las fábricas necesitan sus egresados.</p></details>
+  <details class="desg"><summary>Atajos de teclado (computadora)</summary><div class="cuenta" style="font-size:13px">
+   <span>Mover el mapa</span><span>Flechas o W A S D · arrastrar</span><span>Arrastrar sin construir</span><span>Clic derecho o rueda</span><span>Acercar / alejar</span><span>Rueda del mouse o + / −</span>
+   <span>Construir</span><span>Clic (la pieza sigue al cursor) · Enter</span><span>Cancelar / cerrar</span><span>Esc</span><span>Girar la pieza</span><span>R</span><span>Girar el mapa</span><span>Q / E</span>
+   <span>Pasar mes</span><span>Espacio</span><span>Categorías</span><span>1 a 6</span><span>Calle · Demoler · Capas</span><span>C · X · L</span><span>Investigar · Gobierno · Cartas</span><span>I · G · K</span><span>Pantalla completa</span><span>F11</span></div></details>
   <details class="desg"><summary>Cartas del mes</summary><p style="font-size:14px">Cada mes sacas una carta; el dado (1·1·1·2·2·3) multiplica su efecto. Las de mano se guardan en <b>Cartas</b>. Mientras mejor vas, más salen cartas malas y más probable es una catástrofe: terremoto, inundación del río o huracán. Los edificios dañados dejan de funcionar hasta que los repares desde su ficha.</p></details>
-  <div class="fila"><button class="btn" id="mTour">Repetir recorrido</button><button class="btn" id="mCta">Cuenta</button><button class="btn" id="mNueva">Nueva partida</button><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
-  $('mCerrar').onclick=cerrarModal; $('mTour').onclick=()=>{cerrarModal(); iniciarTour();}; $('mCta').onclick=()=>cuenta();
+  <div class="fila"><button class="btn" id="mFull">Pantalla completa</button><button class="btn" id="mTour">Repetir recorrido</button><button class="btn" id="mCta">Cuenta</button><button class="btn" id="mNueva">Nueva partida</button><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
+  $('mCerrar').onclick=cerrarModal; $('mFull').onclick=()=>{cerrarModal(); pantallaCompleta();}; $('mTour').onclick=()=>{cerrarModal(); iniciarTour();}; $('mCta').onclick=()=>cuenta();
   if($('mPerfil')) $('mPerfil').onclick=()=>{guardar(); cerrarModal(); volverPortada(); elegirPerfil();};
   $('mNueva').onclick=()=>{ $('modal').querySelector('.fila').innerHTML='<span style="align-self:center;color:var(--mal)">Se perderá la partida actual.</span><button class="btn" id="mNo">No</button><button class="btn-sol btn" id="mSi">Empezar de nuevo</button>';
     $('mNo').onclick=cerrarModal; $('mSi').onclick=()=>{cerrarModal();iniciar(true);}; };
@@ -2903,6 +2997,10 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   if(!perfil) crearPerfil(true);
 });
 window.__t={get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+let pidaInstalar=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
+window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
+$('pInstalar').onclick=async()=>{ if(!pidaInstalar) return; pidaInstalar.prompt(); const r=await pidaInstalar.userChoice; pidaInstalar=null; if(r.outcome==='accepted') $('pInstalar').hidden=true; };
 $('pLegado').onclick=()=>verLegado(); $('pCuenta').onclick=()=>cuenta();
 $('tourSig').onclick=()=>{ TOUR.paso++; if(TOUR.paso>=PASOS.length) return terminarTour(); mostrarPaso(); }; $('tourHaz').onclick=()=>{ const P=PASOS[TOUR.paso]; if(P&&P.haz) P.haz(); };
 $('tourSal').onclick=()=>terminarTour('Puedes repetir el recorrido desde el menú ≡');
