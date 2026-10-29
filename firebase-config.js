@@ -1,12 +1,10 @@
-// Configuración de Firebase para las cuentas de El Trienio.
-// Mientras quede en null, el juego funciona sin cuentas (todo se guarda en el equipo).
-// Para activarlas, reemplaza null por el objeto que te da la consola de Firebase, por ejemplo:
-// window.TRIENIO_FIREBASE = {
-//   apiKey: "AIza...",
-//   authDomain: "el-trienio.firebaseapp.com",
-//   projectId: "el-trienio",
-//   storageBucket: "el-trienio.appspot.com",
-//   messagingSenderId: "1234567890",
-//   appId: "1:1234567890:web:abc123"
-// };
-window.TRIENIO_FIREBASE = null;
+// Configuración de Firebase para las cuentas de El Trienio (proyecto el-trienio).
+// La apiKey no es secreta: identifica al proyecto. La seguridad la dan las reglas de Firestore.
+window.TRIENIO_FIREBASE = {
+  apiKey: "AIzaSyBqqGLRNSBhI_YxZyZ9IcQybIvyUkrJvBI",
+  authDomain: "el-trienio.firebaseapp.com",
+  projectId: "el-trienio",
+  storageBucket: "el-trienio.firebasestorage.app",
+  messagingSenderId: "41974785697",
+  appId: "1:41974785697:web:bd6a30ae7b37921b0932e0"
+};
