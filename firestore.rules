@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // datos de cada jugador: solo él los lee y escribe
+    match /usuarios/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      match /partidas/{id} {
+        allow read, write, delete: if request.auth != null && request.auth.uid == uid
+          && (request.resource == null || request.resource.data.data.size() < 900000);
+      }
+      // compras: solo las escribe el servidor (Google Play / App Store); el jugador solo las lee
+      match /compras/{id} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+    // Salón del legado: todos lo leen; cada quien registra solo a su nombre y no se puede editar ni borrar
+    match /legado/{id} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.puntos is int
+        && request.resource.data.puntos >= 0 && request.resource.data.puntos < 200000
+        && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 30;
+      allow update, delete: if false;
+    }
+  }
+}
