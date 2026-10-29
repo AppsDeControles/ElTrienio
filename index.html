@@ -58,8 +58,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .reg img{width:46px;height:46px;object-fit:cover;flex:none;background:var(--hondo)}
 .reg .q{display:flex;flex-direction:column;gap:3px;min-width:0} .reg b{font-size:13px} .reg small{font-size:11.5px;color:var(--tenue)} .reg.si small{color:var(--bien)}
 .reg .chip{font-size:11.5px;padding:3px 6px}
-.ramos{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
-.ramo{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid var(--borde);padding:4px 6px}
+.ramos{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:5px}
+.caja.ancha{width:100%;height:100%;max-width:none;max-height:none;padding:10px 14px;gap:7px}
+.caja.ancha h2{font-size:15px} .caja.ancha p{font-size:13px!important}
+.caja.ancha .fila{position:sticky;bottom:-10px;background:var(--suelo);padding:6px 0 2px;margin-top:auto}
+.ramo{display:flex;align-items:center;gap:5px;background:var(--panel2);border:2px solid var(--borde);padding:3px 5px}
 .ramo .q{flex:1;min-width:0;display:flex;flex-direction:column} .ramo b{font-size:13.5px} .ramo small{font-size:11.5px;color:var(--tenue)} .ramo .pct{min-width:38px;text-align:center;font-weight:700} .ramo .mini2{min-height:30px;min-width:32px;padding:0}
 .legado{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow:auto}
 .lg{display:flex;align-items:center;gap:8px;background:var(--panel2);border:2px solid var(--borde);padding:4px 8px 4px 4px}
@@ -76,7 +79,7 @@ body.en-tour #aviso{display:none!important}
 #tour .blq{position:absolute;background:rgba(6,5,4,.74);pointer-events:auto}
 #tourAro{position:absolute;border:3px solid var(--sol);box-shadow:0 0 0 3px rgba(242,178,51,.35),0 0 18px rgba(242,178,51,.6);pointer-events:none;animation:aro 1.4s ease-in-out infinite}
 @keyframes aro{50%{box-shadow:0 0 0 6px rgba(242,178,51,.15),0 0 26px rgba(242,178,51,.8)}}
-#tourGlobo{position:absolute;pointer-events:auto;background:var(--suelo);border:3px solid var(--sol);box-shadow:6px 6px 0 var(--hondo);padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14.5px;line-height:1.4}
+#tourGlobo{box-sizing:border-box;max-width:calc(100vw - 24px);position:absolute;pointer-events:auto;background:var(--suelo);border:3px solid var(--sol);box-shadow:6px 6px 0 var(--hondo);padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14.5px;line-height:1.4}
 #tourGlobo small{margin-right:auto;color:var(--tenue)} #tourGlobo .btn{min-height:34px}
 @media (prefers-reduced-motion:reduce){#tourAro{animation:none}}
 .tabla{display:grid;grid-template-columns:1fr auto auto auto;gap:2px 12px;font-size:13px;max-height:220px;overflow:auto}
@@ -85,11 +88,14 @@ details.desg summary{cursor:pointer;color:var(--sol);font-size:14px;font-weight:
 details.desg[open]{display:flex;flex-direction:column;gap:6px}
 
 /* panel derecho */
-#panel{position:absolute;right:0;top:calc(47px + env(safe-area-inset-top,0px));bottom:0;width:232px;background:var(--suelo);border-left:3px solid var(--hondo);display:flex;flex-direction:column;z-index:4;
+#panel{position:absolute;right:0;top:calc(47px + env(safe-area-inset-top,0px));bottom:0;width:262px;background:var(--suelo);border-left:3px solid var(--hondo);display:flex;flex-direction:column;z-index:4;
   padding-right:env(safe-area-inset-right,0px);padding-bottom:env(safe-area-inset-bottom,0px);transition:transform .2s}
 #panel.cerrado{transform:translateX(calc(100% - 0px))}
-#panel .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:8px 8px 4px}
-#panel .tabs button{height:30px;background:var(--panel2);border:2px solid var(--borde);font-size:12px;padding:0;font-weight:700}
+#panel{flex-direction:row!important}
+#panel .tabs{display:flex;flex-direction:column;gap:3px;padding:6px 4px;width:66px;flex:none;border-right:2px solid var(--hondo);overflow-y:auto;scrollbar-width:none}
+#panel .tabs::-webkit-scrollbar{display:none}
+#panel .tabs button{flex:1;min-height:46px;max-height:64px;background:var(--panel2);border:2px solid var(--borde);font-size:10px;letter-spacing:-.1px;padding:3px 1px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.05}
+#panel .tabs button i{font-style:normal;font-size:18px;line-height:1}
 #panel .tabs button[aria-selected="true"]{border-color:var(--sol);background:#4A3A1E;color:var(--sol)}
 #panel .phead{display:flex;align-items:center;gap:7px;padding:8px 10px 0;color:var(--sol);font-family:var(--f-display);font-weight:800;font-size:14px;letter-spacing:.8px;flex-wrap:wrap}
 #panel .phead small{flex-basis:100%;font-family:var(--f-body);font-weight:600;letter-spacing:0;font-size:11.5px;color:var(--tenue)}
@@ -102,8 +108,8 @@ details.desg[open]{display:flex;flex-direction:column;gap:6px}
 .item .req{display:block;font-size:11px;color:#E0B25C;margin-top:2px}
 @media (prefers-reduced-motion:reduce){#panel.nuevo .item.sug{animation:none}}
 #panel h3{margin:4px 10px 6px;font-size:14px;color:var(--tenue);font-weight:600}
-#lista{flex:1;overflow-y:auto;padding:0 8px 10px;display:flex;flex-direction:column;gap:6px;touch-action:pan-y}
-.item{display:grid;grid-template-columns:52px 1fr;gap:8px;align-items:center;text-align:left;background:var(--panel2);border:2px solid var(--borde);padding:5px}
+#lista{flex:1;overflow-y:auto;padding:6px 6px 10px;min-width:0;display:flex;flex-direction:column;gap:6px;touch-action:pan-y}
+.item{display:grid;grid-template-columns:46px 1fr;gap:8px;align-items:center;text-align:left;background:var(--panel2);border:2px solid var(--borde);padding:5px}
 .item[aria-pressed="true"]{border-color:var(--sol);background:#3A2F1C}
 .item img{width:52px;height:44px;object-fit:contain;image-rendering:pixelated;background:var(--hondo)}
 .item .nom{font-size:14px;font-weight:600;line-height:1.1}
@@ -113,11 +119,11 @@ details.desg[open]{display:flex;flex-direction:column;gap:6px}
 
 /* herramientas abajo izquierda */
 #herr{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));display:flex;gap:6px;z-index:4}
-#herr{max-width:calc(100vw - 244px - 175px - 20px);overflow-x:auto;scrollbar-width:none;touch-action:pan-x} #herr::-webkit-scrollbar{display:none}
+#herr{max-width:calc(100vw - 274px - 175px - 20px);overflow-x:auto;scrollbar-width:none;touch-action:pan-x} #herr::-webkit-scrollbar{display:none}
 body.panel-cerrado #herr{max-width:calc(100vw - 175px - 30px)}
 #herr button{flex:none;min-width:44px;height:44px;background:var(--suelo);border:2px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);font-size:13px;font-weight:700;padding:0 10px}
 #herr button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--sol);color:var(--sol)}
-#pasar{position:absolute;right:calc(244px + env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:4;height:46px;padding:0 18px;font-family:var(--f-display);font-weight:800;font-size:14px;letter-spacing:.5px;transition:right .2s}
+#pasar{position:absolute;right:calc(274px + env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:4;height:46px;padding:0 18px;font-family:var(--f-display);font-weight:800;font-size:14px;letter-spacing:.5px;transition:right .2s}
 body.panel-cerrado #pasar{right:max(12px,env(safe-area-inset-right,0px))}
 
 /* barra de colocación */
@@ -172,6 +178,10 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
 #portada .acciones{display:flex;flex-direction:column;gap:8px;width:280px;margin-top:6px}
 #portada .acciones button{height:46px;text-align:left;padding:0 16px;font-family:var(--f-display);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center}
 #portada .acciones button span{font-family:var(--f-body);font-size:13px;font-weight:600}
+#portada{overflow-y:auto}
+@media (max-height:560px){#portada .col{gap:7px;padding:10px 0} #portada h1 img{width:min(300px,34vw)} #portada .col>p{display:none} #portada .sub{font-size:12px}
+ #portada .acciones{display:grid;grid-template-columns:1fr 1fr;width:min(460px,52vw);gap:6px;margin-top:0} #portada .acciones button{height:40px;padding:0 10px;font-size:12.5px}
+ #portada .acciones #pCont{grid-column:1/-1} #pPerfil{width:min(460px,52vw);padding:4px 6px} #pPerfil img{width:38px;height:38px} #portada .col>small{display:none}}
 #carga{font-size:13px;color:var(--tenue)}
 #modal{z-index:35} #aviso{z-index:36}
 #pPerfil{display:flex;align-items:center;gap:10px;background:rgba(30,26,22,.88);border:2px solid var(--borde);padding:6px 8px 6px 6px;width:280px;box-sizing:border-box}
@@ -199,9 +209,9 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
 @media (orientation:portrait) and (max-width:700px){#girar{display:flex}}
 #aviso{position:absolute;left:calc(50% - 116px);transform:translateX(-50%);top:calc(56px + env(safe-area-inset-top,0px));z-index:15;background:var(--suelo);border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);padding:8px 14px;font-size:14px;max-width:min(80vw,520px);text-align:center}
 @media (max-width:980px){#hud .logo,#hud .stat small.et{display:none} #hud{gap:10px} .barra{width:44px}}
-@media (max-height:420px){#herr button{min-width:38px;height:38px;font-size:12px;padding:0 7px} #herr{max-width:calc(100vw - 220px - 160px - 16px)} #pasar{height:40px;padding:0 12px;font-size:13px} .caja{padding:10px 14px;gap:7px;font-size:14px} .cuenta{font-size:13px} .chip{font-size:12px} #modal .btn{min-height:36px} #panel{width:208px} #pasar{right:calc(220px + env(safe-area-inset-right,0px))} #colocar{max-width:calc(100vw - 250px)} .item{grid-template-columns:44px 1fr} .item img{width:44px;height:38px}}
+@media (max-height:420px){#herr button{min-width:38px;height:38px;font-size:12px;padding:0 7px} #herr{max-width:calc(100vw - 250px - 160px - 16px)} #pasar{height:40px;padding:0 12px;font-size:13px} .caja{padding:10px 14px;gap:7px;font-size:14px} .cuenta{font-size:13px} .chip{font-size:12px} #modal .btn{min-height:36px} #panel{width:238px} #pasar{right:calc(250px + env(safe-area-inset-right,0px))} #colocar{max-width:calc(100vw - 250px)} .item{grid-template-columns:44px 1fr} .item img{width:44px;height:38px}}
 @media (prefers-reduced-motion:reduce){#panel,#pasar{transition:none}}
-#radio{position:absolute;right:calc(244px + env(safe-area-inset-right,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 54px);z-index:4;display:flex;align-items:center;gap:3px;background:#2A2018;border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px #6B4E31;padding:4px 5px;transition:right .2s;max-width:250px}
+#radio{position:absolute;right:calc(274px + env(safe-area-inset-right,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 54px);z-index:4;display:flex;align-items:center;gap:3px;background:#2A2018;border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px #6B4E31;padding:4px 5px;transition:right .2s;max-width:250px}
 body.panel-cerrado #radio{right:max(12px,env(safe-area-inset-right,0px))}
 body.en-portada #radio{visibility:hidden}
 #radio .ant{position:absolute;right:16px;top:-16px;width:3px;height:14px;background:#8C8C8C;transform:rotate(18deg)}
@@ -210,7 +220,7 @@ body.en-portada #radio{visibility:hidden}
 #radio .can{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #radio button:not(.info){width:30px;height:30px;padding:0;background:var(--panel2);border:2px solid var(--hondo);font-size:13px;color:var(--crema)}
 #radio.sonando .info{box-shadow:0 0 6px rgba(155,224,138,.35)}
-@media (max-height:420px){#radio{right:calc(220px + env(safe-area-inset-right,0px))}}
+@media (max-height:420px){#radio{right:calc(250px + env(safe-area-inset-right,0px))}}
 #capas{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 52px);z-index:6;background:var(--suelo);border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);padding:8px;max-width:min(560px,calc(100vw - 290px));display:flex;flex-direction:column;gap:6px}
 #capas .chip{cursor:pointer;font-family:var(--f-body);color:var(--crema)} #capas small{font-size:12px;color:var(--tenue)}
 body.con-capas #efectos{visibility:hidden}
@@ -252,7 +262,7 @@ body.con-capas #efectos{visibility:hidden}
   <header id="hud" aria-label="Recursos">
     <img id="hAva" alt="" hidden><span class="logo">EL TRIENIO</span>
     <span class="stat clic" id="sCaja" role="button" tabindex="0" title="Ver finanzas"><small class="et">Caja</small><b id="hDin">$0</b><small id="hBal"></small></span>
-    <span class="stat" title="Habitantes / capacidad de vivienda"><small class="et">Habitantes</small><b id="hPob">0</b><small id="hCap"></small></span>
+    <span class="stat clic" id="sPob" role="button" tabindex="0" title="Ver la población"><small class="et">Habitantes</small><b id="hPob">0</b><small id="hCap"></small></span>
     <span class="stat" title="Empleos ocupados / disponibles"><small class="et">Empleo</small><b id="hEmp">0%</b></span>
     <span class="stat"><small class="et">Aprob.</small><span class="barra"><i id="hAprBar"></i></span><b id="hApr">50%</b></span>
     <button class="btn hb" id="bGob">Gobierno</button>
@@ -262,9 +272,7 @@ body.con-capas #efectos{visibility:hidden}
 
   <aside id="panel" aria-label="Construir">
     <button id="tirador" aria-label="Mostrar u ocultar el panel de construcción"><span class="fl">›</span></button>
-    <div class="phead"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg><span>CONSTRUIR</span><small id="pAyuda">Elige una pestaña y una pieza</small></div>
-    <div class="tabs" role="tablist" id="tabs"></div>
-    <h3 id="catNom">Calles</h3>
+    <div class="tabs" role="tablist" id="tabs" aria-orientation="vertical"></div>
     <div id="lista"></div>
   </aside>
 
@@ -312,11 +320,11 @@ body.con-capas #efectos{visibility:hidden}
         <button class="btn" id="pLegado">SALÓN DEL LEGADO</button>
         <button class="btn" id="pCuenta">CUENTA <span>…</span></button>
       </div>
-      <small style="color:var(--tenue)">Versión 0.6 · prueba</small>
+      <small style="color:var(--tenue)">Versión 0.7 · prueba</small>
     </div>
   </section>
   <div id="tour" hidden><div class="blq"></div><div class="blq"></div><div class="blq"></div><div class="blq"></div><div id="tourAro"></div>
-    <div id="tourGlobo" role="dialog" aria-live="polite"><div id="tourTxt"></div><div class="fila" style="align-items:center"><small id="tourN"></small><button class="btn" id="tourSal">Saltar</button><button class="btn-sol btn" id="tourSig">Siguiente</button></div></div></div>
+    <div id="tourGlobo" role="dialog" aria-live="polite"><div id="tourTxt"></div><div class="fila" style="align-items:center"><small id="tourN"></small><button class="btn" id="tourSal">Saltar</button><button class="btn" id="tourHaz" hidden>Hazlo por mí</button><button class="btn-sol btn" id="tourSig">Siguiente</button></div></div></div>
   <div id="cargando" role="status"><img src="logo/carga.svg" alt="El Trienio"><div id="cargaTxt">Cargando piezas…</div></div>
   <div id="girar"><div><p class="pix" style="font-size:16px;color:var(--sol);line-height:1.6">GIRA TU CELULAR</p><p>El Trienio se juega en horizontal.</p></div></div>
 </div>
@@ -336,6 +344,7 @@ window.addEventListener('error',e=>aviso('Error: '+(e.message||'desconocido'),60
 // ---------- catálogo ----------
 const CATS=[['vivienda','Vivienda'],['publica','Infraestructura pública'],['social','Infraestructura social'],['produccion','Producción'],['comercio','Comercio y turismo'],['industria','Industria']];
 const CAT_CORTO={vivienda:'Vivienda',publica:'Pública',social:'Social',produccion:'Producción',comercio:'Comercio',industria:'Industria'};
+const CAT_ICO={vivienda:'🏠',publica:'🛣️',social:'🏫',produccion:'🌾',comercio:'🛒',industria:'🏭'};
 const DEF={
  calle:{nom:'Calle',cat:'publica',costo:4,mant:.1,desc:'Conecta edificios. Arrastra para trazar.'},
  humilde:{nom:'Casa humilde',cat:'vivienda',spr:'casa-humilde-a',A:1,B:1,costo:15,casas:6,predial:.5,lote:'tierra'},
@@ -728,6 +737,7 @@ function factorDe(e){
   if(d.turismo&&!d.bosque){const extra=S.eds.filter(x=>D(x).turismo&&x!==e).length; f*=1+Math.min(.5,extra*.08); if(extra) nota=`Zona turística: +${Math.round(Math.min(.5,extra*.08)*100)}%`;}
   return [f,nota];
 }
+function pobGrupos(p){ const inf=Math.round(p*.28), may=Math.round(p*.10); return {inf,may,activa:Math.max(0,p-inf-may)}; }
 function recalcular(){
   const casas=S.eds.filter(e=>D(e).casas);
   const cap=casas.reduce((s,e)=>s+D(e).casas,0);
@@ -736,8 +746,9 @@ function recalcular(){
   const aire=casas.filter(e=>D(e).aire).length/Math.max(1,casas.length);
   let trans=0; for(const h of casas){const c=centro(h); let q=0; for(const r of S.rutas) if(r._c&&cubreRuta(r,c)) q=Math.max(q,calidad(r)); trans+=q;}
   trans/=Math.max(1,casas.length);
-  const fuerza=Math.round(S.pob*.5*(1+.1*trans));      // con camión la gente llega a más trabajos
-  const ocupados=Math.min(fuerza,empleos);
+  // población: infancias (28%), adultos mayores (10%) y en edad de trabajar (el resto), que se divide en empleados y desempleados
+  const grupos=pobGrupos(S.pob); const fuerza=grupos.activa;
+  const ocupados=Math.min(fuerza,empleos);   // el transporte ya pesa en ingresos y aprobación
   const llenado=empleos?ocupados/empleos:0;
   const desempleo=fuerza?1-ocupados/fuerza:0;
   // cobertura de servicios
@@ -800,7 +811,7 @@ function recalcular(){
   if(cap<S.pob) obj-=6;
   obj-=S.deli*.12+S.mana*.05;
   obj=clamp(obj,3,97);
-  S.calc={cap,empleos,fuerza,ocupados,llenado,desempleo,cob,olor,trans,ing,gas,tIng,tIngBase,tGas,bal:tIng-tGas,obj,neg,egresados,egrNec,fEgr,aprGob};
+  S.calc={grupos,cap,empleos,fuerza,ocupados,llenado,desempleo,cob,olor,trans,ing,gas,tIng,tIngBase,tGas,bal:tIng-tGas,obj,neg,egresados,egrNec,fEgr,aprGob};
   return S.calc;
 }
 function pasarMes(){
@@ -1680,7 +1691,7 @@ $('tRot').onclick=()=>girarMapa(); $('tVer').onclick=()=>ponerModo('ver'); $('tC
 // ---------- interfaz ----------
 let cat='vivienda';
 function pestanas(){
-  $('tabs').innerHTML=CATS.map(([k,n])=>`<button role="tab" aria-selected="${k===cat}" data-c="${k}" title="${n}">${CAT_CORTO[k]}</button>`).join('');
+  $('tabs').innerHTML=CATS.map(([k,n])=>`<button role="tab" aria-selected="${k===cat}" data-c="${k}" title="${n}"><i aria-hidden="true">${CAT_ICO[k]}</i>${CAT_CORTO[k]}</button>`).join('');
   $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{cat=b.dataset.c;pestanas();lista();});
 }
 function detalle(d){
@@ -1700,7 +1711,6 @@ function requisitos(k,d){ const r=[];
   if(d.fabrica) r.push('Necesita egresados'); if(d.unico) r.push('Solo uno');
   return r.join(' · '); }
 function lista(){
-  $('catNom').textContent=CATS.find(c=>c[0]===cat)[1];
   const tipos=Object.keys(DEF).filter(k=>DEF[k].cat===cat);
   $('lista').innerHTML=tipos.map(k=>{const d=DEF[k];const usado=d.unico&&S&&S.eds.some(e=>e.t===k);
     const bloq=d.tec&&S&&!tieneTec(d.tec);
@@ -1712,7 +1722,6 @@ function lista(){
   $('lista').querySelectorAll('.item').forEach(b=>b.onclick=()=>b.dataset.bloq?investigar(DEF[b.dataset.t].tec):elegirTipo(b.dataset.t));
   // jugadores nuevos: mientras no construyan nada, el panel late y sugiere por dónde empezar
   const nuevo=S&&!S.obras; $('panel').classList.toggle('nuevo',!!nuevo);
-  $('pAyuda').textContent=nuevo?(cat==='vivienda'?'Empieza aquí: toca la Casa humilde y luego el mapa junto a una calle':'Empieza en Vivienda con una Casa humilde'):'Elige una pestaña y una pieza';
 }
 const SUG={vivienda:'humilde',publica:'calle',social:'escuela',produccion:'parcela',comercio:'minisuper',industria:'empacadora'};
 function hud(){
@@ -1782,6 +1791,14 @@ function ficha(){
 // panel plegable
 $('rPlay').onclick=()=>Radio.on?Radio.apagar():Radio.encender(); $('rSig').onclick=()=>Radio.siguiente(); $('rAnt').onclick=()=>Radio.anterior(); $('rEst').onclick=()=>Radio.estacion();
 $('sCaja').onclick=()=>finanzas();
+$('sPob').onclick=()=>{ const c=recalcular(), g=c.grupos, P=x=>S.pob?Math.round(100*x/S.pob)+'%':'—';
+  modal(`<h2>POBLACIÓN · ${S.pob} HABITANTES</h2>
+   <div class="cuenta"><span class="t">Cómo se reparte</span><span>Infancias</span><span>${g.inf} · ${P(g.inf)}</span><span>Adultos mayores (jubilados)</span><span>${g.may} · ${P(g.may)}</span>
+   <span>Empleados</span><span style="color:var(--bien)">${c.ocupados} · ${P(c.ocupados)}</span><span>Desempleados</span><span style="color:${c.fuerza-c.ocupados?'var(--mal)':'inherit'}">${c.fuerza-c.ocupados} · ${P(c.fuerza-c.ocupados)}</span>
+   <span class="tot">En edad de trabajar</span><span class="tot">${g.activa}</span></div>
+   <div class="cuenta"><span class="t">Vivienda y trabajo</span><span>Lugar en casas</span><span>${c.cap} (${Math.max(0,c.cap-S.pob)} libres)</span><span>Empleos que ofrece el pueblo</span><span>${c.empleos} (${Math.max(0,c.empleos-c.ocupados)} vacantes)</span></div>
+   <p style="font-size:13px;color:var(--tenue)">La gente llega si hay casas libres y empleo. Si sobran desempleados, construye negocios; si sobran vacantes, construye casas.</p>
+   <div class="fila"><button class="btn-sol btn" id="mCerrar">Cerrar</button></div>`); $('mCerrar').onclick=cerrarModal; };
 $('tirador').onclick=()=>{const p=$('panel');p.classList.toggle('cerrado');document.body.classList.toggle('panel-cerrado',p.classList.contains('cerrado'));$('tirador').querySelector('.fl').textContent=p.classList.contains('cerrado')?'‹':'›';};
 
 // ---------- baraja de modificadores ----------
@@ -2019,9 +2036,9 @@ const IMP={
 const fImp=(k)=>IMP[k].f[S.imp[k]];
 // programas sociales: cuestan cada mes; quitarlos enoja
 const PROG={
- becas:{nom:'Becas escolares',costo:()=>3+.05*S.pob,apr:3,txt:'Aprobación +3 · egresados +15%'},
+ becas:{nom:'Becas escolares',costo:()=>3+.18*pobGrupos(S.pob).inf,apr:3,txt:'Para las infancias: aprobación +3 · egresados +15%'},
  despensas:{nom:'Despensas a familias',costo:()=>4+.07*S.pob,apr:4,txt:'Aprobación +4 · delincuencia −4'},
- mayores:{nom:'Apoyo a adultos mayores',costo:()=>3+.06*S.pob,apr:4,txt:'Aprobación +4'},
+ mayores:{nom:'Apoyo a adultos mayores',costo:()=>3+.6*pobGrupos(S.pob).may,apr:4,txt:'Pensión para los jubilados: aprobación +4'},
  pesca:{nom:'Apoyo a pescadores en veda',costo:()=>5,apr:()=>S.eds.some(e=>e.t==='muelle')?4:1,txt:'Aprobación +4 si hay muelle (+1 si no)'},
  seguro:{nom:'Seguro agrícola',costo:()=>6,apr:1,txt:'Sequía y plaga pegan la mitad · aprobación +1'},
  empleo:{nom:'Empleo temporal',costo:()=>4+.04*S.pob,apr:1,txt:'El desempleo pesa la mitad · aprobación +1'},
@@ -2054,8 +2071,10 @@ function gobierno(tab,obligado){ return new Promise(fin=>{
       <div class="cuenta"><span>Gasto en programas</span><span><b>${dinero(tot)}/mes</b></span></div>`;
     }
     const usadas2=Object.values(borr).reduce((s,v)=>s+v,0);
+    const c0=document.querySelector('#modal .caja.ancha'), st=c0&&!$('modal').hidden?c0.scrollTop:0;
     modal(`<h2>GOBIERNO MUNICIPAL${tab==='fondo'?` · AÑO ${anio}`:''}</h2>${tabs}${cuerpo}
-      <div class="fila">${tab==='fondo'&&puede?`<button class="btn" id="gParejo">Repartir parejo</button><button class="btn-sol btn" id="gOk" ${usadas2<PARTES?'disabled':''}>Confirmar reparto</button>`:`<button class="btn-sol btn" id="gCerrar">Listo</button>`}</div>`);
+      <div class="fila">${tab==='fondo'&&puede?`<button class="btn" id="gParejo">Repartir parejo</button><button class="btn-sol btn" id="gOk" ${usadas2<PARTES?'disabled':''}>Confirmar reparto</button>`:`<button class="btn-sol btn" id="gCerrar">Listo</button>`}</div>`,'ancha');
+    const c1=document.querySelector('#modal .caja'); if(c1) c1.scrollTop=st;
     $('modal').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{ const t=b.dataset.tab; const volver=()=>{tab='fondo';pinta();};
       if(t==='terreno') return mapaTerreno(volver); if(t==='cred') return credito(volver); if(t==='com') return comercio(volver); if(t==='fin') return finanzas(volver); tab=t; pinta();});
     $('modal').querySelectorAll('[data-mas]').forEach(b=>b.onclick=()=>{const k=b.dataset.mas; borr[k]=(borr[k]||0)+1; pinta();});
@@ -2437,7 +2456,7 @@ function transicionMes(nombre){
   });
 }
 // ---------- pasar mes y reportes ----------
-function modal(html){$('aviso').hidden=true;const m=$('modal');m.innerHTML=`<div class="caja" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;return m;}
+function modal(html,cls){$('aviso').hidden=true;const m=$('modal');m.innerHTML=`<div class="caja ${cls||''}" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;return m;}
 function cerrarModal(){$('modal').hidden=true;}
 let pasando=false;
 $('pasar').onclick=async()=>{
@@ -2490,7 +2509,7 @@ function reporte(r,listo){
   const fila=(n,v)=>`<span>${n}</span><span>${dinero(v)}</span>`;
   modal(`<h2>INFORME DE ${MESES[(r.mes-1)%12].toUpperCase()} · AÑO ${Math.floor((r.mes-1)/12)+1}</h2>
   <div class="cols"><div class="cuenta"><span class="t">Entradas</span>${c.ing.map(x=>fila(...x)).join('')}<span class="t">Salidas</span>${c.gas.map(x=>fila(x[0],-x[1])).join('')}<span class="tot">Balance</span><span class="tot" style="color:${c.bal>=0?'var(--bien)':'var(--mal)'}">${c.bal>=0?'+':''}${dinero(c.bal)}</span></div>
-  <div class="cuenta"><span class="t">El pueblo</span><span>Habitantes</span><span>${r.despues.pob} (${dp>=0?'+':''}${dp})</span><span>Aprobación</span><span>${r.despues.apr}% (${da>=0?'+':''}${da})</span><span>Empleo</span><span>${c.ocupados} de ${c.fuerza}</span><span>Caja</span><span>${dinero(r.despues.din)}</span><span>Delincuencia</span><span>${Math.round(S.deli)}</span><span>La maña</span><span>${Math.round(S.mana)}</span></div></div>
+  <div class="cuenta"><span class="t">El pueblo</span><span>Habitantes</span><span>${r.despues.pob} (${dp>=0?'+':''}${dp})</span><span>Aprobación</span><span>${r.despues.apr}% (${da>=0?'+':''}${da})</span><span>Infancias</span><span>${c.grupos.inf}</span><span>Adultos mayores</span><span>${c.grupos.may}</span><span>Empleados</span><span>${c.ocupados}</span><span>Desempleados</span><span style="color:${c.fuerza-c.ocupados>0?'var(--mal)':'inherit'}">${c.fuerza-c.ocupados}</span><span>Caja</span><span>${dinero(r.despues.din)}</span><span>Delincuencia</span><span>${Math.round(S.deli)}</span><span>La maña</span><span>${Math.round(S.mana)}</span></div></div>
   <div class="chips">${chips.map(([k,t])=>`<span class="chip ${k}">${t}</span>`).join('')}</div>
   <details class="desg"><summary>Ver cuánto se espera de cada edificio el mes que entra</summary>${tablaEdificios()}</details>
   <div class="fila"><button class="btn" id="mCom">Comercio</button><button class="btn" id="mCred">Pedir crédito</button><button class="btn-sol btn" id="mOk">${S.mes>36?'Continuar':'Sacar carta del mes'}</button></div>`);
@@ -2519,22 +2538,22 @@ function rectDe(sel){ const el=typeof sel==='string'?document.querySelector(sel)
 function unir(a,b){ if(!a) return b; if(!b) return a; const x=Math.min(a.x,b.x), y=Math.min(a.y,b.y); return {x,y,w:Math.max(a.x+a.w,b.x+b.w)-x,h:Math.max(a.y+a.h,b.y+b.h)-y}; }
 const PASOS=[
  {txt:'Este es tu municipio. Te enseño lo básico en un minuto: dónde construir, cómo ver tus números y cómo pasar el mes.',boton:'Empezar'},
- {el:()=>rectDe('#hud'),txt:'Arriba ves tu <b>caja</b> (y cuánto ganas o pierdes al mes), los <b>habitantes</b>, el <b>empleo</b> y la <b>aprobación</b>. Toca la caja cuando quieras ver de dónde sale el dinero.',boton:'Siguiente'},
+ {el:()=>rectDe('#hud'),txt:'Arriba ves tu <b>caja</b> (y cuánto ganas o pierdes al mes), los <b>habitantes</b>, el <b>empleo</b> y la <b>aprobación</b>. Toca la caja o los habitantes para ver el detalle.',boton:'Siguiente'},
  {antes:()=>{ const p=$('panel'); if(p.classList.contains('cerrado')) $('tirador').click(); cat='vivienda'; pestanas(); lista(); },
-  el:()=>unir(rectDe('#panel .phead'),rectDe('.item[data-t="humilde"]')),txt:'Este es el panel <b>CONSTRUIR</b>. Empecemos con una casa: toca <b>Casa humilde</b>.',listo:()=>modo==='construir'&&sel==='humilde'},
+  el:()=>unir(rectDe('#tabs button[data-c="vivienda"]'),rectDe('.item[data-t="humilde"]')),txt:'A la derecha está el panel para <b>construir</b>: las pestañas del lado son las categorías y a un lado sus edificios. Empecemos con una casa: toca <b>Casa humilde</b>.',haz:()=>elegirTipo('humilde'),listo:()=>modo==='construir'&&sel==='humilde'},
  {el:()=>{ if(!fant) return null; const [x,y]=window.__t.aPant(fant.i+.5,fant.j+.5); return unir({x:x-180,y:y-110,w:360,h:200},rectDe('#colocar')); },
-  txt:'Toca el mapa junto a una calle para ubicarla (verde: se puede; rojo: no). Para construir toca <b>dos veces</b> el mismo lugar o el botón <b>Construir</b>.',listo:()=>(S.obras||0)>TOUR.base},
+  txt:'Toca el mapa junto a una calle para ubicarla (verde: se puede; rojo: no). Para construir toca <b>dos veces</b> el mismo lugar o el botón <b>Construir</b>.',haz:()=>{ if(modo!=='construir') elegirTipo('humilde'); setTimeout(()=>{ if(fant&&!fant.motivo) $('cOk').click(); else aviso('Toca un lugar en verde junto a una calle'); },120); },listo:()=>(S.obras||0)>TOUR.base},
  {antes:()=>ponerModo('ver'),el:()=>rectDe('#tCalle'),txt:'¡Tu primera casa! Todo edificio necesita una calle al lado. Con <b>Calle</b> las trazas arrastrando el dedo y las apruebas con ✓.',boton:'Siguiente'},
- {el:()=>rectDe('#tabs'),txt:'Las seis pestañas agrupan todo: vivienda, infraestructura, servicios, producción, comercio e industria. Lo que tiene 🔒 se desbloquea investigando.',boton:'Siguiente'},
+ {el:()=>rectDe('#tabs'),txt:'Las seis pestañas laterales agrupan todo: vivienda, infraestructura pública, social, producción, comercio e industria. Lo que tiene 🔒 se desbloquea investigando.',boton:'Siguiente'},
  {el:()=>rectDe('#tCapas'),txt:'<b>Capas</b> te muestra hasta dónde llega cada servicio. Las casas sin cobertura se marcan en rojo.',boton:'Siguiente'},
  {el:()=>rectDe('#bGob'),txt:'En <b>Gobierno</b> repartes el fondo federal, ajustas impuestos, activas programas, pides crédito, vendes tu producción y compras terreno.',boton:'Siguiente'},
  {el:()=>rectDe('#tInv'),txt:'En <b>Investigar</b> eliges qué tecnología sigue: desbloquea edificios como el agua potable, la fábrica o la prisión.',boton:'Siguiente'},
- {el:()=>rectDe('#pasar'),txt:'Cuando termines de construir, pasa el mes. Verás el informe, una carta de la suerte y cómo crece tu pueblo. ¡Suerte, alcalde!',listo:()=>pasando,final:true}];
+ {el:()=>rectDe('#pasar'),txt:'Cuando termines de construir, pasa el mes. Verás el informe, una carta de la suerte y cómo crece tu pueblo. ¡Suerte, alcalde!',haz:()=>{ terminarTour(); $('pasar').click(); },listo:()=>pasando,final:true}];
 function iniciarTour(){ if(TOUR.on) return; TOUR.on=true; TOUR.paso=0; const t=$('tour'); t.hidden=false; document.body.classList.add('en-tour'); mostrarPaso(); clearInterval(TOUR.iv); TOUR.iv=setInterval(tickTour,180); }
 function terminarTour(msg){ TOUR.on=false; clearInterval(TOUR.iv); $('tour').hidden=true; document.body.classList.remove('en-tour'); lsSet('trienio.tour','1'); if(msg) aviso(msg,3200); }
 function mostrarPaso(){ const P=PASOS[TOUR.paso]; if(P.antes) P.antes(); TOUR.base=S.obras||0;
   $('tourTxt').innerHTML=P.txt; $('tourN').textContent=`${TOUR.paso+1} de ${PASOS.length}`;
-  $('tourSig').hidden=!P.boton; $('tourSig').textContent=P.boton||''; tickTour(); }
+  $('tourSig').hidden=!P.boton; $('tourSig').textContent=P.boton||''; $('tourHaz').hidden=!P.haz; tickTour(); }
 function tickTour(){ if(!TOUR.on) return; const P=PASOS[TOUR.paso];
   if(P.listo&&P.listo()){ if(P.final) return terminarTour('Recorrido terminado. Lo puedes repetir desde el menú ≡'); TOUR.paso++; return mostrarPaso(); }
   const W=innerWidth, H=innerHeight; let r=P.el?P.el():null; const pad=8;
@@ -2880,7 +2899,8 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
 });
 window.__t={get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 $('pLegado').onclick=()=>verLegado(); $('pCuenta').onclick=()=>cuenta();
-$('tourSig').onclick=()=>{ TOUR.paso++; if(TOUR.paso>=PASOS.length) return terminarTour(); mostrarPaso(); }; $('tourSal').onclick=()=>terminarTour('Puedes repetir el recorrido desde el menú ≡');
+$('tourSig').onclick=()=>{ TOUR.paso++; if(TOUR.paso>=PASOS.length) return terminarTour(); mostrarPaso(); }; $('tourHaz').onclick=()=>{ const P=PASOS[TOUR.paso]; if(P&&P.haz) P.haz(); };
+$('tourSal').onclick=()=>terminarTour('Puedes repetir el recorrido desde el menú ≡');
 window.addEventListener('resize',()=>{ if(TOUR.on) tickTour(); });
 NUBE.iniciar();
 $('pCont').onclick=()=>conPerfil(()=>{ guardada=cargar(); if(!guardada) return refrescarPortada(); S=guardada; completarEstado(); reconstruirOcc(); iniciar(false);});
