@@ -13,7 +13,7 @@
 <title>El Trienio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Press+Start+2P&display=swap">
 <style>
 /* Layout: mapa a pantalla completa; barra superior de recursos, panel de construcción a la derecha, acciones abajo. Un solo look nocturno de juego. */
 :root{
@@ -236,6 +236,27 @@ details.rub .lin{display:flex;justify-content:space-between;font-size:13px;color
 .memo{display:grid;grid-template-columns:repeat(6,1fr);gap:6px} .memo .btn{height:min(74px,16vh);font-size:30px;padding:0}
 .memo .btn span{visibility:hidden} .memo .btn.vista span{visibility:visible} .memo .btn.par{border-color:var(--bien);opacity:.75}
 @media (max-width:700px){.memo{grid-template-columns:repeat(4,1fr)}}
+#mjVelo{z-index:40}
+#mjVelo .mjcaja{width:min(1120px,100%);height:min(660px,100%);display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px;background:var(--suelo);border:4px solid var(--hondo);box-shadow:inset 0 0 0 3px var(--borde),8px 8px 0 var(--hondo);padding:10px 12px}
+#mjVelo h2{margin:0;font-family:'Press Start 2P',ui-monospace,monospace;font-size:12px;line-height:1.5;color:var(--sol)}
+#mjVelo .mjcuerpo{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:10px;min-height:0}
+#mjVelo .mjescena{position:relative;min-height:0;border:3px solid var(--hondo);background:var(--hondo);overflow:hidden}
+#mjVelo canvas{display:block;width:100%;height:100%;touch-action:manipulation;cursor:pointer}
+#mjVelo .mjlado{min-width:0;min-height:0;overflow:auto;background:var(--panel);border:3px solid var(--borde);padding:10px 12px;display:flex;flex-direction:column;gap:9px}
+#mjVelo .mjlado h2{font-size:10px} #mjVelo .mjlado>*{flex-shrink:0}
+#mjVelo .mjlado p{margin:0;line-height:1.4;font-size:13px;color:#E8DCC2}
+#mjVelo .contadores{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#mjVelo .cont{background:var(--panel2);border:2px solid var(--borde);padding:5px 8px;display:flex;flex-direction:column;gap:2px}
+#mjVelo .cont small{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--tenue)}
+#mjVelo .cont b{font-family:'Press Start 2P',ui-monospace,monospace;font-size:12px;font-variant-numeric:tabular-nums}
+#mjVelo .tabla{display:grid;grid-template-columns:auto 1fr auto;gap:3px 8px;font-size:12px;align-items:center}
+#mjVelo .tabla span:nth-child(3n){text-align:right}
+#mjVelo .tabla .ico{width:30px;height:20px;image-rendering:pixelated}
+#mjVelo .res{border-top:2px dashed var(--borde);padding-top:8px;display:flex;flex-direction:column;gap:4px;font-size:13px}
+#mjVelo .res .tot{font-family:'Press Start 2P',ui-monospace,monospace;font-size:11px;color:var(--bien);line-height:1.6}
+#mjVelo .nota{font-size:11px;color:var(--tenue)}
+#mjVelo .mjacc{display:flex;justify-content:flex-end;gap:6px;margin-top:auto;position:sticky;bottom:-10px;background:var(--panel);padding:6px 0 2px}
+@media (max-width:700px),(max-height:440px){ #mjVelo .mjcuerpo{grid-template-columns:minmax(0,1fr) 230px} #mjVelo .mjcaja{padding:6px 8px;gap:5px} #mjVelo .mjlado{padding:7px 9px;gap:6px} #mjVelo .mjlado p{font-size:12px} }
 .partidas .pf{flex-wrap:wrap} .partidas .pf .acc{display:flex;gap:5px;flex-wrap:wrap} .partidas .pf .acc .btn{min-height:34px;font-size:13px;padding:0 10px}
 .partidas .pf small+small{font-size:11px} .partidas .pf.vacia{opacity:.75;border-style:dashed}
 .partidas .pf .num{width:44px;height:44px;display:grid;place-items:center;background:var(--hondo);font-size:20px;color:var(--tenue)}
@@ -347,6 +368,7 @@ body.con-capas #efectos{visibility:hidden}
   <div id="aviso" hidden role="status"></div>
   <div id="tip" hidden></div>
   <div id="modal" class="velo" hidden></div>
+  <div id="mjVelo" class="velo" hidden><div class="mjcaja" role="dialog" aria-modal="true" aria-labelledby="mjTit"><h2 id="mjTit"></h2><div class="mjcuerpo"><div class="mjescena"><canvas id="mjLienzo" aria-label="Tablero del minijuego"></canvas></div><aside class="mjlado" id="mjLado"></aside></div></div></div>
 
   <section id="portada">
     <img class="mono" src="logo/monumento.png" alt="">
@@ -843,6 +865,7 @@ function recalcular(){
     if((d.campo||d.agri||d.agroind)&&ef('inundacion')) f*=prog('seguro')?.8:.6; if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=prog('seguro')?.75:.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=prog('seguro')?.8:.6; if(sinLuz(e)) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
     if(ef('clausura')&&e.t==='granja') f=0;
     if(ef('huracan')&&(d.turismo||e.t==='muelle'||e.t==='congeladora'||e.t==='granja')) f=0;
+    if(e.bono&&e.bono.mes===S.mes) f*=1+e.bono.pct;     // bono del minijuego (riego o corral) de este mes
     e._ing=d.ingreso*f; neg+=e._ing; const r=recursoDe(e); porRec[r]=(porRec[r]||0)+e._ing;}
   // comercio: la parte que va por tren o barco no entra este mes; se junta y se cobra después (y mejor pagada)
   let trenMes=0, marMes=0; const hayMuelle=S.eds.some(e=>e.t==='muelle');
@@ -1929,6 +1952,18 @@ function hud(){
   $('hMes').textContent=`${MESES[(S.mes-1)%12]} · Año ${Math.floor((S.mes-1)/12)+1}`;
   $('hTurno').textContent=`Mes ${m}/36 · elección en ${Math.max(0,36-S.mes)}`;
 }
+// minijuego de cada edificio: una vez al mes
+function mjDe(e){ return (e.t==='mina'||e.t==='minaind')?['mina','⛏️ Explorar veta']:e.t==='parcela'?['riego','💧 Regar la parcela']:e.t==='engorda'?['corral','🐄 Alimentar al ganado']:e.t==='muelle'?['pesca','🎣 Salir a pescar']:null; }
+const PECES_BASE=[40,18,14,8,3];
+async function jugarMJ(e){ const [tipo]=mjDe(e); if(e.mj===S.mes) return; e.mj=S.mes;
+  const op={titulo:`${mjDe(e)[1].replace(/^\S+ /,'').toUpperCase()} · ${nombreDe(e).toUpperCase()}`};
+  if(tipo==='mina'){ const M=MINERAL[e.min||'oro']; op.mineral=e.min||'oro'; op.mes=M.pago/M.ciclo*(e.t==='minaind'?K_IND:1)*(vetaRica(e)?1.3:1)*S.mods.negocios; }
+  if(tipo==='pesca'){ const k=.4*(D(e).ingreso||10)/10; MJ.peces(PECES_BASE.map(v=>Math.round(v*k*10)/10)); }
+  const r=await MJ.abrir(tipo,op);
+  if(!r){ e.mj=undefined; ficha(); return; }
+  if(r.k==='dinero'){ const [m,top]=conTope(r.v); S.dinero+=m; aviso(`${r.txt}${top?' (llegó al tope)':''}: entra a la caja`,3200); }
+  else { e.bono={mes:S.mes,pct:r.v}; aviso(`${nombreDe(e)}: ${r.txt}`,3200); }
+  recalcular(); hud(); efectos(); guardarPronto(); ficha(); }
 function ficha(){
   const e=elegido, f=$('ficha'); if(!e){f.hidden=true;return;}
   const d=D(e), c=S.calc; const [fac,nota]=factorDe(e);
@@ -1949,6 +1984,7 @@ function ficha(){
   if(d.sub) filas.push(['Protege',`Del apagón en ${d.radio} casillas a la redonda`]);
   if(d.carcel) filas.push(['Efecto','Delincuencia −12 y la maña pierde fuerza cada mes']);
   if(nota) filas.push(['Nota',nota]);
+  if(e.bono&&e.bono.mes===S.mes) filas.push(['Bono del mes',`<span style="color:var(--bien)">+${Math.round(e.bono.pct*100)}% por ${e.t==='parcela'?'el riego':'alimentar al ganado'}</span>`]);
   if(d.contamina) filas.push(['Ojo','Huele: baja la aprobación de casas cercanas']);
   const tiene=Object.keys(e.mej||{}).map(k=>MEJORAS[k].nom);
   if(tiene.length) filas.push(['Mejoras',tiene.join(', ')]);
@@ -1958,6 +1994,7 @@ function ficha(){
   <dl>${filas.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>
   ${disp.length?`<div class="mejoras"><span class="t">Mejoras disponibles</span>${disp.map(k=>{const m=MEJORAS[k], cst=costoMejora(e,k); return `<button class="btn" data-mej="${k}" ${S.dinero<cst?'disabled':''}><b>${m.nom}</b><span>${m.txt} · ${dinero(cst)}</span></button>`;}).join('')}</div>`:''}
   ${e.dano?`<div class="acc"><button class="btn btn-sol" id="fRep" ${S.dinero<costoReparar(e)?'disabled':''}>Reparar · ${dinero(costoReparar(e))}</button></div>`:''}
+  ${mjDe(e)?`<div class="acc"><button class="btn btn-sol" id="fMJ" ${e.mj===S.mes||e.dano?'disabled':''}>${mjDe(e)[1]}${e.mj===S.mes?' · ya este mes':''}</button></div>`:''}
   <div class="acc"><button class="btn" id="fCerrar">Cerrar</button>${e.t==='parcela'?'<button class="btn" id="fCult">Cambiar cultivo</button>':''}${e.t==='fabrica'?'<button class="btn" id="fRub">Cambiar rubro</button>':''}${e.t==='universidad'?'<button class="btn" id="fEnf">Cambiar enfoque</button>':''}${e.t!=='presa'?'<button class="btn" id="fMov">Mover</button>':''}${e.t!=='palacio'?'<button class="btn" id="fDem">Demoler</button>':''}</div>`;
   f.hidden=false;
   $('fCerrar').onclick=()=>{elegido=null;f.hidden=true;pedir();};
@@ -1969,6 +2006,7 @@ function ficha(){
   f.querySelectorAll('[data-mej]').forEach(b=>b.onclick=()=>{ const k=b.dataset.mej, cst=costoMejora(e,k); if(S.dinero<cst){aviso('No alcanza el dinero');return;}
     S.dinero-=cst; e.mej=Object.assign({},e.mej,{[k]:S.mes}); limpiarCacheD(); recalcular(); hud(); reponerAgentes(); guardarPronto(); ficha();
     if(k==='letrero'){ aviso('Letrero listo: escribe el nombre'); setTimeout(()=>{ const r=$('fNom'); if(r) r.click(); },60); } else aviso(`${MEJORAS[k].nom}: listo en ${nombreDe(e)}`); });
+  if($('fMJ')) $('fMJ').onclick=()=>jugarMJ(e);
   if($('fDem')) $('fDem').onclick=()=>confirmarDemoler(e);
   if($('fMov')) $('fMov').onclick=()=>moverEdificio(e);
   if($('fRep')) $('fRep').onclick=()=>{ const c=costoReparar(e); if(S.dinero<c) return; S.dinero-=c; e.dano=false; limpiarCacheD(); recalcular(); hud(); efectos(); ficha(); guardarPronto(); aviso(`${nombreDe(e)} reparado`); };
@@ -2919,6 +2957,313 @@ function decidirConflicto(x){ return new Promise(fin=>{
     if(x.estado==='fin'&&x.tipo!=='bloqueo') x.estado='contenido_sin';
     reponerAgentes(); recalcular(); hud(); efectos(); await resultado(tit,msg); fin(); }); }); }
 
+// ---------- minijuegos por edificio (veta, riego, corral y pesca): una vez al mes por edificio ----------
+const MJ=(()=>{
+// ================= utilidades de pixel art =================
+const lienzo=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
+const azar=n=>Math.floor(Math.random()*n), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function ell(q,cx,cy,rx,ry,col){ q.fillStyle=col; for(let y=Math.floor(cy-ry-1);y<=Math.ceil(cy+ry);y++)for(let x=Math.floor(cx-rx-1);x<=Math.ceil(cx+rx);x++){const dx=(x+.5-cx)/rx,dy=(y+.5-cy)/ry; if(dx*dx+dy*dy<=1) q.fillRect(x,y,1,1);} }
+function poli(q,pts,col){ q.fillStyle=col; let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9; for(const [x,y] of pts){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}
+  for(let y=Math.floor(y0);y<=y1;y++)for(let x=Math.floor(x0);x<=x1;x++){ const px=x+.5,py=y+.5; let d=false; for(let i=0,j=pts.length-1;i<pts.length;j=i++){ const [xi,yi]=pts[i],[xj,yj]=pts[j]; if(((yi>py)!==(yj>py))&&(px<(xj-xi)*(py-yi)/(yj-yi)+xi)) d=!d; } if(d) q.fillRect(x,y,1,1);} }
+function rect(q,x,y,w,h,col){ q.fillStyle=col; q.fillRect(x,y,w,h); }
+function contorno(c,col){ const q=c.getContext('2d'),W=c.width,H=c.height,d=q.getImageData(0,0,W,H).data,o=new Uint8Array(W*H);
+  for(let i=0;i<W*H;i++) o[i]=d[i*4+3]>90; q.fillStyle=col;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){ if(o[y*W+x]) continue; if((x>0&&o[y*W+x-1])||(x<W-1&&o[y*W+x+1])||(y>0&&o[(y-1)*W+x])||(y<H-1&&o[(y+1)*W+x])) q.fillRect(x,y,1,1); } return c; }
+function sprite(w,h,fn,out='#2A1C12'){ const c=lienzo(w,h), q=c.getContext('2d'); fn(q); return out?contorno(c,out):c; }
+// ruido estable por casilla
+const ruido=(x,y,s)=>{ const n=Math.sin(x*127.1+y*311.7+s*74.7)*43758.5453; return n-Math.floor(n); };
+
+// ================= texturas de casilla (rombo de 32 × 16 px, con grosor opcional) =================
+const TW0=32, TH0=16;
+function tile(col,{grosor=0,lados=['#000','#000'],semilla=1}={}){
+  const c=lienzo(TW0,TH0+grosor), q=c.getContext('2d');
+  for(let y=0;y<TH0;y++)for(let x=0;x<TW0;x++){ const dx=Math.abs(x+.5-16)/16, dy=Math.abs(y+.5-8)/8; if(dx+dy>1) continue; q.fillStyle=col(x,y,ruido(x,y,semilla)); q.fillRect(x,y,1,1); }
+  if(grosor){ for(let x=0;x<TW0;x++){ const yb=x<16?8+x/2:8+(31-x)/2; for(let k=0;k<grosor;k++){ q.fillStyle=x<16?lados[0]:lados[1]; if((x+k)%5===0) q.fillStyle=x<16?'#4A3A2C':'#3C2F24'; q.fillRect(x,Math.floor(yb)+k,1,1);} } }
+  return c; }
+const T={};
+function hornear(){
+  // arena con ondas, como el piso del pueblo
+  T.arena=tile((x,y,r)=>{ const o=Math.sin((x*.55+y*1.1)*1.2); return o>.65?'#E6B86E':o<-.7?'#BF8743':r>.85?'#D9A65A':'#D29B50'; },{semilla:3});
+  // tierra seca con surcos
+  T.seca=tile((x,y,r)=>{ const s=(x+2*y)%8; return s<1?'#9A6A36':s<2?'#E0AE66':r>.88?'#C08847':'#B98049'; },{semilla:5});
+  // tierra mojada
+  T.mojada=tile((x,y,r)=>{ const s=(x+2*y)%8; return s<1?'#3E2716':s<2?'#7A5131':r>.92?'#8A6040':r<.06?'#2E1D10':'#5B3A21'; },{semilla:7});
+  // roca de la veta (bloque con grosor)
+  T.roca=tile((x,y,r)=>{ const g=ruido(x>>1,y>>1,9); return g>.86?'#9C8670':g<.14?'#5C4A3A':r>.7?'#7E6A56':'#73604D'; },{grosor:6,lados:['#5A4636','#46372A'],semilla:9});
+  T.roca2=tile((x,y,r)=>{ const g=ruido(x>>1,y>>1,4); return g>.86?'#8E7964':g<.14?'#54432F':r>.7?'#76624F':'#6B5947'; },{grosor:6,lados:['#54412F','#413326'],semilla:4});
+  T.hoyo=tile((x,y,r)=>{ const d=Math.abs(x+.5-16)/16+Math.abs(y+.5-8)/8; return d>.8?'#4A3828':d>.6?'#33251A':r>.8?'#2A1E14':'#21170F'; },{semilla:2});
+  T.cueva=tile((x,y,r)=>r>.8?'#3A2E25':r<.1?'#2A211A':'#33281F',{semilla:11});
+  // pasto del corral
+  T.pasto=tile((x,y,r)=>{ const g=ruido(x,y,12); return g>.9?'#9ACF5A':g>.72?'#7DB443':r<.12?'#4F8A2C':'#66A23A'; },{semilla:12});
+  T.tierraCorral=tile((x,y,r)=>r>.85?'#B48A55':r<.1?'#8E6A3E':'#A27B4A',{semilla:13});
+  // mar en 4 cuadros de animación
+  T.mar=[0,1,2,3].map(f=>tile((x,y,r)=>{ const o=Math.sin((x*.5-y*1.0)+f*1.57); return o>.82?'#9FD6F2':o>.45?'#4A9AD6':r>.9?'#3A8ACB':'#2F7CC0'; },{semilla:20+f}));
+  T.hondo=[0,1,2,3].map(f=>tile((x,y,r)=>{ const o=Math.sin((x*.5-y*1.0)+f*1.57); return o>.9?'#5FA6D8':r>.9?'#2A6EA8':'#235F96'; },{semilla:30+f}));
+}
+
+// ================= sprites =================
+const SP={};
+function crearSprites(){
+  // gemas y minerales (14 × 12)
+  SP.diamante=sprite(14,13,q=>{ poli(q,[[2,4],[5,1],[9,1],[12,4],[7,12]],'#7FE3F5'); poli(q,[[2,4],[12,4],[7,12]],'#4CC4E6'); poli(q,[[5,1],[7,4],[9,1]],'#D8FBFF'); rect(q,4,3,1,1,'#FFFFFF'); rect(q,9,5,1,1,'#FFFFFF'); poli(q,[[7,4],[12,4],[7,12]],'#2FA6D0'); },'#16405A');
+  SP.oro=sprite(14,12,q=>{ ell(q,7,7,5.5,3.8,'#E4A928'); ell(q,6,6,4,2.8,'#F6CC3C'); ell(q,5,5,1.6,1.1,'#FFF0A0'); rect(q,9,8,2,1,'#B57F12'); },'#5A3A06');
+  SP.plata=sprite(14,12,q=>{ ell(q,7,7,5.5,3.8,'#A9B2BC'); ell(q,6,6,4,2.8,'#D6DCE2'); ell(q,5,5,1.5,1,'#FFFFFF'); rect(q,9,8,2,1,'#7C8690'); },'#30363C');
+  SP.cobre=sprite(14,12,q=>{ ell(q,7,7,5.5,3.8,'#B5622E'); ell(q,6,6,4,2.8,'#D9824A'); ell(q,5,5,1.5,1,'#F2B58A'); },'#4A220C');
+  SP.zinc=sprite(14,12,q=>{ ell(q,7,7,5.5,3.8,'#7E8C96'); ell(q,6,6,4,2.8,'#9AA9B3'); ell(q,5,5,1.5,1,'#D4E0E6'); rect(q,8,8,2,1,'#5E6A72'); },'#262E34');
+  // brote y planta
+  SP.brote=sprite(12,11,q=>{ rect(q,5,5,2,5,'#3E7E28'); ell(q,3,5,3,1.8,'#7BC843'); ell(q,9,4,3,1.8,'#8FD650'); rect(q,2,4,2,1,'#B4EE7A'); rect(q,8,3,2,1,'#C6F58C'); },'#1F3D12');
+  SP.planta=sprite(20,17,q=>{ rect(q,9,8,2,8,'#3E7E28'); ell(q,5,10,5,3,'#5FB238'); ell(q,15,10,5,3,'#5FB238'); ell(q,10,6,4.5,4,'#74C944'); ell(q,4,6,3.5,2.4,'#83D451'); ell(q,16,6,3.5,2.4,'#83D451'); ell(q,10,4,2.6,2,'#A5E66C'); rect(q,9,3,2,1,'#D2F7A0'); rect(q,3,5,2,1,'#C2F18E'); rect(q,15,5,2,1,'#C2F18E'); },'#1F3D12');
+  // vaca (mira a la izquierda); 3 tamaños de panza
+  const vaca=(lleno)=>sprite(26,19,q=>{
+    const ry=4.2+lleno*.7;
+    rect(q,7,11,2,7,'#3B3B3B'); rect(q,17,11,2,7,'#3B3B3B'); rect(q,10,12,2,6,'#2C2C2C'); rect(q,20,12,2,6,'#2C2C2C');
+    rect(q,7,17,2,1,'#1A1A1A'); rect(q,17,17,2,1,'#1A1A1A'); rect(q,10,17,2,1,'#111'); rect(q,20,17,2,1,'#111');
+    ell(q,15,9,8.5,ry,'#F4F1EA'); ell(q,13,7,3,2.2,'#2B2B2B'); ell(q,19,10,2.6,2,'#2B2B2B'); ell(q,16,12.5,2,1.3,'#2B2B2B');
+    ell(q,15,12.2+lleno*.5,2.4,1.3,'#F2A6B0');
+    rect(q,23,7,1,6,'#3A3A3A'); rect(q,23,12,2,2,'#2B2B2B');
+    ell(q,5,7,3.6,3.2,'#F4F1EA'); ell(q,3,9,2.6,2,'#F2A6B0'); rect(q,2,9,1,1,'#7A3A44'); rect(q,4,9,1,1,'#7A3A44');
+    rect(q,4,5,1,1,'#111'); rect(q,3,3,1,2,'#E8DCC0'); rect(q,7,3,1,2,'#E8DCC0'); ell(q,8,5,1.4,1,'#2B2B2B');
+    rect(q,12,6,4,1,'#FFFFFF');
+  },'#2A2320');
+  SP.vaca=[0,1,2,3].map(vaca);
+  SP.becerro=sprite(17,13,q=>{ rect(q,5,8,1,4,'#4A3A2A'); rect(q,11,8,1,4,'#4A3A2A'); rect(q,7,9,1,3,'#3A2C1E'); rect(q,13,9,1,3,'#3A2C1E');
+    ell(q,10,6.5,5.5,3,'#D8A472'); ell(q,9,5.5,2,1.5,'#F4EEE2'); ell(q,4,5,2.6,2.3,'#D8A472'); ell(q,2.5,6.5,1.6,1.3,'#F2B8B0'); rect(q,3,4,1,1,'#111'); rect(q,2,2,1,1,'#8A5A36'); rect(q,5,2,1,1,'#8A5A36'); },'#3A2414');
+  SP.paca=sprite(14,10,q=>{ rect(q,1,2,12,7,'#E2C15A'); rect(q,1,2,12,2,'#F2DA7C'); for(let x=2;x<13;x+=3) rect(q,x,4,1,5,'#B8952F'); rect(q,4,2,1,7,'#8E6A22'); rect(q,9,2,1,7,'#8E6A22'); },'#5A4212');
+  SP.corazon=sprite(9,8,q=>{ ell(q,2.5,2.5,2,2,'#F05A6A'); ell(q,6.5,2.5,2,2,'#F05A6A'); poli(q,[[.5,3],[8.5,3],[4.5,7.5]],'#F05A6A'); rect(q,2,1,1,1,'#FFC0C8'); },'#5A1420');
+  // peces (miran a la izquierda)
+  const pez=(L,H,lomo,panza,extra)=>sprite(L+6,H+4,q=>{ const cx=(L+6)/2-1, cy=(H+4)/2;
+    poli(q,[[L+1,cy],[L+5,cy-H*.45],[L+5,cy+H*.45]],lomo);
+    ell(q,cx,cy,L/2,H/2,panza); ell(q,cx,cy-H*.18,L/2-.5,H/2.6,lomo);
+    rect(q,Math.round(cx-L/2+2),Math.round(cy-1),1,1,'#111'); rect(q,Math.round(cx-L/2+2),Math.round(cy-2),1,1,'#FFF');
+    poli(q,[[cx-1,cy-H/2],[cx+3,cy-H/2-2],[cx+4,cy-H/2]],lomo); if(extra) extra(q,cx,cy); },'#141C24');
+  SP.atun=pez(22,9,'#1E3E78','#C9D6E2',(q,cx,cy)=>{ for(let x=Math.round(cx+3);x<cx+10;x+=2) rect(q,x,Math.round(cy+3),1,1,'#F2D23A'); });
+  SP.sardina=pez(12,4,'#3B6A86','#E2ECF2');
+  SP.sierra=pez(24,5,'#3E5E6E','#E4ECEE',(q,cx,cy)=>{ for(let x=Math.round(cx-6);x<cx+9;x+=3) rect(q,x,Math.round(cy),1,1,'#E8B23A'); });
+  SP.dorado=pez(19,8,'#2E9A5A','#F2D24A',(q,cx,cy)=>{ for(let x=Math.round(cx-4);x<cx+7;x+=3) rect(q,x,Math.round(cy-2),1,1,'#3FB8E8'); });
+  SP.pargo=pez(17,8,'#D8504A','#F6B0A0',(q,cx,cy)=>{ rect(q,Math.round(cx-2),Math.round(cy-1),5,1,'#F48A7A'); });
+}
+
+// ================= motor de dibujo isométrico =================
+let cv=null, g=null;
+let W=0,H=0,DPR=1;
+function ajustar(){ const r=cv.getBoundingClientRect(); DPR=Math.min(2,window.devicePixelRatio||1); W=Math.max(200,r.width); H=Math.max(180,r.height); cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); }
+window.addEventListener('resize',()=>{ if(!cv||!J) return; ajustar(); J.medir(); });
+// geometría de la cuadrícula: n columnas × m filas
+function geo(n,m,margen=.9,arriba=.1){ const tw=Math.floor(Math.min(W*margen/((n+m)/2), H*(margen-.06)/((n+m)/4+.4))/2)*2; const th=tw/2;
+  const ox=W/2+(m-n)*tw/4, oy=Math.max(H*arriba,(H-(n+m)*th/2)/2-th*.2); return {tw,th,ox,oy,n,m}; }
+const cima=(G,i,j)=>[G.ox+(i-j)*G.tw/2, G.oy+(i+j)*G.th/2];
+const centro=(G,i,j)=>{ const [x,y]=cima(G,i,j); return [x,y+G.th/2]; };
+function pick(G,px,py){ const a=((px-G.ox)/(G.tw/2)+(py-G.oy)/(G.th/2))/2, b=((py-G.oy)/(G.th/2)-(px-G.ox)/(G.tw/2))/2; const i=Math.floor(a), j=Math.floor(b); return (i>=0&&j>=0&&i<G.n&&j<G.m)?[i,j]:null; }
+function pintaTile(G,i,j,tx,dy=0,alfa=1){ const [x,y]=cima(G,i,j), k=G.tw/TW0; g.globalAlpha=alfa; g.drawImage(tx,Math.round(x-G.tw/2),Math.round(y+dy),Math.round(tx.width*k),Math.round(tx.height*k)); g.globalAlpha=1; }
+function pintaSprite(sp,x,y,esc,ancla=[.5,1],flip=false){ const w=sp.width*esc, h=sp.height*esc; g.save(); g.translate(Math.round(x),Math.round(y)); if(flip) g.scale(-1,1); g.drawImage(sp,Math.round(-w*ancla[0]),Math.round(-h*ancla[1]),Math.round(w),Math.round(h)); g.restore(); }
+function sombra(x,y,rx,ry,a=.28){ g.fillStyle=`rgba(0,0,0,${a})`; g.beginPath(); g.ellipse(x,y,rx,ry,0,0,7); g.fill(); }
+function rombo(G,i,j,fill,stroke,lw=2){ const [x,y]=cima(G,i,j); g.beginPath(); g.moveTo(x,y); g.lineTo(x+G.tw/2,y+G.th/2); g.lineTo(x,y+G.th); g.lineTo(x-G.tw/2,y+G.th/2); g.closePath(); if(fill){g.fillStyle=fill; g.fill();} if(stroke){g.strokeStyle=stroke; g.lineWidth=lw; g.stroke();} }
+// fondo: piso alrededor del tablero
+function fondo(G,tx,anim){ const ext=Math.ceil(Math.max(W/G.tw,H/G.th))+2;
+  for(let s=-ext*2;s<=ext*2;s++) for(let i=-ext;i<=G.n+ext;i++){ const j=s-i; if(j<-ext||j>G.m+ext) continue; if(i>=0&&j>=0&&i<G.n&&j<G.m) continue; const [x,y]=cima(G,i,j); if(x<-G.tw||x>W+G.tw||y<-G.th*2||y>H+G.th) continue;
+    const t=Array.isArray(tx)?tx[(anim+((i*3+j*5)&3))&3]:tx; pintaTile(G,i,j,t,0,.82); } }
+// efectos: partículas y textos que flotan
+let FX=[];
+function chispas(x,y,col,n=12,vel=90){ for(let k=0;k<n;k++){ const a=Math.random()*Math.PI*2, v=vel*(.4+Math.random()); FX.push({k:'p',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-vel*.6,t:0,dur:.7+Math.random()*.4,col,s:2+azar(3)}); } }
+function gotas(x,y,n=14){ for(let k=0;k<n;k++){ const a=-Math.PI/2+(Math.random()-.5)*2.2, v=60+Math.random()*90; FX.push({k:'p',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:0,dur:.55+Math.random()*.3,col:k%3?'#8FD0F4':'#E6F6FF',s:2+azar(2)}); } }
+function flota(x,y,txt,col='#F2B233'){ FX.push({k:'t',x,y,txt,col,t:0,dur:1.4}); }
+function pintaFX(dt){ for(const f of FX){ f.t+=dt; if(f.k==='p'){ f.vy+=260*dt; f.x+=f.vx*dt; f.y+=f.vy*dt; g.globalAlpha=Math.max(0,1-f.t/f.dur); g.fillStyle=f.col; g.fillRect(Math.round(f.x),Math.round(f.y),f.s,f.s); }
+    else { const a=Math.max(0,1-Math.max(0,f.t-.6)/.8); g.globalAlpha=a; g.font=`${Math.round(clamp(W/52,10,15))}px 'Press Start 2P', monospace`; g.textAlign='center'; g.lineWidth=4; g.strokeStyle='#1A120A'; const yy=f.y-f.t*38; g.strokeText(f.txt,f.x,yy); g.fillStyle=f.col; g.fillText(f.txt,f.x,yy); } }
+  g.globalAlpha=1; g.textAlign='start'; FX=FX.filter(f=>f.t<f.dur); }
+const dinero=v=>v<1?'$'+Math.round(v*1000)+' pesos':'$'+(v<10?Math.round(v*10)/10:Math.round(v)).toLocaleString('es-MX')+' mil';
+
+// ================= panel lateral =================
+let lado=null;
+function panel(html){ lado.innerHTML=html+`<div class="mjacc">${mjFin?'<button class="btn-sol btn" id="mjListo">Listo</button>':(mjMovs?'':'<button class="btn" id="mjCancel">Ahora no</button>')}</div>`;
+  const l=lado.querySelector('#mjListo'); if(l) l.onclick=()=>cerrar(J.resultado()); const c=lado.querySelector('#mjCancel'); if(c) c.onclick=()=>cerrar(null); }
+let mjFin=false, mjMovs=0;
+const icono=(sp)=>{ const c=lienzo(30,20), q=c.getContext('2d'); q.imageSmoothingEnabled=false; const k=Math.min(28/sp.width,18/sp.height); q.drawImage(sp,(30-sp.width*k)/2,(20-sp.height*k)/2,sp.width*k,sp.height*k); return c.toDataURL(); };
+
+// =====================================================================
+// ⛏️ MINA: veta de 10 × 10, eliges 10 cuadros
+// =====================================================================
+const MINAS={oro:{nom:'Oro',mes:16,reparto:{diamante:10}},plata:{nom:'Plata',mes:16.75,reparto:{diamante:4,oro:10}},cobre:{nom:'Cobre',mes:12,reparto:{diamante:1,oro:3,plata:10}},zinc:{nom:'Zinc',mes:9.6,reparto:{diamante:1,oro:3,plata:10}}};
+const VALOR={diamante:1.5,oro:.5,plata:.2,comun:.03};
+const NOMBRE={diamante:'Diamante',oro:'Oro',plata:'Plata',cobre:'Cobre',zinc:'Zinc'};
+const Mina={ tipo:'oro', mes:16,
+  nueva(){ const M=MINAS[this.tipo], cel=[]; for(const [k,n] of Object.entries(M.reparto)) for(let q=0;q<n;q++) cel.push(k); while(cel.length<100) cel.push('comun');
+    for(let k=cel.length-1;k>0;k--){ const r=azar(k+1); [cel[k],cel[r]]=[cel[r],cel[k]]; }
+    this.cel=cel; this.abiertas=new Map(); this.quedan=10; this.ganado=0; this.fin=false; this.medir(); this.lado(); },
+  medir(){ this.G=geo(10,10,.94,.08); },
+  mineral(k){ return k==='comun'?this.tipo:k; },
+  toque(x,y){ if(this.fin) return; const p=pick(this.G,x,y); if(!p) return; const id=p[1]*10+p[0]; if(this.abiertas.has(id)) return;
+    const k=this.cel[id], v=this.mes*VALOR[k]; this.abiertas.set(id,{t:0,k}); this.quedan--; this.ganado+=v;
+    const [cx,cy]=centro(this.G,...p); chispas(cx,cy-this.G.th*.2,k==='diamante'?'#9FEFFF':k==='oro'?'#F6CC3C':k==='plata'?'#E6ECF2':'#B9A58C',k==='comun'?8:20,k==='comun'?60:110);
+    flota(cx,cy-this.G.th*.6,'+'+dinero(v),k==='diamante'?'#9FEFFF':k==='comun'?'#E8DCC2':'#F6CC3C');
+    mjMovs++; if(this.quedan<=0){ this.fin=true; mjFin=true; setTimeout(()=>{ this.revelar=performance.now(); },700); }
+    this.lado(); },
+  dibujar(t,dt){ const G=this.G; g.fillStyle='#241C16'; g.fillRect(0,0,W,H); fondo(G,T.cueva,0);
+    for(let s=0;s<20;s++) for(let i=0;i<10;i++){ const j=s-i; if(j<0||j>9) continue; const id=j*10+i, a=this.abiertas.get(id);
+      if(a){ a.t+=dt; pintaTile(G,i,j,T.hoyo,G.th*.18); const k=this.mineral(a.k), [cx,cy]=centro(G,i,j), sp=SP[k];
+        const sube=clamp(a.t/.35,0,1), bote=Math.sin(Math.min(1,a.t/.5)*Math.PI)*G.th*.35;
+        if(a.k!=='comun'){ const br=(Math.sin(t*4+id)+1)/2; g.fillStyle=`rgba(255,240,180,${.12+.18*br})`; g.beginPath(); g.ellipse(cx,cy+G.th*.05,G.tw*.34,G.th*.34,0,0,7); g.fill(); }
+        pintaSprite(sp,cx,cy+G.th*.25-bote*sube,G.tw/(a.k==='comun'?26:20));
+        if(a.k==='diamante'&&Math.sin(t*6+id)>.6){ g.fillStyle='#FFFFFF'; g.fillRect(Math.round(cx+G.tw*.12),Math.round(cy-G.th*.35),2,6); g.fillRect(Math.round(cx+G.tw*.12)-2,Math.round(cy-G.th*.35)+2,6,2); }
+      } else {
+        const tx=((i*7+j*3)%5===0)?T.roca2:T.roca; pintaTile(G,i,j,tx,-G.th*.18);
+        if(this.revelar){ const k=this.cel[id]; if(k!=='comun'){ const [cx,cy]=centro(G,i,j); g.globalAlpha=.55; pintaSprite(SP[k],cx,cy+G.th*.05,G.tw/30); g.globalAlpha=1; } }
+      } }
+    if(this.hover&&!this.fin&&!this.abiertas.has(this.hover[1]*10+this.hover[0])){ const [x,y]=cima(G,...this.hover); g.save(); g.translate(0,-G.th*.18); rombo(G,...this.hover,'rgba(242,178,51,.22)','#F2B233',2); g.restore(); }
+  },
+  lado(){ const M=MINAS[this.tipo], R=M.reparto, base={diamante:R.diamante||0,oro:R.oro||0,plata:R.plata||0};
+    const enc={}; for(const a of this.abiertas.values()) enc[a.k]=(enc[a.k]||0)+1;
+    const fila=(k,n)=>`<img class="ico" alt="" src="${icono(SP[k==='comun'?this.tipo:k])}"><span>${k==='comun'?NOMBRE[this.tipo]+' (resto)':NOMBRE[k]} · ${n}%</span><span>${Math.round(VALOR[k]*100)}% del mes</span>`;
+    panel(`<h2>VETA DE LA MINA</h2>
+      <p>Elige 10 cuadros de la veta. Además del ${NOMBRE[this.tipo].toLowerCase()}, abajo puede haber piedras más valiosas.</p>
+      <div class="contadores"><div class="cont"><small>Te quedan</small><b>${this.quedan} picos</b></div><div class="cont"><small>Extra este mes</small><b>${dinero(this.ganado)}</b></div></div>
+      <div class="tabla">${['diamante','oro','plata'].filter(k=>base[k]).map(k=>fila(k,base[k])).join('')}${fila('comun',100-base.diamante-base.oro-base.plata)}</div>
+      <p class="nota">La mina paga ${dinero(this.mes)} al mes en promedio. Cada cuadro paga una parte de eso.</p>
+      ${this.fin?`<div class="res"><span>Encontraste: ${Object.entries(enc).map(([k,n])=>`${n} ${k==='comun'?NOMBRE[this.tipo].toLowerCase():NOMBRE[k].toLowerCase()}`).join(' · ')}</span><span class="tot">+${dinero(this.ganado)}</span><span class="nota">Las piedras que no encontraste se ven en la veta.</span></div>`:''}`); },
+  resultado(){ return {k:'dinero',v:this.ganado,txt:`La veta dejó ${dinero(this.ganado)} extra`}; }
+};
+
+// =====================================================================
+// 💧 RIEGO: parcela de 6 × 6, 8 cubetas
+// =====================================================================
+const Riego={
+  nueva(){ this.c=Array.from({length:36},()=>({moj:0,brote:0,tb:0})); this.cubetas=8; this.brotes=0; this.fin=false; this.medir(); this.lado(); },
+  medir(){ this.G=geo(6,6,.8,.12); },
+  vecinosMojados(i,j){ let n=0; for(const [a,b] of [[1,0],[-1,0],[0,1],[0,-1]]){ const x=i+a,y=j+b; if(x>=0&&y>=0&&x<6&&y<6&&this.c[y*6+x].moj) n++; } return n; },
+  toque(x,y){ if(this.fin) return; const p=pick(this.G,x,y); if(!p) return; const c=this.c[p[1]*6+p[0]]; if(c.moj) return;
+    const prob=Math.min(.9,.3+.2*this.vecinosMojados(...p)); c.moj=performance.now(); this.cubetas--;
+    const [cx,cy]=centro(this.G,...p); gotas(cx,cy-this.G.th*.3,18);
+    if(Math.random()<prob){ c.brote=1; c.tb=performance.now()+300; this.brotes++; setTimeout(()=>{ chispas(cx,cy-this.G.th*.6,'#B4EE7A',10,70); flota(cx,cy-this.G.th,'+3.75%','#B4EE7A'); },320); }
+    else flota(cx,cy-this.G.th*.6,'mojado','#8FD0F4');
+    mjMovs++; if(this.cubetas<=0){ this.fin=true; mjFin=true; } this.lado(); },
+  dibujar(t,dt){ const G=this.G; g.fillStyle='#C28C4A'; g.fillRect(0,0,W,H); fondo(G,T.arena,0); const ahora=performance.now();
+    for(let s=0;s<12;s++) for(let i=0;i<6;i++){ const j=s-i; if(j<0||j>5) continue; const c=this.c[j*6+i];
+      if(c.moj){ const a=clamp((ahora-c.moj)/400,0,1); pintaTile(G,i,j,T.seca); pintaTile(G,i,j,T.mojada,0,a); } else pintaTile(G,i,j,T.seca);
+      if(c.brote&&ahora>c.tb){ const [cx,cy]=centro(G,i,j), e=clamp((ahora-c.tb)/600,0,1), crece=1-Math.pow(1-e,3), sway=Math.sin(t*2+i+j)*1.2;
+        sombra(cx,cy+G.th*.08,G.tw*.22,G.th*.16,.25); const sp=e<1?SP.brote:SP.planta; pintaSprite(sp,cx+sway,cy+G.th*.18,(G.tw/(e<1?14:22))*Math.max(.2,crece)); } }
+    if(this.hover&&!this.fin&&!this.c[this.hover[1]*6+this.hover[0]].moj) rombo(G,...this.hover,'rgba(143,208,244,.25)','#8FD0F4',2);
+    // regadera que sigue al dedo
+    if(this.hover&&!this.fin){ const [cx,cy]=centro(G,...this.hover); g.font=`${Math.round(G.tw*.42)}px serif`; g.textAlign='center'; g.fillText('🚿',cx+G.tw*.28,cy-G.th*.7); g.textAlign='start'; } },
+  lado(){ const pct=Math.min(30,this.brotes*3.75);
+    panel(`<h2>REGAR LA PARCELA</h2>
+      <p>Tienes 8 cubetas. Cada cuadro que riegas se moja y puede brotar. Si riegas junto a otro cuadro mojado, es más fácil que brote.</p>
+      <div class="contadores"><div class="cont"><small>Cubetas</small><b>${'🪣'.repeat(Math.max(0,this.cubetas))||'0'}</b></div><div class="cont"><small>Brotes</small><b>${this.brotes} de 8</b></div></div>
+      <div class="tabla"><img class="ico" alt="" src="${icono(SP.brote)}"><span>Cada brote</span><span>+3.75%</span><img class="ico" alt="" src="${icono(SP.planta)}"><span>8 brotes</span><span>+30% máx.</span></div>
+      <p class="nota">Probabilidad de brote: 30% en tierra seca y +20% por cada vecino mojado (hasta 90%).</p>
+      ${this.fin?`<div class="res"><span>Brotaron ${this.brotes} de 8 cuadros regados.</span><span class="tot">Cosecha +${pct.toFixed(pct%1?2:0)}% este mes</span></div>`:''}`); },
+  resultado(){ const pct=Math.min(30,this.brotes*3.75); return {k:'pct',v:pct/100,txt:`Cosecha +${pct.toFixed(pct%1?2:0)}% este mes`}; }
+};
+
+// =====================================================================
+// 🐄 CORRAL: 6 vacas, 10 pacas de pastura
+// =====================================================================
+const Corral={
+  nueva(){ const pos=[[1,1],[3,1],[1,3],[4,3],[2,4.6],[4.6,1.6]]; this.vacas=pos.map(([i,j],k)=>({i:i+.5,j:j+.5,lleno:0,becerro:0,emp:0,flip:k%2===1,t:Math.random()*5,come:0})); this.pacas=10; this.fin=false; this.medir(); this.lado(); },
+  medir(){ this.G=geo(6,6,.82,.16); },
+  aPant(v){ const G=this.G; return [G.ox+(v.i-v.j)*G.tw/2, G.oy+(v.i+v.j)*G.th/2]; },
+  toque(x,y){ if(this.fin) return; let mejor=null,md=1e9; const e=this.G.tw/32*1.25;
+    for(const v of this.vacas){ const [vx,vy]=this.aPant(v); const d=Math.hypot(x-vx,(y-(vy-12*e))*1.2); if(d<md){md=d;mejor=v;} }
+    if(!mejor||md>this.G.tw*.6||mejor.emp) return; const v=mejor; v.lleno++; v.come=performance.now(); this.pacas--;
+    const [vx,vy]=this.aPant(v); chispas(vx,vy-12*e,'#E2C15A',10,70);
+    if(v.lleno>=4){ v.emp=1; flota(vx,vy-26*e,'¡se empachó!','#F07A5A'); }
+    else if(v.lleno>=2&&!v.becerro&&Math.random()<.4){ v.becerro=performance.now()+500; setTimeout(()=>{ chispas(vx,vy-8*e,'#F7A6B6',16,90); flota(vx,vy-26*e,'¡nació un becerro! +4%','#F7A6B6'); },500); }
+    else flota(vx,vy-24*e,['flaca','bien','llena','¡ya no!'][Math.min(3,v.lleno)],'#E8DCC2');
+    mjMovs++; if(this.pacas<=0){ this.fin=true; mjFin=true; } this.lado(); },
+  dibujar(t,dt){ const G=this.G; g.fillStyle='#4F8A2C'; g.fillRect(0,0,W,H); fondo(G,T.pasto,0); const ahora=performance.now();
+    for(let s=0;s<12;s++) for(let i=0;i<6;i++){ const j=s-i; if(j<0||j>5) continue; pintaTile(G,i,j,(i+j)%4===0||(i*j)%5===1?T.tierraCorral:T.pasto); }
+    // cerca de madera
+    const poste=(i,j)=>{ const [x,y]=[G.ox+(i-j)*G.tw/2, G.oy+(i+j)*G.th/2]; return [x,y]; };
+    const cerca=(a,b,trasera)=>{ const [x1,y1]=poste(...a),[x2,y2]=poste(...b), h=G.th*.9; g.strokeStyle='#5A3A20'; g.lineWidth=Math.max(3,G.tw/16); for(const f of [.45,.85]){ g.beginPath(); g.moveTo(x1,y1-h*f); g.lineTo(x2,y2-h*f); g.stroke(); }
+      g.strokeStyle='#9C6B3C'; g.lineWidth=Math.max(1.5,G.tw/32); for(const f of [.45,.85]){ g.beginPath(); g.moveTo(x1,y1-h*f-1); g.lineTo(x2,y2-h*f-1); g.stroke(); }
+      const n=6; for(let k=0;k<=n;k++){ const x=x1+(x2-x1)*k/n, y=y1+(y2-y1)*k/n; g.fillStyle='#4A2E18'; g.fillRect(Math.round(x-2),Math.round(y-h),5,Math.round(h)); g.fillStyle='#8A5A30'; g.fillRect(Math.round(x-2),Math.round(y-h),2,Math.round(h)); } };
+    cerca([0,0],[6,0]); cerca([0,0],[0,6]);
+    // vacas ordenadas por profundidad
+    const L=this.vacas.slice().sort((a,b)=>(a.i+a.j)-(b.i+b.j)), e=G.tw/32*1.25;
+    for(const v of L){ const [x,y]=this.aPant(v); sombra(x,y,13*e,4*e);
+      if(v.becerro&&ahora>v.becerro){ const k=clamp((ahora-v.becerro)/500,0,1); sombra(x+12*e,y+4*e,7*e,2.5*e,.22); pintaSprite(SP.becerro,x+13*e,y+5*e,e*.95*k,[.5,1],!v.flip); }
+      const come=ahora-v.come<900, bob=come?Math.abs(Math.sin(ahora/90))*1.2*e:Math.sin(t*1.6+v.t)*.5*e;
+      g.save(); if(v.emp){ g.translate(x,y); g.rotate(v.flip?-.25:.25); g.translate(-x,-y); }
+      pintaSprite(SP.vaca[Math.min(3,v.lleno)],x,y+bob*.2,e,[.5,1],v.flip); g.restore();
+      if(come){ const fx=x+(v.flip?9:-9)*e; pintaSprite(SP.paca,fx,y-1*e,e*.7); }
+      // barra de llenado
+      const bw=18*e, bx=x-bw/2, by=y-24*e; g.fillStyle='#1A120A'; g.fillRect(Math.round(bx-1),Math.round(by-1),Math.round(bw+2),Math.round(4*e+2));
+      for(let k=0;k<3;k++){ g.fillStyle=k<v.lleno?(v.emp?'#F07A5A':k===2?'#F2B233':'#7FD06A'):'#3A2E22'; g.fillRect(Math.round(bx+k*bw/3+1),Math.round(by),Math.round(bw/3-2),Math.round(4*e)); }
+      if(v.becerro&&ahora>v.becerro) pintaSprite(SP.corazon,x+(Math.sin(t*3+v.t)*2),by-4*e-Math.abs(Math.sin(t*2+v.t))*3*e,e*.8);
+      if(v.emp){ g.font=`${Math.round(10*e)}px serif`; g.textAlign='center'; g.fillText('🤢',x,by-5*e); g.textAlign='start'; } } },
+  lado(){ const bec=this.vacas.filter(v=>v.becerro).length, pct=Math.min(20,bec*4), emp=this.vacas.filter(v=>v.emp).length;
+    panel(`<h2>ALIMENTAR AL GANADO</h2>
+      <p>Tienes 10 pacas de pastura. Toca una vaca para darle de comer. Bien alimentada puede tener becerro; si le das de más, se empacha.</p>
+      <div class="contadores"><div class="cont"><small>Pacas</small><b>${this.pacas}</b></div><div class="cont"><small>Becerros</small><b>${bec}</b></div></div>
+      <div class="tabla"><img class="ico" alt="" src="${icono(SP.vaca[0])}"><span>1 paca: flaca</span><span>—</span><img class="ico" alt="" src="${icono(SP.vaca[2])}"><span>2 o 3 pacas: 40% de becerro</span><span>+4% c/u</span><img class="ico" alt="" src="${icono(SP.vaca[3])}"><span>4 pacas: se empacha</span><span>no rinde</span></div>
+      <p class="nota">Hasta +20% de producción del corral este mes (5 becerros).</p>
+      ${this.fin?`<div class="res"><span>Nacieron ${bec} becerro${bec===1?'':'s'}${emp?` y ${emp} vaca${emp>1?'s':''} se empach${emp>1?'aron':'ó'}`:''}.</span><span class="tot">Producción +${pct}% este mes</span></div>`:''}`); },
+  resultado(){ const pct=Math.min(20,this.vacas.filter(v=>v.becerro).length*4); return {k:'pct',v:pct/100,txt:`Producción del corral +${pct}% este mes`}; }
+};
+
+// =====================================================================
+// 🎣 PESCA: mar de 6 × 6, 6 lances de red
+// =====================================================================
+const PECES=[['atun','Atún',5,40],['dorado','Dorado',12,18],['pargo','Pargo',18,14],['sierra','Sierra',25,8],['sardina','Sardina',40,3]];
+function pezAzar(){ let r=Math.random()*100; for(const p of PECES){ if(r<p[2]) return p; r-=p[2]; } return PECES[4]; }
+const Pesca={
+  nueva(){ this.sombras=Array.from({length:8},()=>({i:azar(6),j:azar(6),x:0,y:0,ti:0,tj:0,t:Math.random()*2,fase:Math.random()*6})); for(const s of this.sombras){ s.x=s.i+.5; s.y=s.j+.5; s.ti=s.i; s.tj=s.j; }
+    this.lances=6; this.pesca=[]; this.redes=[]; this.saltos=[]; this.fin=false; this.medir(); this.lado(); },
+  medir(){ this.G=geo(6,6,.8,.14); },
+  toque(x,y){ if(this.fin||this.lances<=0) return; const p=pick(this.G,x,y); if(!p) return; this.lances--; const [cx,cy]=centro(this.G,...p);
+    this.redes.push({i:p[0],j:p[1],t0:performance.now()}); gotas(cx,cy,12);
+    setTimeout(()=>{ const s=this.sombras.find(s=>Math.floor(s.x)===p[0]&&Math.floor(s.y)===p[1]);
+      if(s){ this.sombras=this.sombras.filter(z=>z!==s); const pz=pezAzar(); this.pesca.push(pz); this.saltos.push({x:cx,y:cy,sp:SP[pz[0]],t0:performance.now()}); chispas(cx,cy-10,'#BFE6FF',16,100); flota(cx,cy-this.G.th,`${pz[1]} +${dinero(pz[3])}`,pz[0]==='atun'?'#9FEFFF':'#F2B233'); }
+      else flota(cx,cy-this.G.th*.5,'nada…','#BFD6E6');
+      if(this.lances<=0){ this.fin=true; mjFin=true; } this.lado(); },550);
+    mjMovs++; this.lado(); },
+  dibujar(t,dt){ const G=this.G, f=Math.floor(t*3)&3; g.fillStyle='#1E5A8E'; g.fillRect(0,0,W,H); fondo(G,T.hondo,f); const ahora=performance.now();
+    for(let s=0;s<12;s++) for(let i=0;i<6;i++){ const j=s-i; if(j<0||j>5) continue; pintaTile(G,i,j,T.mar[(f+((i*3+j*5)&3))&3]); }
+    // sombras de peces que nadan
+    for(const s of this.sombras){ s.t-=dt; if(s.t<=0){ const op=[[1,0],[-1,0],[0,1],[0,-1]].map(([a,b])=>[s.ti+a,s.tj+b]).filter(([a,b])=>a>=0&&b>=0&&a<6&&b<6); const n=op[azar(op.length)]; s.ti=n[0]; s.tj=n[1]; s.t=1.2+Math.random()*1.4; }
+      s.x+=(s.ti+.5-s.x)*Math.min(1,dt*1.4); s.y+=(s.tj+.5-s.y)*Math.min(1,dt*1.4);
+      const x=G.ox+(s.x-s.y)*G.tw/2, y=G.oy+(s.x+s.y)*G.th/2, w=G.tw*.24+Math.sin(t*3+s.fase)*2;
+      g.fillStyle='rgba(10,30,60,.45)'; g.beginPath(); g.ellipse(x,y,w,G.th*.16,0,0,7); g.fill(); g.beginPath(); g.moveTo(x+w*.9,y); g.lineTo(x+w*1.4,y-G.th*.12); g.lineTo(x+w*1.4,y+G.th*.12); g.fill(); }
+    // redes
+    for(const r of this.redes){ const e=(ahora-r.t0)/1000; if(e>1.6) continue; const [cx,cy]=centro(G,r.i,r.j), a=e<.55?1:Math.max(0,1-(e-.55)/1);
+      const caer=Math.min(1,e/.45), rad=G.tw*.42*(e<.45?.4+.6*caer:1), yy=cy-(1-caer)*G.th*1.6;
+      g.globalAlpha=a; g.strokeStyle='#F4EEDC'; g.lineWidth=2; g.beginPath(); g.ellipse(cx,yy,rad,rad/2,0,0,7); g.stroke();
+      g.strokeStyle='rgba(244,238,220,.7)'; g.lineWidth=1; for(let k=-3;k<=3;k++){ g.beginPath(); g.moveTo(cx+k*rad/4,yy-rad/2*Math.sqrt(1-(k/4)**2)); g.lineTo(cx+k*rad/4,yy+rad/2*Math.sqrt(1-(k/4)**2)); g.stroke(); g.beginPath(); g.moveTo(cx-rad*Math.sqrt(1-(k/4)**2),yy+k*rad/8); g.lineTo(cx+rad*Math.sqrt(1-(k/4)**2),yy+k*rad/8); g.stroke(); }
+      g.fillStyle='#8A8A8A'; for(let k=0;k<10;k++){ const an=k/10*Math.PI*2; g.fillRect(Math.round(cx+Math.cos(an)*rad-1.5),Math.round(yy+Math.sin(an)*rad/2-1.5),3,3); } g.globalAlpha=1; }
+    // peces que saltan
+    for(const s of this.saltos){ const e=(ahora-s.t0)/1000; if(e>1.4) continue; const h=Math.sin(Math.min(1,e/1.1)*Math.PI)*G.th*2.2; g.save(); g.translate(s.x,s.y-h); g.rotate(Math.sin(e*14)*.25); pintaSprite(s.sp,0,0,G.tw/22,[.5,.5]); g.restore(); }
+    if(this.hover&&!this.fin) rombo(G,...this.hover,'rgba(255,255,255,.12)','#F4EEDC',2); },
+  lado(){ const tot=this.pesca.reduce((s,p)=>s+p[3],0);
+    panel(`<h2>SALIR A PESCAR</h2>
+      <p>Tienes 6 lances de red. Tira la red donde veas la sombra de un pez: se mueven, así que calcula bien.</p>
+      <div class="contadores"><div class="cont"><small>Lances</small><b>${this.lances}</b></div><div class="cont"><small>Pesca del día</small><b>${dinero(tot)}</b></div></div>
+      <div class="tabla">${PECES.map(([k,n,p,v])=>`<img class="ico" alt="" src="${icono(SP[k])}"><span>${n} · ${p}%</span><span>${dinero(v)}</span>`).join('')}</div>
+      ${this.pesca.length?`<p class="nota">En la red: ${this.pesca.map(p=>p[1]).join(', ')}.</p>`:''}
+      ${this.fin?`<div class="res"><span>Pescaste ${this.pesca.length} de 6 lances.</span><span class="tot">+${dinero(tot)} al muelle</span></div>`:''}`); },
+  resultado(){ const tot=this.pesca.reduce((s,p)=>s+p[3],0); return {k:'dinero',v:tot,txt:`La pesca dejó ${dinero(tot)}`}; }
+};
+
+
+// ================= abrir dentro del juego =================
+const JUEGOS={mina:Mina,riego:Riego,corral:Corral,pesca:Pesca};
+let J=null, fin_=null, vivo=false, ult=0, listos=false;
+function cerrar(r){ vivo=false; document.getElementById('mjVelo').hidden=true; const f=fin_; fin_=null; if(f) f(r); }
+function bucle(ts){ if(!vivo) return; requestAnimationFrame(bucle); const dt=Math.min(.05,(ts-ult)/1000); ult=ts; if(!J||!J.G) return;
+  g.setTransform(DPR,0,0,DPR,0,0); g.imageSmoothingEnabled=false; J.dibujar(ts/1000,dt); pintaFX(dt); }
+const punto=e=>{ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; };
+function abrir(tipo,op={}){ return new Promise(res=>{
+  if(!listos){ hornear(); crearSprites(); listos=true; }
+  const v=document.getElementById('mjVelo'); v.hidden=false; document.getElementById('mjTit').textContent=op.titulo||'';
+  cv=document.getElementById('mjLienzo'); g=cv.getContext('2d'); lado=document.getElementById('mjLado');
+  J=JUEGOS[tipo]; FX=[]; mjFin=false; mjMovs=0; fin_=res; J.hover=null;
+  if(tipo==='mina'){ Mina.tipo=op.mineral||'oro'; Mina.mes=op.mes||10; Mina.revelar=0; }
+  requestAnimationFrame(()=>{ ajustar(); J.nueva(); vivo=true; ult=performance.now(); requestAnimationFrame(bucle); });
+  cv.onpointerdown=e=>{ const [x,y]=punto(e); if(J.G&&J!==Corral) J.hover=pick(J.G,x,y); J.toque(x,y); };
+  cv.onpointermove=e=>{ if(!J.G||J===Corral) return; const [x,y]=punto(e); J.hover=pick(J.G,x,y); };
+  cv.onpointerleave=()=>{ if(J) J.hover=null; };
+}); }
+function peces(v){ PECES.forEach((p,i)=>p[3]=v[i]); }
+return {abrir,peces};
+})();
+
 // ---------- retos relámpago: minijuegos para ganar un bono ----------
 function bacheo(){ return new Promise(fin=>{
   modal(`<h2>RETO RELÁMPAGO · BACHEO EXPRÉS</h2><p style="font-size:14px">Tapa 10 baches en 12 segundos: tócalos antes de que desaparezcan.</p><div class="mj" id="mj"><span class="mjT" id="mjT">12.0 s</span><span class="mjN" id="mjN">0 / 10</span></div><div class="fila"><button class="btn" id="mjNo">Rendirse</button></div>`);
@@ -3031,11 +3376,11 @@ function reporte(r,listo){
 const ICO={meta:'🏛️',construir:'🏗️',gente:'👪',dinero:'💰',gobierno:'📜',eleccion:'🗳️'};
 function bienvenida(){ return new Promise(fin=>{
   const R=[['meta','Tu meta','Gobierna 36 meses un municipio de Sinaloa y gana la elección para seguir. Si pierdes, tu puntuación queda en el Salón del legado.'],
-    ['construir','Construir','Abre el panel CONSTRUIR de la derecha, elige una pieza y tócala en el mapa junto a una calle.'],
+    ['construir','Construir','Abre el panel CONSTRUIR de la derecha, elige una pieza y toca el mapa junto a una calle.'],
     ['gente','Gente y aprobación','La gente llega si hay casas y empleo. Salud, escuela, seguridad y diversión cerca de las casas suben la aprobación.'],
     ['dinero','Dinero','Cada mes entran participaciones, predial y lo que dejan los negocios. Cuida no gastar más de lo que entra.'],
-    ['gobierno','Gobierno','Cada enero repartes el fondo federal. También hay impuestos, programas, crédito, comercio y terreno nuevo.'],
-    ['eleccion','La elección','En el mes 30 empieza la campaña contra El Güero. La aprobación ayuda, pero sin campaña puedes perder.']];
+    ['gobierno','Gobierno','Cada enero repartes el fondo federal. También ajustas impuestos y programas, pides crédito, vendes por carretera, tren o barco, compras terreno y apartas el guardadito para la campaña.'],
+    ['eleccion','La elección','En el mes 30 empieza la campaña contra El Güero. La aprobación ayuda, pero sin campaña (y sin guardadito) puedes perder.']];
   modal(`<h2>BIENVENIDO A EL TRIENIO</h2>
    <p style="font-size:14px">Eres el nuevo gobierno de un pueblo de la costa sinaloense: tierras de riego y temporal, un río que baja de la sierra y el mar enfrente. Tienes tres años para que crezca.</p>
    <div class="reglas">${R.map(([k,t,x])=>`<div class="regla"><span class="ic" aria-hidden="true">${ICO[k]}</span><span><b>${t}</b><small>${x}</small></span></div>`).join('')}</div>
@@ -3049,12 +3394,12 @@ const PASOS=[
  {txt:'Este es tu municipio. Te enseño lo básico en un minuto: dónde construir, cómo ver tus números y cómo pasar el mes.',boton:'Empezar'},
  {el:()=>rectDe('#hud'),txt:'Arriba ves tu <b>caja</b> (y cuánto ganas o pierdes al mes), los <b>habitantes</b>, el <b>empleo</b> y la <b>aprobación</b>. Toca la caja o los habitantes para ver el detalle.',boton:'Siguiente'},
  {antes:()=>{ const p=$('panel'); if(p.classList.contains('cerrado')) $('tirador').click(); cat='vivienda'; pestanas(); lista(); },
-  el:()=>unir(rectDe('#tabs button[data-c="vivienda"]'),rectDe('.item[data-t="humilde"]')),txt:'A la derecha está el panel para <b>construir</b>: las pestañas del lado son las categorías y a un lado sus edificios. Empecemos con una casa: toca <b>Casa humilde</b>.',haz:()=>elegirTipo('humilde'),listo:()=>modo==='construir'&&sel==='humilde'},
+  el:()=>unir(rectDe('#tabs button[data-c="vivienda"]'),rectDe('.item[data-t="humilde"]')),txt:'A la derecha está el panel para <b>construir</b>: las pestañas son las categorías y junto a ellas aparecen sus edificios. Empecemos con una casa: toca <b>Casa humilde</b>.',haz:()=>elegirTipo('humilde'),listo:()=>modo==='construir'&&sel==='humilde'},
  {el:()=>{ if(!fant) return null; const [x,y]=window.__t.aPant(fant.i+.5,fant.j+.5); return unir({x:x-180,y:y-110,w:360,h:200},rectDe('#colocar')); },
   txt:'Toca el mapa junto a una calle para ubicarla (verde: se puede; rojo: no). Para construir toca <b>dos veces</b> el mismo lugar o el botón <b>Construir</b>.',haz:()=>{ if(modo!=='construir') elegirTipo('humilde'); setTimeout(()=>{ if(fant&&!fant.motivo) $('cOk').click(); else aviso('Toca un lugar en verde junto a una calle'); },120); },listo:()=>(S.obras||0)>TOUR.base},
- {antes:()=>ponerModo('ver'),el:()=>rectDe('#tCalle'),txt:'¡Tu primera casa! Todo edificio necesita una calle al lado. Con <b>Calle</b> las trazas arrastrando el dedo y las apruebas con ✓.',boton:'Siguiente'},
+ {antes:()=>ponerModo('ver'),el:()=>rectDe('#tCalle'),txt:'¡Tu primera casa! Todo edificio necesita una calle al lado. Con <b>Calle</b> las trazas: mantén el dedo medio segundo sobre una casilla, arrastra y apruébalas con ✓. En la computadora basta con arrastrar el mouse.',boton:'Siguiente'},
  {el:()=>rectDe('#tabs'),txt:'Las seis pestañas laterales agrupan todo: vivienda, infraestructura pública, social, producción, comercio e industria. Lo que tiene 🔒 se desbloquea investigando.',boton:'Siguiente'},
- {el:()=>rectDe('#bGob'),txt:'En <b>Gobierno</b> repartes el fondo federal, eliges qué <b>investigar</b>, ves las <b>capas</b> del mapa, ajustas impuestos y programas, pides crédito, vendes tu producción y compras terreno.',boton:'Siguiente'},
+ {el:()=>rectDe('#bGob'),txt:'En <b>Gobierno</b> repartes el fondo federal, eliges qué <b>investigar</b>, ves las <b>capas</b> del mapa, ajustas impuestos y programas, pides crédito, decides cómo vender tu producción, apartas el guardadito pal partido y compras terreno.',boton:'Siguiente'},
  {el:()=>rectDe('#pasar'),txt:'Cuando termines de construir, pasa el mes. Verás el informe, una carta de la suerte y cómo crece tu pueblo. ¡Suerte, alcalde!',haz:()=>{ terminarTour(); $('pasar').click(); },listo:()=>pasando,final:true}];
 function iniciarTour(){ if(TOUR.on) return; TOUR.on=true; TOUR.paso=0; const t=$('tour'); t.hidden=false; document.body.classList.add('en-tour'); mostrarPaso(); clearInterval(TOUR.iv); TOUR.iv=setInterval(tickTour,180); }
 function terminarTour(msg){ TOUR.on=false; clearInterval(TOUR.iv); $('tour').hidden=true; document.body.classList.remove('en-tour'); lsSet('trienio.tour','1'); if(msg) aviso(msg,3200); }
@@ -3169,20 +3514,21 @@ function verLegado(tab){ tab=tab||'equipo';
 $('btnMenu').onclick=()=>{
   modal(`<h2>MENÚ</h2>${perfil?`<div class="perfiles"><div class="pf" aria-current="true"><img alt="" src="${retrato(perfil.ret)}"><span class="q"><b>${esc(perfil.nombre)}</b><small>Perfil en este equipo</small></span><button class="btn borrar" id="mPerfil">Cambiar perfil</button></div></div>`:''}<p>«${esc(S.nomP||'Partida '+(partida+1))}» se guarda sola cada mes y al construir.</p>
   <div class="cuenta"><span class="t">Cómo jugar</span></div>
-  <details class="desg" open><summary>Tu meta</summary><p style="font-size:14px">Tienes 36 meses para hacer crecer tu municipio. Al empezar eliges a tu alcalde; cada personaje del partido tiene su propia ventaja. En el mes 30 arranca la campaña contra El Güero: eliges candidato (reelección una sola vez o alguien más del partido), gastas el fondo de campaña en mitines, radio, redes, colonias y un debate, y en el mes 36 se vota. La aprobación ayuda mucho, pero sin campaña puedes perder. Quien se reelige descansa un trienio y luego puede volver con derecho a otra reelección. Si pierdes, la partida termina y tu puntuación queda en el Salón del legado.</p></details>
-  <details class="desg"><summary>Moverte y construir</summary><p style="font-size:14px">Arrastra para moverte y pellizca para acercar. El panel <b>CONSTRUIR</b> de la derecha tiene seis pestañas; elige una pieza, toca el mapa y confirma con <b>Construir</b> o tocando dos veces el mismo lugar. Cada pieza dice su tamaño y lo que necesita. Todo edificio necesita una calle al lado: trázala con el botón <b>Calle</b>: en la computadora arrastra con el mouse; en el celular mantén el dedo medio segundo sobre una casilla y luego arrastra (si arrastras sin esperar, solo mueves el mapa). Apruébala con ✓ y sal con Salir. Desde la ficha de un edificio puedes <b>Mover</b> (20% del precio) o <b>Demoler</b> (recuperas 25%). <b>↻</b> gira la vista y en <b>Gobierno › Capas</b> ves el alcance de cada servicio.</p></details>
+  <details class="desg" open><summary>Tu meta</summary><p style="font-size:14px">Tienes 36 meses para hacer crecer tu municipio. Al empezar eliges a tu alcalde; cada personaje del partido tiene su propia ventaja. En el mes 30 arranca la campaña contra El Güero: eliges candidato (puede ser tu alcalde, si no se ha reelegido, o alguien más del partido) y usas el fondo de campaña, que sale del guardadito que fuiste apartando, en mitines, radio, redes, colonias y un debate. La elección es al cerrar el mes 36. La aprobación ayuda mucho, pero sin campaña puedes perder. Cada alcalde puede reelegirse una sola vez seguida; después descansa un trienio y luego puede volver a competir. Si pierdes, la partida termina y tu puntuación queda en el Salón del legado.</p></details>
+  <details class="desg"><summary>Moverte y construir</summary><p style="font-size:14px">Arrastra para moverte y pellizca para acercar. El panel <b>CONSTRUIR</b> de la derecha tiene seis pestañas: elige una pieza, toca el mapa y confirma con <b>Construir</b> o tocando dos veces el mismo lugar. Al elegirla, la pieza te dice lo que necesita. Todo edificio necesita una calle al lado. Para trazarla, usa el botón <b>Calle</b>. En la computadora, arrastra con el mouse. En el celular, mantén el dedo medio segundo sobre una casilla y luego arrastra; si arrastras sin esperar, solo mueves el mapa. Aprueba la calle con ✓ y sal con <b>Salir</b>. Desde la ficha de un edificio puedes <b>Mover</b> (cuesta 20% del precio), <b>Demoler</b> (recuperas 25%) y comprar mejoras. Con <b>↻</b> giras la vista y en <b>Gobierno › Capas</b> ves el alcance de cada servicio.</p></details>
   <details class="desg"><summary>Gente y aprobación</summary><p style="font-size:14px">La gente llega si hay casas libres y empleo. La aprobación sube si las casas tienen salud, escuela, seguridad, diversión, abasto, deporte y agua cerca, y baja con el desempleo, los malos olores, la delincuencia y la maña.</p></details>
-  <details class="desg"><summary>Dinero</summary><p style="font-size:14px">Toca la <b>Caja</b> para ver de dónde entra y a dónde se va. Entran participaciones, predial y lo que dejan los negocios; salen mantenimiento, calles, autobuses, programas y créditos.</p></details>
+  <details class="desg"><summary>Dinero</summary><p style="font-size:14px">Toca la <b>Caja</b> para ver de dónde entra y a dónde se va el dinero. Entran las participaciones, el predial, lo que dejan los negocios y las ventas por tren y barco. Salen el mantenimiento, las calles, los autobuses, los programas, los créditos, el guardadito pal partido, la protección de envíos y, si la maña es fuerte, el cobro de piso. Los bloqueos y las balaceras también frenan las ventas.</p></details>
   <details class="desg"><summary>Gobierno</summary><p style="font-size:14px">En <b>Gobierno</b> repartes cada enero el fondo federal entre 12 ramos, ajustas impuestos, activas programas sociales, pides crédito, decides cómo se vende lo que produces y apartas el guardadito pal partido.</p></details>
   <details class="desg"><summary>Comercio</summary><p style="font-size:14px">En <b>Gobierno › Comercio</b> repartes en porcentajes lo que produce cada rubro: por <b>carretera</b> a los pueblos vecinos se cobra cada mes; por <b>tren</b> a todo el país se junta y se cobra cada 3 meses (12% mejor pagado); por <b>barco</b> a otros países el dinero llega 6 meses después (25% mejor pagado). El tren y el barco pueden ser asaltados: protégelos con seguro, escolta o… cuota.</p></details>
   <details class="desg"><summary>Campaña y guardadito</summary><p style="font-size:14px">El partido no pone dinero para la campaña: sale del <b>guardadito</b> que apartes cada mes de la caja (Gobierno › Guardadito pal partido). Mientras más apartes, más riesgo de que la Auditoría lo detecte. Las comidas de recaudación dan $45 mil cada una.</p></details>
   <details class="desg"><summary>La maña, balaceras y bloqueos</summary><p style="font-size:14px">Si la maña crece, puede atacar negocios o enfrentarse con grupos rivales en tus calles; si la gente está inconforme, habrá bloqueos. Todo se ve en el mapa y tú decides: policía, Guardia Nacional o Marina; negociar a piedra, papel o tijera; ceder, desalojar o arreglarte por debajo de la mesa. Los sobornos funcionan… hasta que se saben. Con la caja en rojo todavía puedes pagar, hasta un límite.</p></details>
-  <details class="desg"><summary>Producción e investigación</summary><p style="font-size:14px">Cada cultivo tiene su temporada. Hay tres embalses, uno por río; la presa solo va en un embalse y riega una franja de 20 casillas hasta el mar. Tu municipio crece comprando terreno: toca la tierra oscura o ve a Gobierno › Terreno. Al fondo está la sierra, con minas de vetas más ricas y bosque para cabañas de ecoturismo. Las minas van sobre el monte: el oro paga cada 6 meses, la plata cada 4, el cobre cada 2 y el zinc cada mes. Lo que tiene candado se desbloquea en <b>Gobierno › Investigación</b>; una universidad de investigación da más puntos y las fábricas necesitan sus egresados.</p></details>
+  <details class="desg"><summary>Producción e investigación</summary><p style="font-size:14px">Cada cultivo tiene su temporada. Hay tres embalses, uno en cada río; la presa solo va en un embalse y riega una franja de 20 casillas hasta el mar. Tu municipio crece comprando terreno: toca la tierra oscura o ve a <b>Gobierno › Terreno</b>. Al fondo está la sierra, con minas de vetas más ricas y bosque para cabañas de ecoturismo. Las minas van sobre el monte: el oro paga cada 6 meses, la plata cada 4, el cobre cada 2 y el zinc cada mes. Desde la ficha puedes comprar <b>fertilización</b>, <b>maquinaria nueva</b> o un <b>letrero personalizado</b> para ponerle nombre. Lo que tiene candado se desbloquea en <b>Gobierno › Investigación</b>; una universidad de investigación da más puntos y las fábricas necesitan sus egresados.</p></details>
+  <details class="desg"><summary>Minijuegos</summary><p style="font-size:14px">Una vez al mes, cada mina, parcela, corral de engorda y muelle tiene su minijuego en la ficha. En la mina eliges 10 cuadros de la veta, donde puede haber diamantes, oro o plata. En la parcela riegas con 8 cubetas y cada brote sube la cosecha (hasta 30%). En el corral alimentas a las vacas con 10 pacas: pueden nacer becerros (hasta +20%), pero si les das de más se empachan. En el muelle tienes 6 lances de red para pescar atún, dorado, pargo, sierra o sardina.</p></details>
   <details class="desg"><summary>Atajos de teclado (computadora)</summary><div class="cuenta" style="font-size:13px">
    <span>Mover el mapa</span><span>Flechas o W A S D · arrastrar</span><span>Arrastrar sin construir</span><span>Clic derecho o rueda</span><span>Acercar / alejar</span><span>Rueda del mouse o + / −</span>
    <span>Construir</span><span>Clic (la pieza sigue al cursor) · Enter</span><span>Cancelar / cerrar</span><span>Esc</span><span>Girar la pieza</span><span>R</span><span>Girar el mapa</span><span>Q / E</span>
    <span>Pasar mes</span><span>Espacio</span><span>Categorías</span><span>1 a 6</span><span>Calle · Demoler · Capas</span><span>C · X · L</span><span>Investigar · Gobierno · Cartas</span><span>I · G · K</span><span>Pantalla completa</span><span>F11</span></div></details>
-  <details class="desg"><summary>Cartas del mes</summary><p style="font-size:14px">Cada mes sacas una carta; el dado (1·1·1·2·2·3) multiplica su efecto. Las de mano se guardan en <b>Cartas</b>. Mientras mejor vas, más salen cartas malas y más probable es una catástrofe: terremoto, inundación del río o huracán. Los edificios dañados dejan de funcionar hasta que los repares desde su ficha.</p></details>
+  <details class="desg"><summary>Cartas del mes</summary><p style="font-size:14px">Cada mes sacas una carta. En la mayoría, el dado (1 · 1 · 1 · 2 · 2 · 3) multiplica su efecto; en los <b>dilemas</b> no hay dado: eliges una de tres opciones y cada una tiene consecuencias. Las cartas de mano se guardan en <b>Cartas</b>. Mientras mejor vas, más salen cartas malas y más probable es una catástrofe: terremoto, inundación del río o huracán. Los edificios dañados dejan de funcionar hasta que los repares desde su ficha. A veces aparece un <b>reto relámpago</b> (bacheo o memorama) que da dinero y aprobación si lo ganas.</p></details>
   <div class="fila"><button class="btn" id="mFull">Pantalla completa</button><button class="btn" id="mTour">Repetir recorrido</button><button class="btn" id="mCta">Cuenta</button><button class="btn" id="mPart">Partidas guardadas</button><button class="btn" id="mNueva">Nueva partida</button><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
   $('mPart').onclick=()=>pantallaPartidas('juego');
   $('mCerrar').onclick=cerrarModal; $('mFull').onclick=()=>{cerrarModal(); pantallaCompleta();}; $('mTour').onclick=()=>{cerrarModal(); iniciarTour();}; $('mCta').onclick=()=>cuenta();
@@ -3453,7 +3799,7 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 let pidaInstalar=null;
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
 window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
