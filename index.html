@@ -125,6 +125,10 @@ details.desg[open]{display:flex;flex-direction:column;gap:6px}
 #herr{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));display:flex;gap:6px;z-index:4}
 #herr{max-width:calc(100vw - 287px - 175px - 20px);overflow-x:auto;scrollbar-width:none;touch-action:pan-x} #herr::-webkit-scrollbar{display:none}
 body.panel-cerrado #herr{max-width:calc(100vw - 175px - 30px)}
+.misgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.mis{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:var(--panel2);border:2px solid var(--sol);padding:7px 9px;min-height:74px}
+.mis b{font-size:15px} .mis small{font-size:11.5px;color:var(--tenue);line-height:1.25} .mis .est{margin-top:auto;font-size:12px;font-weight:700;color:var(--sol)}
+.mis.bloq{border-color:var(--borde);opacity:.55;cursor:not-allowed} .mis.bloq .est{color:var(--tenue)}
 #herr button{flex:none;min-width:44px;height:44px;background:var(--suelo);border:2px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);font-size:13px;font-weight:700;padding:0 10px}
 #herr button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--sol);color:var(--sol)}
 #pasar{position:absolute;right:calc(287px + env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:4;height:46px;padding:0 18px;font-family:var(--f-display);font-weight:800;font-size:14px;letter-spacing:.5px;transition:right .2s}
@@ -345,6 +349,7 @@ body.con-capas #efectos{visibility:hidden}
     <button id="tDem" title="Demoler (X)" aria-pressed="false">Demoler</button>
     <button id="tRot" aria-label="Girar el mapa" title="Girar el mapa (Q / E)">↻</button>
     <button id="tCartas" title="Cartas (K)" aria-pressed="false">Cartas<span class="badge" id="bCartas" hidden>0</span></button>
+    <button id="tMision" hidden title="Ver la misión">🎯</button>
     <button id="tCamp" hidden>Campaña</button>
     <button id="tCapas" hidden aria-pressed="false">Capas</button><button id="tInv" hidden>Investigar</button>
     <div id="radio" role="group" aria-label="Radio">
@@ -380,12 +385,13 @@ body.con-capas #efectos{visibility:hidden}
       <div class="acciones">
         <button class="btn-sol" id="pCont" hidden>CONTINUAR <span id="pContDet"></span></button>
         <button class="btn" id="pPartidas" hidden>PARTIDAS GUARDADAS <span id="pPartDet"></span></button>
+        <button class="btn" id="pMis">MISIONES <span>Sinaloa</span></button>
         <button class="btn" id="pNueva">NUEVA PARTIDA</button>
         <button class="btn" id="pLegado">SALÓN DEL LEGADO</button>
         <button class="btn" id="pCuenta">CUENTA <span>…</span></button>
         <button class="btn" id="pInstalar" hidden>INSTALAR <span>En este equipo</span></button>
       </div>
-      <small style="color:var(--tenue)">Versión 0.8 · prueba</small>
+      <small style="color:var(--tenue)">Versión 0.11 · prueba</small>
     </div>
   </section>
   <div id="tour" hidden><div class="blq"></div><div class="blq"></div><div class="blq"></div><div class="blq"></div><div id="tourAro"></div>
@@ -427,6 +433,7 @@ const DEF={
  clinica:{nom:'Centro de salud',cat:'social',spr:'edif-clinica-a',A:2,B:2,costo:220,mant:8,empleos:15,serv:'salud',radio:14},
  comandancia:{nom:'Comandancia',cat:'publica',spr:'edif-comandancia-a',A:2,B:2,costo:180,mant:7,empleos:18,serv:'seguridad',radio:16},
  autobus:{nom:'Ruta de autobús',cat:'publica',icono:'autobus-icono',costo:140,desc:'Pon paradas A y B sobre calles. Cada parada extra (C, D, E…) cuesta 20% más; más autobuses dan mejor servicio.'},
+ cruz:{nom:'Monumento a la Cruz del Perdón',cat:'social',spr:'edif-cruz-a',A:3,B:3,costo:120,mant:1,serv:'diversion',radio:12,turismo:true,unico:true,lote:'plaza',solo:'elota',desc:'El monumento de La Cruz de Elota, con sus letras de colores. Da orgullo al pueblo: +1 de aprobación cada mes.'},
  kiosco:{nom:'Plazuela con kiosco',cat:'social',spr:'edif-kiosco-a',A:3,B:3,costo:70,mant:1.5,serv:'diversion',radio:11,lote:'plaza'},
  iglesia:{nom:'Parroquia de San Isidro',cat:'social',spr:'edif-iglesia-a',A:3,B:3,costo:150,mant:0,empleos:2,unico:true,lote:'plaza',fe:true},
  panteon:{nom:'Panteón',cat:'publica',spr:'edif-panteon-a',A:3,B:3,costo:50,mant:1,empleos:3,unico:true},
@@ -444,6 +451,7 @@ const DEF={
  granja:{nom:'Granja acuícola',cat:'produccion',spr:'edif-granja-a',A:4,B:4,costo:280,mant:2,empleos:25,ingreso:15,suelo:'costa',contamina:3},
  hotel:{nom:'Hotel de playa',cat:'comercio',spr:'edif-hotel-a',A:4,B:4,costo:480,mant:4,empleos:40,ingreso:24,suelo:'costa',turismo:true,lote:'plaza'},
  palapa:{nom:'Palapa de mariscos',cat:'comercio',spr:'edif-palapa-a',A:2,B:2,costo:60,mant:.5,empleos:8,ingreso:5,suelo:'costa',turismo:true,serv:'diversion',radio:7},
+ tortugas:{nom:'Campamento tortuguero',cat:'comercio',spr:'edif-tortugas-a',A:3,B:3,costo:60,mant:1,empleos:4,serv:'diversion',radio:8,suelo:'playa',turismo:true,unico:true,desc:'Cuida los nidos de tortuga en la playa. En Elota es lo único que se puede poner en la playa Ceuta sin enojar a la gente.'},
  malecon:{nom:'Malecón',cat:'comercio',spr:'edif-malecon-a',A:3,B:1,costo:35,mant:.5,serv:'diversion',radio:8,suelo:'playa',turismo:true},
  parcela:{nom:'Parcela agrícola',cat:'produccion',A:3,B:3,costo:35,agri:true,lote:'tierra',desc:'Elige qué sembrar: maíz, sorgo, chile, tomate, plátano o mango.'},
  agro:{nom:'Empresa agroindustrial',cat:'produccion',spr:'edif-agro-a',A:6,B:6,costo:950,mant:8,empleos:90,ingreso:42,agroind:true,lote:'tierra',desc:'Campo tecnificado con silos y maquinaria. Necesita tierra de riego.'},
@@ -678,6 +686,7 @@ function nuevaPartida(){
   for(const i of [12,13,14,15]) agregar('humilde',OX+i,OY+18,false,true);
   for(let a=0;a<3;a++)for(let b=0;b<3;b++) if(S.ter[idx(OX+23+a,OY+20+b)]==='calle') S.ter[idx(OX+23+a,OY+20+b)]='temporal';
   agregar('parcela',OX+23,OY+20,false,true,'maiz');
+  aplicarMision();
   recalcular();
 }
 
@@ -724,6 +733,7 @@ function maxUnico(){ const r=new Set(['12']); for(const id of (S&&S.bloques)||[]
 const cuantos=t=>S.eds.filter(e=>e.t===t).length;
 function huella(d,flip){return flip?[d.B,d.A]:[d.A,d.B];}
 function puede(tipo,i,j,flip){
+  if(DEF[tipo]&&DEF[tipo].solo&&!(S.mision&&S.mision.id===DEF[tipo].solo)) return 'Solo en su municipio';
   const d=DEF[tipo]; const [A,B]=huella(d,flip);
   if(d.tec && !tieneTec(d.tec)) return 'Primero investiga: '+tecPor(d.tec).nom;
   if(d.presa){ if(S.eds.filter(e=>e.t==='presa').length>=MAX_PRESAS) return `Máximo ${MAX_PRESAS} presas`;
@@ -937,6 +947,7 @@ function pasarMes(){
   for(const cr of S.creditos||[]){cr.meses--; cr.saldo=Math.max(0,cr.saldo-cr.pago); if(cr.meses<=0) terminados.push(`Crédito de ${dinero(cr.monto)} liquidado`);} S.creditos=(S.creditos||[]).filter(cr=>cr.meses>0);
   const embarques=cobrarComercio(cMes).concat(guardaditoMes(cMes),nuevosConflictos(cMes));
   const rep={mes:S.mes,antes,c:cMes,despues:{pob:S.pob,apr:S.apr,din:S.dinero},terminados,talas,sucesos:embarques,minas,tec:tecLista};
+  rep.mis=S.mision?(misionDe(S.mision.id).mes(cMes)||[]):[]; if(S.mision) rep.despues.apr=S.apr;
   S.mes++;
   // retos
   rep.eventos=[]; recalcular();
@@ -1143,18 +1154,23 @@ function geo(e){
   return {im,nombre,mir,x:bx-Av*64+(SPR_DX[nombre]||0),y:by-im.height,c};
 }
 // letreros: zona del letrero en cada imagen (-a), texto original y color de letra. Muestran el nombre que le pongas al edificio
-const LETRERO={"aserradero":[[66,196],[242,281],16,"ASERRADERO EL PINABETE","#814632"],"bodega":[[33.9,72.8],[173.8,137.8],14.2,"BODEGA LA ESPERANZA","#864834"],"cafe":[[68,126],[98,120],15,"CAFÉ","#f4dcb0"],"clinica":[[50,120],[125,156],11,"Centro de salud","#f2f2ea"],"comandancia":[[64,126],[132,161],9,"COMANDANCIA","#2f4a86"],"congeladora":[[27,219],[217,312],15,"CONGELADORA MAR DE CORTÉS","#a53e37"],"empacadora":[[28,219],[188,297],15,"EMPACADORA VALLE VERDE","#a53e37"],"engorda":[[81,240],[236,314],12,"CORRAL LOS ÁLAMOS","#3a6a3c"],"escuela":[[28,226],[202,310],15,"ESC. PRIM. NIÑOS HÉROES","#a53e37"],"estadio":[[131,482],[284,557],16,"ESTADIO EL DIAMANTE","#a53e37"],"hotel":[[155,218],[306,291],17,"HOTEL PLAYA DORADA","#6e402e"],"iglesia":[[89,326],[171,366],15,"SAN ISIDRO","#904535"],"kiosco":[[19,206],[135,264],13,"PLAZUELA LOS ÁLAMOS","#a53e37"],"mercado":[[120,241],[213,277],9,"MERCADO MUNICIPAL","#b45f54"],"minisuper":[[26,189],[118,227],10,"MINI SÚPER","#c1534b"],"muelle":[[21,369],[203,463],11,"COOP. PESCADORES UNIDOS","#a53e37"],"palacio":[[39,223],[163,284],11,"H. AYUNTAMIENTO","#a23831"],"palapa":[[30,191],[123,243],10,"MARISCOS LA GÜERA","#a53e37"],"presa":[[31,206],[183,273],16,"PRESA EL MEZQUITAL","#6d4735"],"rastro":[[21,161],[139,220],12,"RASTRO MUNICIPAL","#598760"],"sushi":[[41,187],[66,199],14,"KIKO","#f3e2d0"],"veterinaria":[[10,151],[60,172],18,"VETERINARIA","#3b5a96"],"agro":[[125,282],[315,371],14,"AGROINDUSTRIAL DEL VALLE","#34562c"],"ecoturismo":[[142,188],[173,188],13,"ECO","#5f6037"],"agua":[[178,204],[276,238],29,"JAPAM","#dbe3f1"],"fabrica-alimentos":[[178,230],[276,265],28,"ALIMENTOS","#ddeae0"],"fabrica-textil":[[178,230],[276,265],28,"TEXTIL","#ebe3ef"],"fabrica-materiales":[[178,230],[276,265],28,"MATERIALES","#f2e6dd"],"fabrica-ensambladora":[[178,230],[276,265],28,"ENSAMBLADORA","#dae2f0"],"prision":[[35,113],[108,145],23,"PRISIÓN","#ece6dc"]};
+const LETRERO={"aserradero":[[152.0,170.0],[260.0,224.0],26,"ASERRADERO EL PINABETE","#814632",2],"bodega":[[95.0,128.5],[190.0,81.0],26,"BODEGA LA ESPERANZA","#864834",2],"cafe":[[68,126],[98,120],15,"CAFÉ","#f4dcb0"],"clinica":[[50,120],[125,156],11,"Centro de salud","#f2f2ea"],"comandancia":[[126.0,199.0],[203.0,160.5],12,"COMANDANCIA","#2f4a86"],"congeladora":[[10.0,237.0],[138.0,301.0],26,"CONGELADORA MAR DE CORTÉS","#a53e37",2],"empacadora":[[17.0,239.5],[127.0,294.5],26,"EMPACADORA VALLE VERDE","#a53e37",2],"engorda":[[141.0,206.5],[289.0,280.5],12,"CORRAL LOS ÁLAMOS","#3a6a3c"],"escuela":[[153.0,230.5],[237.0,272.5],18,"ESC. PRIM. NIÑOS HÉROES","#a53e37",2],"estadio":[[98.0,401.0],[302.0,503.0],15,"ESTADIO EL DIAMANTE","#a53e37"],"hotel":[[191.0,254.5],[293.0,305.5],25,"HOTEL PLAYA DORADA","#6e402e",2],"iglesia":[[104.0,318.0],[157.0,344.5],8,"SAN ISIDRO","#904535"],"kiosco":[[21.0,190.5],[189.0,274.5],12,"PLAZUELA LOS ÁLAMOS","#a53e37"],"mercado":[[120,241],[213,277],9,"MERCADO MUNICIPAL","#b45f54"],"minisuper":[[26,189],[118,227],10,"MINI SÚPER","#c1534b"],"muelle":[[138.0,343.0],[249.0,398.5],22,"COOP. PESCADORES UNIDOS","#a53e37",2],"palacio":[[65.0,224.5],[192.0,288.0],12,"H. AYUNTAMIENTO","#a23831"],"palapa":[[68.0,167.0],[128.0,197.0],18,"MARISCOS LA GÜERA","#a53e37",2],"presa":[[60.0,195.0],[242.0,286.0],14,"PRESA EL MEZQUITAL","#6d4735"],"rastro":[[21,161],[139,220],12,"RASTRO MUNICIPAL","#598760"],"sushi":[[41,187],[66,199],14,"KIKO","#f3e2d0"],"veterinaria":[[10,151],[60,172],18,"VETERINARIA","#3b5a96"],"agro":[[98.0,252.0],[323.0,364.5],13,"AGROINDUSTRIAL DEL VALLE","#34562c"],"ecoturismo":[[142,188],[173,188],13,"ECO","#5f6037"],"agua":[[178,204],[276,238],29,"JAPAM","#dbe3f1"],"fabrica-alimentos":[[178,230],[276,265],28,"ALIMENTOS","#ddeae0"],"fabrica-textil":[[178,230],[276,265],28,"TEXTIL","#ebe3ef"],"fabrica-materiales":[[178,230],[276,265],28,"MATERIALES","#f2e6dd"],"fabrica-ensambladora":[[178,230],[276,265],28,"ENSAMBLADORA","#dae2f0"],"prision":[[35,113],[108,145],23,"PRISIÓN","#ece6dc"],"tortugas":[[200.0,291.0],[350.0,216.0],24,"CAMPAMENTO TORTUGUERO CEUTA","#1F5A2A",2]};
 function dibujarLetrero(e,q,sx,sy){
   const m=/^edif-(.+)-([af])$/.exec(q.nombre); if(!m) return; const L=LETRERO[m[1]]; if(!L) return;
   const z=cam.z, [p1,p2,h,txt,col]=L, W=q.im.width, esp=(m[2]==='f')!==!!q.mir;
   if(h*z<5) return;
   let a=esp?[W-1-p1[0],p1[1]]:p1, b=esp?[W-1-p2[0],p2[1]]:p2; if(a[0]>b[0]) [a,b]=[b,a];
   const A=[sx+a[0]*z,sy+a[1]*z], B=[sx+b[0]*z,sy+b[1]*z], dx=B[0]-A[0], dy=B[1]-A[1], len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len;
-  const texto=(e.nombre||txt).toUpperCase();
-  g.save(); g.font='800 20px Montserrat, system-ui, sans-serif'; const tw=g.measureText(texto).width;
-  const alto=h*z*.62, ky=alto/15, kx=Math.min(ky*1.05,len*.9/tw), ox=(len-tw*kx)/2;
-  g.setTransform(DPR*ux*kx, DPR*uy*kx, 0, DPR*ky, DPR*(A[0]+ux*ox), DPR*(A[1]+uy*ox+h*z*.5));
-  g.textBaseline='middle'; g.fillStyle=col; g.fillText(texto,0,0); g.restore(); }
+  const texto=(e.nombre||txt).toUpperCase(), nl=L[5]||1, lineas=nl>1?partirLetrero(texto):[texto], lh=h/lineas.length;
+  g.save(); g.font='800 20px Montserrat, system-ui, sans-serif'; g.textBaseline='middle'; g.fillStyle=col;
+  lineas.forEach((t,k)=>{ const tw=g.measureText(t).width;
+    const alto=lh*z*.62, ky=alto/15, kx=Math.min(ky*1.05,len*.9/tw), ox=(len-tw*kx)/2;
+    // las letras quedan verticales: solo la línea base sigue la pendiente del letrero
+    g.setTransform(DPR*kx, DPR*uy/ux*kx, 0, DPR*ky, DPR*(A[0]+ox), DPR*(A[1]+uy/ux*ox+lh*z*(k+.5)));
+    g.fillText(t,0,0); });
+  g.restore(); }
+function partirLetrero(t){ const w=t.split(' '); if(w.length<2) return [t]; let best=null;
+  for(let k=1;k<w.length;k++){ const a=w.slice(0,k).join(' '), b=w.slice(k).join(' '), m=Math.max(a.length,b.length); if(!best||m<best[0]) best=[m,[a,b]]; } return best[1]; }
 function dibujarSprite(e,alfa){
   if(e.t==='parcela'&&!e.fant&&brote(e)) return;      // recién sembrada: solo brotes en el suelo
   const q=geo(e); if(!q) return; const {im}=q;
@@ -1226,6 +1242,7 @@ function dibujar(){
     for(const e of S.embalses||[]) if(!S.eds.some(x=>x.t==='presa'&&x.i===e.i&&x.j===e.j)) for(let a=0;a<5;a++)for(let b=0;b<3;b++) romboPantalla(e.i+a,e.j+b,null,'rgba(242,178,51,.9)'); }
   // recorrido de la ruta que se edita o se mira
   const rv=borr||rutaSel; if(rv&&rv._c){ const col=borr?'rgba(255,255,255,.28)':hexA(rv.color,.32); for(const [i,j] of rv._c) romboPantalla(i,j,col); }
+  if(S.mision){ const ms=misionDe(S.mision.id); if(ms&&ms.pinta) ms.pinta(); }
   // calles propuestas
   for(const k of prop){const i=k%N,j=(k/N)|0; const [a,b]=celV(i,j); const [x,y]=topW(a,b); const [sx,sy]=aPantalla(x-64,y); g.globalAlpha=.75; g.drawImage(TEX.calle0,sx,sy,128*z,64*z); g.globalAlpha=1; romboPantalla(i,j,'rgba(242,178,51,.22)','rgba(242,178,51,.95)');}
   // edificios y agentes en orden de profundidad
@@ -1343,6 +1360,9 @@ function reponerAgentes(){
 }
 function puntoMuelle(m){const [A,B]=huella(DEF.muelle,m.f); return [m.i+A+.9,m.j+B/2+.5];}
 function esParada(r,p){return r.paradas.some(q=>q[0]===p[0]&&q[1]===p[1]);}
+// barcos: el dibujo tiene la proa hacia abajo a la izquierda; espejado la apunta abajo a la derecha.
+// Se elige el que lleva la proa hacia el lado de la pantalla al que avanza (nunca en reversa).
+function proaHacia(vx,vy,antes){ const ex=(vx-vy)*2, ey=vx+vy; const L=Math.hypot(ex,ey)||1; if(Math.abs(ex)/L<.12) return antes; return ex>0; }
 function actualizar(dt){
   dt*=tEscala;
   for(const a of agentes){
@@ -1375,7 +1395,7 @@ function actualizar(dt){
       if(a.fase==='atracado'){a.wx=dock[0];a.wy=dock[1]; if(a.t<=0){a.fase='ida'; const lado=Math.random()<.5?-1:1; a.dest=[clamp(m.i+2+lado*(8+Math.random()*10),1,N-2)+.5, clamp(m.j+1+Math.random()*3,MAR_J,N-1)+.5];}}
       else if(a.fase==='ida'||a.fase==='vuelta'){const dest=a.fase==='ida'?a.dest:dock; const dx=dest[0]-a.wx, dy=dest[1]-a.wy, L=Math.hypot(dx,dy); const sp=.8*dt;
         if(L<=sp){a.wx=dest[0];a.wy=dest[1]; if(a.fase==='ida'){a.fase='pesca';a.t=4+Math.random()*5;} else {a.fase='atracado';a.t=5+Math.random()*6;}}
-        else {a.wx+=dx/L*sp; a.wy+=dy/L*sp; const [vx,vy]=dirV(dx,dy); a.fl=Math.abs(vx)>Math.abs(vy);}}   // el dibujo va sobre un eje de la pantalla: se voltea si navega sobre el otro
+        else {a.wx+=dx/L*sp; a.wy+=dy/L*sp; const [vx,vy]=dirV(dx,dy); a.fl=proaHacia(vx,vy,a.fl);}}   // el dibujo va sobre un eje de la pantalla: se voltea si navega sobre el otro
       else if(a.fase==='pesca'){ if(a.t<=0) a.fase='vuelta'; }
     } else if(a.k==='bc'){
       // barco de carga: llega del horizonte, atraca frente al muelle, carga y se va por el otro lado
@@ -1386,7 +1406,7 @@ function actualizar(dt){
       else if(a.fase==='llega'||a.fase==='sale'){ const dest=a.fase==='llega'?dock:a.fin; const dx=dest[0]-a.wx, dy=dest[1]-a.wy, L=Math.hypot(dx,dy);
         const sp=(a.fase==='llega'?clamp(L*.3,.2,1.3):clamp(.2+(26-L)*.06,.2,1.3))*dt;
         if(L<=sp){ a.wx=dest[0]; a.wy=dest[1]; if(a.fase==='llega'){a.fase='carga'; a.t=12+Math.random()*6;} else {a.fase='fuera'; a.t=35+Math.random()*40; a.wx=null;} }
-        else { a.wx+=dx/L*sp; a.wy+=dy/L*sp; const [vx,vy]=dirV(dx,dy); a.fl=Math.abs(vx)>Math.abs(vy); } }
+        else { a.wx+=dx/L*sp; a.wy+=dy/L*sp; const [vx,vy]=dirV(dx,dy); a.fl=proaHacia(vx,vy,a.fl); } }
       else if(a.fase==='carga'){ if(a.t<=0) a.fase='sale'; }
     } else if(a.k==='j'){
       const e=S.eds.find(x=>x.id===a.par); if(!e) continue;
@@ -1925,7 +1945,7 @@ const ORDEN={vivienda:['humilde','media','buena','buenab','cuartos','vecindad','
  industria:['empacadora','rastro','congeladora','fabrica']};
 function lista(){
   const O=ORDEN[cat]||[], pos=k=>{const n=O.indexOf(k); return n<0?100+(DEF[k].costo||0)/1000:n;};
-  const tipos=Object.keys(DEF).filter(k=>DEF[k].cat===cat).sort((a,b)=>pos(a)-pos(b));
+  const tipos=Object.keys(DEF).filter(k=>DEF[k].cat===cat&&(!DEF[k].solo||(S&&S.mision&&S.mision.id===DEF[k].solo))).sort((a,b)=>pos(a)-pos(b));
   $('lista').innerHTML=tipos.map(k=>{const d=DEF[k];const usado=d.unico&&S&&cuantos(k)>=maxUnico();
     const bloq=d.tec&&S&&!tieneTec(d.tec);
     const img=k==='parcela'?`<img alt="" src="sprites/cult-tomate.png">`:k==='mina'?`<img alt="" src="sprites/edif-mina-oro.png">`:d.icono?`<img alt="" src="sprites/${d.icono}.png">`:d.spr?`<img src="sprites/${d.spr}.png" alt="">`:`<img alt="" src="${TEX.calle10?TEX.calle10.toDataURL():''}">`;
@@ -2246,13 +2266,13 @@ function efectos(){
   if(S.bono) ch.push(`<span class="bien">${S.bono.tipo==='gratis'?`Obra gratis hasta ${dinero(S.bono.tope)}`:`Descuento ${Math.round(S.bono.pct*100)}%`}</span>`);
   if(S.callesGratis) ch.push(`<span class="bien">${S.callesGratis} calles gratis</span>`);
   el.innerHTML=ch.join('');
-  $('tCamp').hidden=!S.campana;
+  $('tCamp').hidden=!S.campana; hudMision();
   const n=S.mano.length+S.retos.length; $('bCartas').hidden=!n; $('bCartas').textContent=n;
   const ta=S.tec.actual&&tecPor(S.tec.actual); $('bInv').hidden=false; $('bInv').textContent=ta?Math.min(99,Math.round(S.tec.pts/ta.pts*100))+'%':'!';
   $('bInv').style.background=ta?'#B48CE0':'var(--sol)';
 }
 $('tCartas').onclick=()=>verMano();
-$('tInv').onclick=()=>investigar(); $('tCamp').onclick=()=>campana();
+$('tMision').onclick=()=>{ if(S.mision) verMision(false); }; $('tInv').onclick=()=>investigar(); $('tCamp').onclick=()=>campana();
 // ---------- investigación ----------
 function investigar(resaltar){
   const pm=ptsMes(), act=S.tec.actual&&tecPor(S.tec.actual);
@@ -3349,6 +3369,8 @@ function reporte(r,listo){
   if(S.mes>=27&&S.mes<30) chips.push(['',`En ${30-S.mes} mes${30-S.mes>1?'es':''} arranca la campaña: junta aprobación`]);
   if(S.mes>=6&&S.mes<30&&!S.aporteP&&!S.campana) chips.push(['',`No estás apartando guardadito pal partido: sin él no habrá fondo de campaña (Gobierno)`]);
   for(const x of r.sucesos||[]) chips.push([x.ok?'bien':'mal',x.txt]);
+  for(const x of r.mis||[]) chips.push(x);
+  if(S.mision) chips.push([misionDe(S.mision.id).logrado()?'bien':'',`🎯 Misión: ${misionDe(S.mision.id).avance()}`]);
   if(!chips.length) chips.push(['bien','El pueblo va bien este mes']);
   // informe compacto: totales por rubro; quien quiera, despliega el detalle
   const rubro=(lst,grupos)=>{ const G=grupos.map(([n,re])=>({n,re,l:[],t:0})), otros={n:'Otros',l:[],t:0};
@@ -3581,8 +3603,9 @@ async function elegirAlcaldeInicial(){
 // dificultad: mientras mejor vas, más pesan las cartas malas y más probable es una catástrofe
 function exito(){ return clamp((S.apr-50)/35,0,1)*.6+clamp(S.dinero/2500,0,1)*.4; }
 function pesosCartas(){ const x=exito(), malas=['retencion','peticion','contratiempo'];
-  return PESOS.map(([c,w])=>[c, malas.includes(c)?w*(1+1.2*x):w*(1-.4*x)]); }
-function probCatastrofe(){ if(S.mes<4) return 0; const m=((S.mes-1)%12)+1; return .03+.08*exito()+((m>=8&&m<=10)?.03:0); }
+  const df=difAct(), buenas=['mayor','recursos','usable'];
+  return PESOS.map(([c,w])=>[c, malas.includes(c)?w*(1+1.2*x)*df.malas:w*(1-.4*x)*(buenas.includes(c)?df.buenas:1)]); }
+function probCatastrofe(){ if(S.mes<4) return 0; const m=((S.mes-1)%12)+1; return (.03+.08*exito()+((m>=8&&m<=10)?.03:0))*difAct().catas; }
 // edificios dañados: dejan de funcionar hasta repararlos
 function dañar(lista,n){ const c=lista.filter(e=>!e.dano&&e.t!=='palacio'&&e.t!=='presa'&&e.t!=='parcela'); const out=[];
   for(let k=0;k<n&&c.length;k++){ const e=c.splice(Math.floor(Math.random()*c.length),1)[0]; e.dano=true; out.push(nombreDe(e)); } limpiarCacheD(); return out; }
@@ -3665,6 +3688,7 @@ function eleccion(){
     if(k<1) requestAnimationFrame(paso); else setTimeout(()=>resultadoEleccion(v,gana),500); };
   requestAnimationFrame(paso); }
 function resultadoEleccion(v,gana){
+  if(S.mision) return finMision(v,gana);
   const c=S.campana, t=trienioAct();
   if(!gana){ S.campana=null; return finDePartida(v); }
   const reel=c.cand===S.alcalde; S.hist=S.hist||{};
@@ -3773,17 +3797,132 @@ function crearPerfil(primero,despues){
 }
 function conPerfil(fn){ if(perfil) fn(); else crearPerfil(true,fn); }
 
+// ---------- modo Misiones: los 20 municipios de Sinaloa ----------
+// dificultad: la elige el jugador al empezar cada misión
+const DIFS={
+ facil:{nom:'Fácil',txt:'Más cartas buenas, poca delincuencia, el pueblo te recibe contento',malas:.6,buenas:1.3,catas:.5,deli:12,mana:8,apr:60,dinero:1500},
+ normal:{nom:'Normal',txt:'Como el modo libre',malas:1,buenas:1,catas:1,deli:22,mana:18,apr:52,dinero:1200},
+ dificil:{nom:'Difícil',txt:'Más cartas malas, la maña ya está instalada, aprobación baja',malas:1.4,buenas:.85,catas:1.4,deli:32,mana:30,apr:45,dinero:1000},
+ leyenda:{nom:'Leyenda',txt:'Casi todo en contra: solo para los que ya conocen el juego',malas:1.9,buenas:.7,catas:1.9,deli:45,mana:42,apr:38,dinero:800}};
+const DIF_ORDEN=['facil','normal','dificil','leyenda'];
+const difAct=()=>DIFS[(S&&S.mision&&S.mision.dif)||'normal'];
+// zona de la playa Ceuta (Elota): santuario de tortugas
+const CEUTA=[OX+26,OX+37,PLAYA_J,MAR_J-1];
+const enCeuta=(i,j)=>i>=CEUTA[0]&&i<=CEUTA[1]&&j>=CEUTA[2]&&j<=CEUTA[3];
+function edificiosEnCeuta(){ return S.eds.filter(e=>{ if(e.t==='tortugas') return false; const [A,B]=huella(D(e),e.f); for(let a=0;a<A;a++)for(let b=0;b<B;b++) if(enCeuta(e.i+a,e.j+b)) return true; return false; }); }
+const prodTomate=()=>S.eds.filter(e=>e.t==='parcela'&&e.cult==='tomate').reduce((s,e)=>s+(e._ing||0),0);
+const exportaHort=()=>{ const p=repartoDe('hortalizas'); return p.tren+p.mar>0; };
+const MISIONES=[
+ {id:'elota',mun:'Elota',reg:'Centro-sur',jugable:true,gratis:true,
+  lema:'El valle de las hortalizas junto a la playa Ceuta',
+  intro:'Elota vive de sus campos de tomate y de la pesca. Los productores quieren vender fuera del municipio, pero en la playa Ceuta anidan las tortugas y la gente no quiere que se construya ahí.',
+  regla:'Aquí puedes construir el Monumento a la Cruz del Perdón (Social), que sube 1 de aprobación cada mes. Cada edificio que pongas en la playa Ceuta (marcada en verde) baja 1 de aprobación cada mes. El campamento tortuguero es la excepción: ahí sube 1 cada mes.',
+  objetivo:{txt:'Exporta tomate por tren o barco durante 12 meses y gana la elección',meta:12},
+  estrellas:[{txt:'En la playa Ceuta, solo el campamento tortuguero'},{txt:'Una empacadora con segundo turno'},{txt:'Ganar con 60% de los votos o más'}],
+  mes:c=>{ const m=S.mision; if(prodTomate()>0&&exportaHort()) m.cuenta=(m.cuenta||0)+1;
+    const ch=[]; if(S.eds.some(e=>e.t==='cruz')){ S.apr=clamp(S.apr+1,1,99); ch.push(['bien','La Cruz del Perdón: orgullo del pueblo (aprobación +1)']); }
+    if(S.eds.some(e=>e.t==='tortugas'&&enCeuta(e.i+1,e.j+1))){ S.apr=clamp(S.apr+1,1,99); ch.push(['bien','Campamento tortuguero en Ceuta: la gente lo agradece (aprobación +1)']); }
+    const n=edificiosEnCeuta().length; if(n){ m.ceutaRota=true; S.apr=clamp(S.apr-n,1,99); ch.push(['mal',`Playa Ceuta: ${n} edificio${n>1?'s':''} en el santuario de tortugas (aprobación −${n})`]); } return ch; },
+  avance:()=>{ const m=S.mision; return `Tomate exportado: ${Math.min(m.cuenta||0,12)} de 12 meses`; },
+  logrado:()=>(S.mision.cuenta||0)>=12,
+  estrellasOk:v=>[!S.mision.ceutaRota&&!edificiosEnCeuta().length, S.eds.some(e=>e.t==='empacadora'&&e.mej&&e.mej.turno), v>=60],
+  pinta:()=>{ for(let j=CEUTA[2];j<=CEUTA[3];j++)for(let i=CEUTA[0];i<=CEUTA[1];i++) romboPantalla(i,j,'rgba(60,200,130,.38)','rgba(40,150,95,.55)'); }},
+ {id:'ahome',mun:'Ahome',reg:'Norte',lema:'Los Mochis, la terminal del Chepe y las carretas de dogos'},
+ {id:'elfuerte',mun:'El Fuerte',reg:'Norte',lema:'Pueblo Mágico junto al río Fuerte'},
+ {id:'mazatlan',mun:'Mazatlán',reg:'Sur',lema:'Muchos hoteles, pocos servicios'},
+ {id:'culiacan',mun:'Culiacán',reg:'Centro',lema:'Dos ríos que forman un tercero y el Puente Negro'},
+ {id:'jjrios',mun:'Juan José Ríos',reg:'Norte',lema:'Un municipio nuevo que hay que armar desde cero'},
+ {id:'salvador',mun:'Salvador Alvarado',reg:'Centro-norte',lema:'Guamúchil, cruce de carreteras'},
+ {id:'sinaloa',mun:'Sinaloa',reg:'Centro-norte',lema:'Una de las villas más antiguas del estado'},
+ {id:'guasave',mun:'Guasave',reg:'Norte',lema:'El valle de los granos'},
+ {id:'navolato',mun:'Navolato',reg:'Centro',lema:'El ingenio que está por cerrar'},
+ {id:'eldorado',mun:'Eldorado',reg:'Centro',lema:'Nuevo municipio con deudas heredadas'},
+ {id:'angostura',mun:'Angostura',reg:'Centro-norte',lema:'La veda del camarón'},
+ {id:'mocorito',mun:'Mocorito',reg:'Centro-norte',lema:'La Atenas de Sinaloa y su chilorio'},
+ {id:'escuinapa',mun:'Escuinapa',reg:'Sur',lema:'Mango, marismas y tamales barbones'},
+ {id:'rosario',mun:'Rosario',reg:'Sur',lema:'El pueblo minero que se hunde'},
+ {id:'concordia',mun:'Concordia',reg:'Sur',lema:'Muebles de madera sin acabar el monte'},
+ {id:'sanignacio',mun:'San Ignacio',reg:'Sur',lema:'Pinturas rupestres y alfarería'},
+ {id:'choix',mun:'Choix',reg:'Norte',lema:'La sierra y la presa Huites'},
+ {id:'badiraguato',mun:'Badiraguato',reg:'Centro',lema:'Conectar los pueblos de la sierra'},
+ {id:'cosala',mun:'Cosalá',reg:'Centro',lema:'La misión final de la campaña'}];
+const misionDe=id=>MISIONES.find(m=>m.id===id);
+// avance de misiones por perfil: {elota:{pasada:true, est:{normal:[1,0,1],...}}}
+function leerAvance(){ try{ return JSON.parse(lsGet(pref()+'misiones'))||{}; }catch(e){ return {}; } }
+function guardarAvance(a){ lsSet(pref()+'misiones',JSON.stringify(a)); }
+const nEst=a=>a?a.filter(Boolean).length:0;
+function mejorEst(id){ const a=leerAvance()[id]; if(!a||!a.est) return 0; return Math.max(0,...Object.values(a.est).map(nEst)); }
+const estHtml=(n,tot=3)=>'★'.repeat(n)+'<span style="opacity:.3">'+'★'.repeat(tot-n)+'</span>';
+let misionPend=null;
+function pantallaMisiones(){
+  const A=leerAvance();
+  const tarjeta=m=>{ const ok=m.jugable, n=mejorEst(m.id), pas=A[m.id]&&A[m.id].pasada;
+    return `<button class="mis${ok?'':' bloq'}" ${ok?`data-mis="${m.id}"`:'disabled'}><b>${esc(m.mun)}</b><small>${esc(m.lema)}</small><span class="est">${ok?(pas?estHtml(n):'Disponible'+(m.gratis?' · gratis':'')):'🔒 Próximamente'}</span></button>`; };
+  const regs=['Norte','Centro-norte','Centro','Centro-sur','Sur'];
+  modal(`<h2>MISIONES · SINALOA</h2><p style="font-size:14px">Un trienio en cada municipio, con su propio reto. Pasa una misión para desbloquear la siguiente y vuelve para sacar las 3 estrellas en cada dificultad.</p>
+   <div class="cuenta"><span class="t">Disponibles</span></div><div class="misgrid">${MISIONES.filter(m=>m.jugable).map(tarjeta).join('')}</div>
+   ${regs.map(r=>{ const L=MISIONES.filter(m=>m.reg===r&&!m.jugable); return L.length?`<div class="cuenta"><span class="t">${r}</span></div><div class="misgrid">${L.map(tarjeta).join('')}</div>`:''; }).join('')}
+   <div class="fila"><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
+  $('mCerrar').onclick=cerrarModal;
+  $('modal').querySelectorAll('[data-mis]').forEach(b=>b.onclick=()=>fichaMision(b.dataset.mis));
+}
+function fichaMision(id,dif){
+  const m=misionDe(id), A=leerAvance()[id]||{}; dif=dif||A.ultDif||'normal';
+  const D_=DIFS[dif];
+  modal(`<h2>${esc(m.mun).toUpperCase()}</h2><p>${esc(m.intro)}</p>
+   <div class="cuenta"><span class="t">Objetivo</span></div><p style="font-size:14px"><b>${esc(m.objetivo.txt)}</b>, en 36 meses.</p>
+   <div class="cuenta"><span class="t">Regla especial</span></div><p style="font-size:14px">${esc(m.regla)}</p>
+   <div class="cuenta"><span class="t">Estrellas</span></div><div class="chips">${m.estrellas.map(e=>`<span class="chip">★ ${esc(e.txt)}</span>`).join('')}</div>
+   <div class="cuenta"><span class="t">Dificultad</span></div>
+   <div class="chips">${DIF_ORDEN.map(k=>`<button class="chip opc" data-dif="${k}" aria-pressed="${k===dif}">${DIFS[k].nom}${A.est&&A.est[k]?' · '+estHtml(nEst(A.est[k])):''}</button>`).join('')}</div>
+   <div class="cuenta"><span>${D_.txt}</span><span></span>
+    <span>Aprobación inicial</span><span>${D_.apr}%</span><span>Delincuencia y maña al empezar</span><span>${D_.deli} · ${D_.mana}</span>
+    <span>Caja inicial</span><span>${dinero(D_.dinero)}</span><span>Cartas malas / buenas</span><span>×${D_.malas} / ×${D_.buenas}</span></div>
+   <div class="fila"><button class="btn" id="mVolver">Volver</button><button class="btn-sol btn" id="mJugar">Empezar misión</button></div>`);
+  $('mVolver').onclick=pantallaMisiones;
+  $('modal').querySelectorAll('[data-dif]').forEach(b=>b.onclick=()=>fichaMision(id,b.dataset.dif));
+  $('mJugar').onclick=()=>conPerfil(()=>{ const a=leerAvance(); a[id]=Object.assign(a[id]||{},{ultDif:dif}); guardarAvance(a);
+    const g=ranuraLibre(); if(g<0){ modal(`<h2>SIN ESPACIO</h2><p>Ya tienes ${MAXP} partidas guardadas. Borra una para empezar la misión.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Ver partidas</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>pantallaPartidas('portada'); return; }
+    partida=g; misionPend={id,dif}; cerrarModal(); iniciar(true); });
+}
+// se llama dentro de nuevaPartida
+function aplicarMision(){ if(!misionPend) return; const {id,dif}=misionPend; misionPend=null; const d=DIFS[dif];
+  S.mision={id,dif,cuenta:0}; S.apr=d.apr; S.deli=d.deli; S.mana=d.mana; S.dinero=d.dinero; S.nomP=`Misión ${misionDe(id).mun}`; }
+function verMision(inicio){ return new Promise(fin=>{ const m=misionDe(S.mision.id);
+  modal(`<h2>MISIÓN ${esc(m.mun).toUpperCase()} · ${DIFS[S.mision.dif].nom.toUpperCase()}</h2>${inicio?`<p>${esc(m.intro)}</p>`:''}
+   <div class="cuenta"><span class="t">Objetivo</span><span>${esc(m.objetivo.txt)}</span><span></span><span>${esc(m.avance())}</span><span>${m.logrado()?'✓':''}</span></div>
+   <p style="font-size:14px">${esc(m.regla)}</p>
+   <div class="cuenta"><span class="t">Estrellas (se revisan en la elección)</span>${m.estrellas.map(e=>`<span>★ ${esc(e.txt)}</span><span></span>`).join('')}</div>
+   <div class="fila"><button class="btn-sol btn" id="mOkM">${inicio?'A gobernar':'Listo'}</button></div>`);
+  $('mOkM').onclick=()=>{cerrarModal(); fin();}; }); }
+function hudMision(){ const b=$('tMision'); if(!b) return; b.hidden=!(S&&S.mision); if(S&&S.mision){ const m=misionDe(S.mision.id); b.innerHTML=`🎯 ${Math.min(S.mision.cuenta||0,m.objetivo.meta)}/${m.objetivo.meta}`; } }
+function finMision(v,gana){
+  const m=misionDe(S.mision.id), logro=m.logrado(), paso=gana&&logro, ests=paso?m.estrellasOk(v):[false,false,false];
+  const A=leerAvance(), a=A[m.id]=A[m.id]||{est:{}}; a.est=a.est||{};
+  if(paso){ a.pasada=true; const prev=a.est[S.mision.dif]||[false,false,false]; a.est[S.mision.dif]=prev.map((x,k)=>x||ests[k]); }
+  guardarAvance(A); S.terminada=true; borrarG(partida);
+  const sig=MISIONES[MISIONES.indexOf(m)+1];
+  modal(`<h2>${paso?'¡MISIÓN CUMPLIDA!':'MISIÓN NO CUMPLIDA'}</h2>
+   <p>Tu partido obtuvo el ${v}% de los votos${gana?'':' y perdió la elección'}. ${logro?'':esc(m.avance())+': no se alcanzó el objetivo.'}</p>
+   ${paso?`<div class="cuenta"><span class="t">Estrellas · ${DIFS[S.mision.dif].nom}</span>${m.estrellas.map((e,k)=>`<span>${ests[k]?'★':'☆'} ${esc(e.txt)}</span><span>${ests[k]?'Lograda':'—'}</span>`).join('')}</div>
+     <p style="font-size:14px">${sig?`Siguiente municipio: <b>${esc(sig.mun)}</b>${sig.jugable?'':' (llega en la próxima actualización)'}.`:''}</p>`:'<p style="font-size:14px">Puedes volver a intentarlo desde Misiones, con la misma dificultad o una más fácil.</p>'}
+   <div class="fila"><button class="btn" id="fmPort">Portada</button><button class="btn-sol btn" id="fmMis">Ver misiones</button></div>`);
+  $('fmPort').onclick=()=>{cerrarModal();volverPortada();};
+  $('fmMis').onclick=()=>{volverPortada();pantallaMisiones();};
+}
+
 // ---------- arranque ----------
 function iniciar(nueva){
   if(nueva){occ=new Int32Array(N*N); nuevaPartida(); guardar();}
   $('portada').hidden=true; document.body.classList.remove('en-portada'); ponerModo('ver'); cat='vivienda'; pestanas(); lista(); recalcular(); hud();
   cam.z=.55; centrarEn(OX+19,OY+18); agentes.length=0; reponerAgentes(); efectos(); pedir();
   if(nueva) setTimeout(async()=>{ const primera=!lsGet('trienio.tour'); const tour=primera?await bienvenida():false; await elegirAlcaldeInicial(); await gobierno('fondo',true);
+    if(S.mision) await verMision(true);
     if(tour) iniciarTour(); else aviso('Construye casas junto a las calles y negocios para dar empleo',4200); },400);
   if(Radio.quiereSonar()&&!Radio.on) try{Radio.encender();}catch(e){}
 }
 function cargarSprites(){
-  const FLIP=['palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos'];
+  const FLIP=['palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
   const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-tanque','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
   let listos=0;
   return Promise.all(nombres.map(n=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[n]=im;listos++;$('cargaTxt').textContent=`Cargando piezas… ${listos} de ${nombres.length}`;res();};im.onerror=()=>{listos++;res();};im.src=`sprites/${n}.png`;})));
@@ -3799,12 +3938,12 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 let pidaInstalar=null;
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
 window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
 $('pInstalar').onclick=async()=>{ if(!pidaInstalar) return; pidaInstalar.prompt(); const r=await pidaInstalar.userChoice; pidaInstalar=null; if(r.outcome==='accepted') $('pInstalar').hidden=true; };
-$('pLegado').onclick=()=>verLegado(); $('pCuenta').onclick=()=>cuenta();
+$('pMis').onclick=()=>conPerfil(()=>pantallaMisiones()); $('pLegado').onclick=()=>verLegado(); $('pCuenta').onclick=()=>cuenta();
 $('tourSig').onclick=()=>{ TOUR.paso++; if(TOUR.paso>=PASOS.length) return terminarTour(); mostrarPaso(); }; $('tourHaz').onclick=()=>{ const P=PASOS[TOUR.paso]; if(P&&P.haz) P.haz(); };
 $('tourSal').onclick=()=>terminarTour('Puedes repetir el recorrido desde el menú ≡');
 window.addEventListener('resize',()=>{ if(TOUR.on) tickTour(); });
