@@ -433,7 +433,7 @@ const DEF={
  clinica:{nom:'Centro de salud',cat:'social',spr:'edif-clinica-a',A:2,B:2,costo:220,mant:8,empleos:15,serv:'salud',radio:14},
  comandancia:{nom:'Comandancia',cat:'publica',spr:'edif-comandancia-a',A:2,B:2,costo:180,mant:7,empleos:18,serv:'seguridad',radio:16},
  autobus:{nom:'Ruta de autobús',cat:'publica',icono:'autobus-icono',costo:140,desc:'Pon paradas A y B sobre calles. Cada parada extra (C, D, E…) cuesta 20% más; más autobuses dan mejor servicio.'},
- cruz:{nom:'Monumento a la Cruz del Perdón',cat:'social',spr:'edif-cruz-a',A:3,B:3,costo:120,mant:1,serv:'diversion',radio:12,turismo:true,unico:true,lote:'plaza',solo:'elota',desc:'El monumento de La Cruz de Elota, con sus letras de colores. Da orgullo al pueblo: +1 de aprobación cada mes.'},
+ cruz:{nom:'Monumento a la Cruz del Perdón',cat:'social',spr:'edif-cruz-a',A:3,B:3,costo:2000,mant:1,serv:'diversion',radio:12,turismo:true,unico:true,lote:'plaza',solo:'elota',desc:'El monumento de La Cruz de Elota, con sus letras de colores. Da orgullo al pueblo: +1 de aprobación cada mes.'},
  kiosco:{nom:'Plazuela con kiosco',cat:'social',spr:'edif-kiosco-a',A:3,B:3,costo:70,mant:1.5,serv:'diversion',radio:11,lote:'plaza'},
  iglesia:{nom:'Parroquia de San Isidro',cat:'social',spr:'edif-iglesia-a',A:3,B:3,costo:150,mant:0,empleos:2,unico:true,lote:'plaza',fe:true},
  panteon:{nom:'Panteón',cat:'publica',spr:'edif-panteon-a',A:3,B:3,costo:50,mant:1,empleos:3,unico:true},
@@ -3816,16 +3816,16 @@ const MISIONES=[
  {id:'elota',mun:'Elota',reg:'Centro-sur',jugable:true,gratis:true,
   lema:'El valle de las hortalizas junto a la playa Ceuta',
   intro:'Elota vive de sus campos de tomate y de la pesca. Los productores quieren vender fuera del municipio, pero en la playa Ceuta anidan las tortugas y la gente no quiere que se construya ahí.',
-  regla:'Aquí puedes construir el Monumento a la Cruz del Perdón (Social), que sube 1 de aprobación cada mes. Cada edificio que pongas en la playa Ceuta (marcada en verde) baja 1 de aprobación cada mes. El campamento tortuguero es la excepción: ahí sube 1 cada mes.',
+  regla:'Aquí puedes levantar el Monumento a la Cruz del Perdón (Social, $2 M): es la tercera estrella y sube 1 de aprobación cada mes. Cada edificio que pongas en la playa Ceuta (marcada en verde) baja 1 de aprobación cada mes. El campamento tortuguero es la excepción: ahí sube 1 cada mes.',
   objetivo:{txt:'Exporta tomate por tren o barco durante 12 meses y gana la elección',meta:12},
-  estrellas:[{txt:'En la playa Ceuta, solo el campamento tortuguero'},{txt:'Una empacadora con segundo turno'},{txt:'Ganar con 60% de los votos o más'}],
+  estrellas:[{txt:'En la playa Ceuta, solo el campamento tortuguero'},{txt:'Una empacadora con segundo turno'},{txt:'Levantar el Monumento a la Cruz del Perdón'}],
   mes:c=>{ const m=S.mision; if(prodTomate()>0&&exportaHort()) m.cuenta=(m.cuenta||0)+1;
     const ch=[]; if(S.eds.some(e=>e.t==='cruz')){ S.apr=clamp(S.apr+1,1,99); ch.push(['bien','La Cruz del Perdón: orgullo del pueblo (aprobación +1)']); }
     if(S.eds.some(e=>e.t==='tortugas'&&enCeuta(e.i+1,e.j+1))){ S.apr=clamp(S.apr+1,1,99); ch.push(['bien','Campamento tortuguero en Ceuta: la gente lo agradece (aprobación +1)']); }
     const n=edificiosEnCeuta().length; if(n){ m.ceutaRota=true; S.apr=clamp(S.apr-n,1,99); ch.push(['mal',`Playa Ceuta: ${n} edificio${n>1?'s':''} en el santuario de tortugas (aprobación −${n})`]); } return ch; },
   avance:()=>{ const m=S.mision; return `Tomate exportado: ${Math.min(m.cuenta||0,12)} de 12 meses`; },
   logrado:()=>(S.mision.cuenta||0)>=12,
-  estrellasOk:v=>[!S.mision.ceutaRota&&!edificiosEnCeuta().length, S.eds.some(e=>e.t==='empacadora'&&e.mej&&e.mej.turno), v>=60],
+  estrellasOk:v=>[!S.mision.ceutaRota&&!edificiosEnCeuta().length, S.eds.some(e=>e.t==='empacadora'&&e.mej&&e.mej.turno), S.eds.some(e=>e.t==='cruz')],
   pinta:()=>{ for(let j=CEUTA[2];j<=CEUTA[3];j++)for(let i=CEUTA[0];i<=CEUTA[1];i++) romboPantalla(i,j,'rgba(60,200,130,.38)','rgba(40,150,95,.55)'); }},
  {id:'ahome',mun:'Ahome',reg:'Norte',lema:'Los Mochis, la terminal del Chepe y las carretas de dogos'},
  {id:'elfuerte',mun:'El Fuerte',reg:'Norte',lema:'Pueblo Mágico junto al río Fuerte'},
