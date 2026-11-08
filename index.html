@@ -399,6 +399,7 @@ body.herr-plegada #herr>:not(#tMas){display:none!important}
         <button class="btn" id="pNueva">NUEVA PARTIDA</button>
         <button class="btn" id="pLegado">SALÓN DEL LEGADO</button>
         <button class="btn" id="pCuenta">CUENTA <span>…</span></button>
+        <button class="btn" id="pCompartir">COMPARTIR <span>Invita a jugar</span></button>
         <button class="btn" id="pInstalar" hidden>INSTALAR <span>En este equipo</span></button>
       </div>
       <small style="color:var(--tenue)">Versión 0.11 · prueba</small>
@@ -466,7 +467,7 @@ const DEF={
  hotel:{nom:'Hotel de playa',cat:'comercio',spr:'edif-hotel-a',A:4,B:4,costo:480,mant:4,empleos:40,ingreso:24,suelo:'costa',turismo:true,lote:'plaza'},
  palapa:{nom:'Palapa de mariscos',cat:'comercio',spr:'edif-palapa-a',A:2,B:2,costo:60,mant:.5,empleos:8,ingreso:5,suelo:'costa',turismo:true,serv:'diversion',radio:7},
  tortugas:{nom:'Campamento tortuguero',cat:'comercio',spr:'edif-tortugas-a',A:3,B:3,costo:60,mant:1,empleos:4,serv:'diversion',radio:8,suelo:'playa',turismo:true,unico:true,desc:'Cuida los nidos de tortuga en la playa. En Elota es lo único que se puede poner en la playa Ceuta sin enojar a la gente.'},
- malecon:{nom:'Malecón',cat:'comercio',spr:'edif-malecon-a',variantes:['edif-malecon-a','edif-malecon-a','edif-malecon-palma-a'],A:1,B:1,costo:12,mant:.2,serv:'diversion',radio:6,suelo:'malecon',turismo:true,poco:1/3,desc:'Un cuadro de paseo frente al mar. Pon varios seguidos junto a la playa para armar el malecón.'},
+ malecon:{nom:'Malecón',cat:'comercio',spr:'edif-malecon-a',variantes:['edif-malecon-a','edif-malecon-a','edif-malecon-palma-a'],A:1,B:1,costo:12,mant:.2,serv:'diversion',radio:6,suelo:'malecon',lote:'plaza',turismo:true,poco:1/3,desc:'Paseo frente al mar o a la orilla del río. Se traza arrastrando, como la calle, en tierra firme junto a la arena o al río.'},
  parcela:{nom:'Parcela agrícola',cat:'produccion',A:3,B:3,costo:35,agri:true,lote:'tierra',desc:'Elige qué sembrar: maíz, sorgo, chile, tomate, plátano o mango.'},
  agro:{nom:'Empresa agroindustrial',cat:'produccion',spr:'edif-agro-a',A:6,B:6,costo:950,mant:8,empleos:90,ingreso:42,agroind:true,lote:'tierra',desc:'Campo tecnificado con silos y maquinaria. Necesita tierra de riego.'},
  tacos:{nom:'Taquería',cat:'comercio',spr:'edif-tacos-a',A:2,B:2,costo:45,mant:.4,empleos:6,ingreso:4.5,serv:'diversion',radio:6,desc:'Tacos al pastor para la colonia.'},
@@ -689,6 +690,8 @@ function precioMitad(){ return 400+200*(S.bloques||[]).length; }
 function rectPropio(){ let i0=OX,i1=OX+39,j0=OY,j1=N-1; for(const id of S.bloques||[]){ const m=MITADES.find(x=>x.id===id); if(!m) continue; i0=Math.min(i0,m.i0); i1=Math.max(i1,m.i1); j0=Math.min(j0,m.j0); j1=Math.max(j1,m.j1); } return [i0,i1,j0,j1]; }
 // tienda: hoy todo se compra con dinero del juego; en la fase de cuentas se conecta Google Play / App Store
 const TIENDA={ disponible:false, producto:m=>'terreno_'+m.id, precioReal:m=>null, comprar:async()=>{ throw new Error('La tienda todavía no está conectada'); } };
+// mes del calendario (0 = enero) de un mes de la partida; algunas misiones arrancan en otro mes (S.ofs)
+function calI(m,st){ st=st||S; return ((m-1+((st&&st.ofs)||0))%12+12)%12; }
 function nuevaPartida(){
   S={v:2,mes:1,dinero:1200,pob:22,apr:52,ter:terrenoInicial(),eds:[],sig:1,hist:[],eleccion:0,bloques:[],mundo:120};
   completarEstado();
@@ -778,7 +781,7 @@ function puede(tipo,i,j,flip){
     if(tipo!=='malecon'&&t2==='malecon') return 'No se puede pegar al malecón: deja libre ese cuadro o pon una calle'; }
   const vecinos=[]; for(let a=-1;a<=A;a++)for(let b=-1;b<=B;b++){ if((a===-1||a===A)&&(b===-1||b===B)) continue; if(a>=0&&a<A&&b>=0&&b<B) continue; if(dentro(i+a,j+b)) vecinos.push(S.ter[idx(i+a,j+b)]); }
   const suelo=d.suelo||'tierra';
-  if(suelo==='malecon'){ if(playa||mar) return 'El malecón va en tierra firme, no sobre la arena'; if(!vecinos.includes('playa')) return 'Debe quedar junto a la playa'; return ''; }
+  if(suelo==='malecon'){ if(playa||mar) return 'El malecón va en tierra firme, no sobre la arena'; if(!vecinos.includes('playa')&&!vecinos.includes('rio')&&!vecinos.includes('mar')) return 'El malecón va frente al mar o a la orilla del río'; return ''; }
   if(suelo==='mar'){ if(mar<tot) return 'Va sobre el mar'; if(!vecinos.includes('playa')) return 'Debe tocar la playa'; return ''; }
   if(mar) return 'No se puede construir en el mar';
   if(suelo==='playa'){ if(playa<tot) return 'Va sobre la arena de la playa'; return ''; }
@@ -835,7 +838,7 @@ function factorDe(e){
   if(d.campo){let n=contarCerca(c,10,t=>t==='riego'?1:t==='temporal'?.4:0); const np=S.eds.filter(p=>p.t==='parcela'&&dist(centro(p),c)<=12).length+3*S.eds.filter(p=>p.t==='agro'&&dist(centro(p),c)<=14).length; n+=np*22; f=clamp(n/45,.2,1.6); nota=`Campos cerca: ${Math.round(f*100)}%${np?` (${np} parcela${np>1?'s':''})`:''}`;}
   if(d.agri){const cu=CULT[e.cult]; let rg=0,tt=0; for(let a=0;a<3;a++)for(let b=0;b<3;b++){tt++; if(S.ter[idx(e.i+a,e.j+b)]==='riego') rg++;}
     const fr=rg/tt; f=fr*(cu.riego?1:1.2)+(1-fr)*(cu.riego?.35:.8);
-    const mes=((S.mes-1)%12)+1, enT=cu.temp.includes(mes); f*=enT?cu.alta:cu.baja;
+    const mes=calI(S.mes)+1, enT=cu.temp.includes(mes); f*=enT?cu.alta:cu.baja;
     const notas=[enT?'En temporada de cosecha':'Fuera de temporada'];
     if(cu.madura&&S.mes-e.sem<cu.madura){f=0; notas[0]=`Árboles creciendo: faltan ${cu.madura-(S.mes-e.sem)} meses`;}
     if(S.eds.some(x=>(x.t==='bodega'||x.t==='empacadora')&&dist(centro(x),c)<=14)){f*=1.2; notas.push('Bodega o empacadora cerca: +20%');}
@@ -1169,11 +1172,12 @@ function rangoVisible(){
   return [Math.max(0,Math.min(...is)-2),Math.min(N-1,Math.max(...is)+2),Math.max(0,Math.min(...js)-2),Math.min(N-1,Math.max(...js)+8)];
 }
 // imágenes más anchas que su huella: cuánto se recorren a la izquierda
-const SPR_DX={}; let DX_CHIEPE=.8;
+const SPR_DX={}; let DX_CHIEPE=.8, DJ_MAL=.5;
 // geometría de un edificio en la vista actual: qué imagen, si va espejada y dónde
 function geo(e){
   const d=D(e); if(!d.spr) return null; const [A,B]=huella(d,e.f); const c=cajaV(e.i,e.j,A,B); const Av=c.i1-c.i0;
-  const espejo = d.A!==d.B ? (Av!==d.A) : (!!e.f!==(rot%2===1));
+  let espejo = d.A!==d.B ? (Av!==d.A) : (!!e.f!==(rot%2===1));
+  if(e.t==='malecon'){ const w=aguaMalecon(e); if(w){ const [va,vb]=dirV(...w); if(va<0||vb<0) return null; espejo=va>0; } }
   let nombre=d.spr, mir=espejo;
   if(d.variantes){ const n=d.variantes.length, v=d.variantes[(((e.i+e.j)%n)+n)%n]; if(IMG[v]) nombre=v; }
   // vista trasera: si el lado de atrás (aguas arriba en la presa) mira hacia la cámara
@@ -1182,6 +1186,7 @@ function geo(e){
   const im=IMG[nombre]; if(!im) return null;
   const [bx,by]=topW(c.i1,c.j1);
   const q={im,nombre,mir,x:bx-Av*64+(SPR_DX[nombre]||0),y:by-im.height,c};
+  if(e.t==='malecon'){ const w=aguaMalecon(e); if(w){ const [p0x,p0y]=proj(0,0),[p1x,p1y]=proj(w[0]*DJ_MAL,w[1]*DJ_MAL); q.x+=p1x-p0x; q.y+=p1y-p0y; } }   // el muro baja hacia el agua
   if(e.t==='chepe'){ const [p0x,p0y]=proj(0,0),[p1x,p1y]=proj(DX_CHIEPE,0); q.x+=p1x-p0x; q.y+=p1y-p0y; }   // el andén queda pegado a la vía
   if(e.t==='puentenegro'){ const [p0x,p0y]=proj(0,0),[p1x,p1y]=proj(-.5,0); q.x+=p1x-p0x; q.y+=p1y-p0y+17; }   // 17 px del dibujo quedan bajo el vértice del suelo   // la vía va por el centro del puente
   return q;
@@ -1204,7 +1209,22 @@ function dibujarLetrero(e,q,sx,sy){
   g.restore(); }
 function partirLetrero(t){ const w=t.split(' '); if(w.length<2) return [t]; let best=null;
   for(let k=1;k<w.length;k++){ const a=w.slice(0,k).join(' '), b=w.slice(k).join(' '), m=Math.max(a.length,b.length); if(!best||m<best[0]) best=[m,[a,b]]; } return best[1]; }
+// malecón: lado donde está el agua (arena, mar o río); prefiere el que mira a la cámara
+function aguaMalecon(e){ if(e.fant) return [0,1]; let mejor=null, pt=-9;
+  for(const w of [[0,1],[1,0],[0,-1],[-1,0]]){ const x=e.i+w[0], y=e.j+w[1]; if(!dentro(x,y)) continue; const t=S.ter[idx(x,y)];
+    if(t==='playa'||t==='mar'||t==='rio'){ const [va,vb]=dirV(...w); const p=va+vb; if(p>pt){pt=p; mejor=w;} } }
+  return mejor; }
+// con el agua del lado de atrás el muro no se ve: el paseo es piso de plaza con barandal a la orilla
+function barandalMalecon(e,w,alfa){ const z=cam.z, P=(x,y,h)=>{ const [sx,sy]=aPantalla(...proj(x,y)); return [sx,sy-h*z]; };
+  const i=e.i,j=e.j, L=w[0]?[[i+(w[0]>0?1:0),j],[i+(w[0]>0?1:0),j+1]]:[[i,j+(w[1]>0?1:0)],[i+1,j+(w[1]>0?1:0)]];
+  const a=[L[0][0]-w[0]*.08,L[0][1]-w[1]*.08], b=[L[1][0]-w[0]*.08,L[1][1]-w[1]*.08];
+  g.globalAlpha=alfa||1; g.strokeStyle='#2E2A28'; g.lineWidth=Math.max(1,1.6*z);
+  for(const h of [9,15]){ g.beginPath(); g.moveTo(...P(...a,h)); g.lineTo(...P(...b,h)); g.stroke(); }
+  for(let t=0;t<=1.001;t+=.125){ const x=a[0]+(b[0]-a[0])*t, y=a[1]+(b[1]-a[1])*t; g.beginPath(); g.moveTo(...P(x,y,0)); g.lineTo(...P(x,y,16)); g.stroke(); }
+  g.fillStyle='#CFC3B4'; for(const t of [0,1]){ const x=a[0]+(b[0]-a[0])*t, y=a[1]+(b[1]-a[1])*t; const [sx,sy]=P(x,y,18); g.fillRect(sx-2.5*z,sy,5*z,18*z); }
+  g.globalAlpha=1; }
 function dibujarSprite(e,alfa){
+  if(e.t==='malecon'&&!e.fant){ const w=aguaMalecon(e); if(w){ const [va,vb]=dirV(...w); if(va<0||vb<0) return barandalMalecon(e,w,alfa); } }
   if(e.t==='parcela'&&!e.fant&&brote(e)) return;      // recién sembrada: solo brotes en el suelo
   const q=geo(e); if(!q) return; const {im}=q;
   const [sx,sy]=aPantalla(q.x,q.y);
@@ -1769,7 +1789,7 @@ function entrarCompleta(){ const d=document.documentElement; if(document.fullscr
 if(matchMedia('(pointer:coarse)').matches) document.addEventListener('pointerup',()=>{ if(lsGet('trienio.full')!=='0') entrarCompleta(); },{capture:true});
 cv.addEventListener('wheel',ev=>{ev.preventDefault();const w=aMundo(ev.offsetX,ev.offsetY);cam.z=clamp(cam.z*(ev.deltaY<0?1.12:1/1.12),ZMIN,1.6);cam.x=w[0]-ev.offsetX/cam.z;cam.y=w[1]-ev.offsetY/cam.z;limitar();pedir();},{passive:false});
 
-let ultimaCalle=null; const prop=new Set(); let tocoProp=null, pintadas=0, borrando=false;
+let ultimaCalle=null; const prop=new Set(); let tocoProp=null, pintadas=0, borrando=false, trazo='calle';
 function quitarCalle(i,j){ const k=idx(i,j); if(S.ter[k]!=='calle') return;
   for(const r of S.rutas.slice()){const n=r.paradas.findIndex(p=>p[0]===i&&p[1]===j); if(n<0) continue; r.paradas.splice(n,1);
     if(r.paradas.length<2){S.rutas=S.rutas.filter(x=>x!==r); aviso(`${r.nom} se quedó sin paradas y se retiró`);} else aviso(`Se quitó una parada de la ${r.nom}`);}
@@ -1777,29 +1797,43 @@ function quitarCalle(i,j){ const k=idx(i,j); if(S.ter[k]!=='calle') return;
 function pintarCalle(sx,sy){
   const [i,j]=casillaEn(sx,sy); if(!dentro(i,j)) return; const k=idx(i,j); if(ultimaCalle===k) return; ultimaCalle=k;
   if(borrando){ pintadas++; if(prop.has(k)){ prop.delete(k); barraCalles(); pedir(); return; }
-    if(S.ter[k]==='calle'&&propio(i,j)){ quitarCalle(i,j); S.quitoCalles=1; reponerAgentes(); recalcular(); hud(); pedir(); guardarPronto(); } return; }
-  const t=S.ter[k]; if(t==='calle') return;
+    if(trazo==='malecon'&&occ[k]){ const e=S.eds.find(x=>x.id===occ[k]); if(e&&e.t==='malecon'){ S.eds=S.eds.filter(x=>x!==e); reconstruirOcc(); recalcular(); hud(); pedir(); guardarPronto(); } return; }
+    if(trazo==='calle'&&S.ter[k]==='calle'&&propio(i,j)){ quitarCalle(i,j); S.quitoCalles=1; reponerAgentes(); recalcular(); hud(); pedir(); guardarPronto(); } return; }
   if(prop.has(k)){ if(pintadas===0) tocoProp=k; return; }
+  if(trazo==='malecon'){ const m=motivoMalecon(i,j); if(m){ if(pintadas===0) aviso(m,2200); return; } prop.add(k); pintadas++; barraCalles(); pedir(); return; }
+  const t=S.ter[k]; if(t==='calle') return;
   if(!propio(i,j)){aviso('Ese terreno no es tuyo: tócalo en modo Ver para comprarlo');return;}
   if(t==='mar'||t==='playa'){aviso('Las calles no van sobre la playa ni el mar');return;}
   if(occ[k]){aviso('Ahí hay un edificio');return;}
   if(EST[k]){aviso('Ahí está la estación del tren');return;}
   prop.add(k); pintadas++; barraCalles(); pedir();
 }
-function costoCalles(){const l=[...prop].map(k=>RIO[k]?3:1).sort((a,b)=>b-a); return l.slice(S.callesGratis).reduce((s,x)=>s+x,0)*DEF.calle.costo;}
+function motivoMalecon(i,j){ const k=idx(i,j), t=S.ter[k];
+  if(!propio(i,j)) return 'Ese terreno no es tuyo';
+  if(t==='playa'||t==='mar') return 'El malecón va en tierra firme, no sobre la arena';
+  if(t==='rio'||RIO[k]) return 'El malecón va a la orilla del río, no encima';
+  if(t==='calle') return 'Ahí hay una calle';
+  if(occ[k]) return 'Ahí hay un edificio'; if(VIA[k]||EST[k]) return 'Ahí pasa el tren';
+  let orilla=false; for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const x=i+dx,y=j+dy; if(!dentro(x,y)) continue; const t2=S.ter[idx(x,y)];
+    if(t2==='playa'||t2==='rio'||t2==='mar') orilla=true;
+    const o=occ[idx(x,y)]; if(o&&(S.eds.find(z=>z.id===o)||{}).t!=='malecon') return 'Junto al malecón no puede haber edificios'; }
+  return orilla?'':'El malecón va frente al mar o a la orilla del río'; }
+function costoCalles(){ if(trazo==='malecon') return prop.size*DEF.malecon.costo;const l=[...prop].map(k=>RIO[k]?3:1).sort((a,b)=>b-a); return l.slice(S.callesGratis).reduce((s,x)=>s+x,0)*DEF.calle.costo;}
 function barraCalles(){
   if(modo!=='calle'){return;}
   $('cGirar').hidden=false; $('cGirar').textContent=borrando?'✏️ Trazar':'🧽 Borrar'; $('cGirar').setAttribute('aria-pressed',String(borrando)); $('colocar').hidden=false;
   const n=prop.size, c=costoCalles();
   $('cMsg').className='msg'+(n&&S.dinero<c?' mal':'');
-  const np=[...prop].filter(k=>RIO[k]).length;
-  $('cMsg').textContent=n?`${n} tramo${n>1?'s':''}${np?` (${np} de puente)`:''} · ${c?dinero(c):'gratis'}${S.callesGratis?` (${Math.min(n,S.callesGratis)} gratis por carta)`:''}`:(borrando?(esMouse?'Borrador: arrastra sobre las calles para quitarlas':'Borrador: mantén el dedo ½ s y pásalo sobre las calles'):(esMouse?'Arrastra sobre el mapa para trazar':'Mantén el dedo ½ s y arrastra'));
+  const np=trazo==='malecon'?0:[...prop].filter(k=>RIO[k]).length;
+  $('cMsg').textContent=n?`${trazo==='malecon'?'Malecón: ':''}${n} tramo${n>1?'s':''}${np?` (${np} de puente)`:''} · ${c?dinero(c):'gratis'}${S.callesGratis?` (${Math.min(n,S.callesGratis)} gratis por carta)`:''}`:(borrando?(esMouse?'Borrador: arrastra sobre las calles para quitarlas':'Borrador: mantén el dedo ½ s y pásalo sobre las calles'):(esMouse?'Arrastra sobre el mapa para trazar':'Mantén el dedo ½ s y arrastra'));
   if(borrando&&n) $('cMsg').textContent+=' · borrador activo';
   $('cOk').textContent='✓ Aprobar'; $('cNo').textContent=n?'✗ Descartar':'Salir';
   $('cOk').disabled=!n||S.dinero<c;
 }
 function aprobarCalles(){
   const c=costoCalles(); if(S.dinero<c){aviso('No alcanza el dinero');return;}
+  if(trazo==='malecon'){ const n=prop.size; for(const k of prop) agregar('malecon',k%N,(k/N)|0,false,true); prop.clear(); S.dinero-=c; S.obras=(S.obras||0)+1;
+    recalcular(); hud(); barraCalles(); reponerAgentes(); pedir(); guardarPronto(); aviso(`${n} tramo${n>1?'s':''} de malecón construido${n>1?'s':''}`); return; }
   const usadas=Math.min(prop.size,S.callesGratis); S.callesGratis-=usadas;
   for(const k of prop) S.ter[k]='calle'; const n=prop.size; prop.clear(); S.dinero-=c; S.obras=(S.obras||0)+1;
   recalcular(); hud(); barraCalles(); reponerAgentes(); pedir(); guardarPronto(); aviso(`${n} tramo${n>1?'s':''} de calle construido${n>1?'s':''}`);
@@ -1908,7 +1942,8 @@ function elegirEnfoque(alElegir,titulo){
 }
 function elegirTipo(t,yaCultivo){
   if(mov){ cancelarMover(); ponerModo('ver'); }
-  if(t==='calle'){ponerModo('calle');return;}
+  if(t==='calle'){trazo='calle'; ponerModo('calle');return;}
+  if(t==='malecon'){trazo='malecon'; ponerModo('calle');return;}
   if(t==='autobus'){iniciarRuta(null);return;}
   if(t==='parcela'&&!yaCultivo){elegirCultivo(()=>elegirTipo('parcela',true));return;}
   if((t==='mina'||t==='minaind')&&!yaCultivo){elegirMineral(()=>elegirTipo(t,true),t==='minaind');return;}
@@ -1988,7 +2023,7 @@ function plegarHerr(si,guarda){ document.body.classList.toggle('herr-plegada',si
 $('tMas').onclick=()=>plegarHerr(!document.body.classList.contains('herr-plegada'),true);
 $('efBtn').onclick=()=>{ const l=$('efLista'); l.hidden=!l.hidden; $('efBtn').setAttribute('aria-expanded',String(!l.hidden)); efectos(); };
 { const g=lsGet('trienio.herr'); plegarHerr(g?g==='0':matchMedia('(pointer:coarse)').matches,false); }
-$('tRot').onclick=()=>girarMapa(); $('tVer').onclick=()=>ponerModo('ver'); $('tCartas').onclick=()=>verMano(); $('tCalle').onclick=()=>ponerModo('calle'); $('tDem').onclick=()=>ponerModo('demoler');
+$('tRot').onclick=()=>girarMapa(); $('tVer').onclick=()=>ponerModo('ver'); $('tCartas').onclick=()=>verMano(); $('tCalle').onclick=()=>{trazo='calle'; ponerModo('calle');}; $('tDem').onclick=()=>ponerModo('demoler');
 
 // ---------- interfaz ----------
 let cat='vivienda';
@@ -2024,10 +2059,10 @@ function lista(){
   $('lista').innerHTML=tipos.map(k=>{const d=DEF[k];const usado=d.unico&&S&&cuantos(k)>=maxUnico();
     const bloq=d.tec&&S&&!tieneTec(d.tec);
     const img=k==='parcela'?`<img alt="" src="sprites/cult-tomate.png">`:k==='mina'?`<img alt="" src="sprites/edif-mina-oro.png">`:d.icono?`<img alt="" src="sprites/${d.icono}.png">`:d.spr?`<img src="sprites/${d.spr}.png" alt="">`:`<img alt="" src="${TEX.calle10?TEX.calle10.toDataURL():''}">`;
-    const activo=(k==='calle'&&modo==='calle')||(k==='autobus'&&modo==='ruta')||(sel===k);
+    const activo=(k==='calle'&&modo==='calle'&&trazo==='calle')||(k==='malecon'&&modo==='calle'&&trazo==='malecon')||(k==='autobus'&&modo==='ruta')||(sel===k);
     if(bloq) return `<button class="item bloq" data-t="${k}" data-bloq="1" title="${esc(d.desc||'')}">${img}<span><span class="nom">🔒 ${d.nom}</span><span class="det">Se investiga</span></span></button>`;
     const req=requisitos(k,d).split(' · ').filter(x=>x&&!/^Hasta|^Uno por/.test(x))[0]||'', tam='';
-    const dato=k==='parcela'?'Elige el cultivo':k==='calle'?'Arrastra para trazar':k==='autobus'?'Paradas sobre calles':detalle(d);
+    const dato=k==='parcela'?'Elige el cultivo':k==='calle'?'Arrastra para trazar':k==='malecon'?'Se traza frente al mar o al río':k==='autobus'?'Paradas sobre calles':detalle(d);
     return `<button class="item${S&&S.dinero<d.costo?' caro':''}${k===SUG[cat]?' sug':''}" data-t="${k}" aria-pressed="${activo}" ${usado?'disabled':''} title="${esc(detalleLargo(d,k))}">${img}<span><span class="nom">${d.nom}</span><span class="det"><b class="pr">${usado?(maxUnico()<9?'Compra terreno para otro':'Ya tienes el máximo'):(k==='parcela'?'Desde '+dinero(35):dinero(d.costo))}</b>${!usado&&dato?' · '+dato:''}</span>${req&&!usado?`<span class="req">${req}</span>`:''}</span></button>`;}).join('');
   $('lista').querySelectorAll('.item').forEach(b=>b.onclick=()=>b.dataset.bloq?investigar(DEF[b.dataset.t].tec):elegirTipo(b.dataset.t));
   // jugadores nuevos: mientras no construyan nada, el panel late y sugiere por dónde empezar
@@ -2044,7 +2079,7 @@ function hud(){
   $('hApr').textContent=S.apr+'%'; $('hAprBar').style.width=S.apr+'%';
   $('hAprBar').style.background=S.apr>=50?'var(--sol)':'var(--mal)';
   const m=Math.min(S.mes,36);
-  $('hMes').textContent=`${MESES[(S.mes-1)%12]} · Año ${Math.floor((S.mes-1)/12)+1}`;
+  $('hMes').textContent=`${MESES[calI(S.mes)]} · Año ${Math.floor((S.mes-1)/12)+1}`;
   $('hTurno').textContent=`Mes ${m}/36 · elección en ${Math.max(0,36-S.mes)}`;
 }
 // minijuego de cada edificio: una vez al mes
@@ -2284,7 +2319,7 @@ function jugarCarta(c,{titulo='CARTA DEL MES',voltear=true}={}){
       if(ok&&c.cat==='reto'){ // ya cumplido: se sube la meta implícita al premio directo
         resu.innerHTML=`<b>${cond.txt}</b><br>¡Ya lo cumples! Tira el dado para tu premio.`; conDado('', 'Tirar dado', d=>premio(d,resu,acc,cerrar)); return;}
       S.retos.push(r);
-      resu.innerHTML=`<b>${cond.txt}</b><br>Plazo: hasta ${MESES[(r.plazo-1)%12]} del año ${Math.floor((r.plazo-1)/12)+1} (${c.meses} meses).${cond.k==='pagar'?'<br>Puedes pagar desde el botón Cartas.':''}`;
+      resu.innerHTML=`<b>${cond.txt}</b><br>Plazo: hasta ${MESES[calI(r.plazo)]} del año ${Math.floor((r.plazo-1)/12)+1} (${c.meses} meses).${cond.k==='pagar'?'<br>Puedes pagar desde el botón Cartas.':''}`;
       acc.innerHTML='<button class="btn-sol btn" id="bOk">Aceptar el reto</button>'; $('bOk').onclick=cerrar; return;}
     // efectos con dado inmediato
     conDado('', 'Tirar dado', d=>{
@@ -2434,7 +2469,7 @@ function aprGobierno(){ let a=0; for(const [k] of RAMOS){ const q=qR(k); a+=({de
   return a; }
 $('bGob').onclick=()=>gobierno('fondo');
 function gobierno(tab,obligado){ return new Promise(fin=>{
-  const anio=Math.floor((S.mes-1)/12)+1, enero=(S.mes-1)%12===0, puede=enero&&S.ramosAnio!==anio;
+  const anio=Math.floor((S.mes-1+(S.ofs||0))/12)+1, enero=calI(S.mes)===0, puede=(enero||S.mes===1)&&S.ramosAnio!==anio;
   let borr={...S.ramos};
   const pinta=()=>{
     const usadas=Object.values(borr).reduce((s,v)=>s+v,0), F=fondoFed();
@@ -2587,7 +2622,7 @@ function credito(volver){ const cerrar=typeof volver==='function'?volver:cerrarM
     modal(`<h2>PEDIR CRÉDITO</h2>
     <p style="font-size:14px">Un crédito de la banca de desarrollo para los malos tiempos. Con ${AUTO_APR}% de aprobación o más, el cabildo lo autoriza sin discutir; si no, tendrás que negociar con los regidores.</p>
     ${act.length?`<div class="cuenta"><span class="t">Créditos vigentes</span>${act.map(c=>`<span>${dinero(c.monto)} · faltan ${c.meses} meses</span><span>−${dinero(c.pago)}/mes</span>`).join('')}</div>`:''}
-    ${veto?`<p style="color:var(--mal)">El cabildo rechazó tu última solicitud. Puedes volver a pedirlo en ${MESES[(S.vetoCredito-1)%12]}.</p>`:!ops.length?`<p style="color:var(--mal)">Con tus ingresos y lo que ya debes, el banco no te presta más por ahora.</p>`:`
+    ${veto?`<p style="color:var(--mal)">El cabildo rechazó tu última solicitud. Puedes volver a pedirlo en ${MESES[calI(S.vetoCredito)]}.</p>`:!ops.length?`<p style="color:var(--mal)">Con tus ingresos y lo que ya debes, el banco no te presta más por ahora.</p>`:`
     <div class="cuenta"><span class="t">Monto (te prestan hasta ${dinero(cap)})</span></div><div class="chips">${ops.map(v=>`<button class="chip opc" data-m="${v}" aria-pressed="${v===monto}">${dinero(v)}</button>`).join('')}</div>
     <div class="cuenta"><span class="t">Plazo</span></div><div class="chips">${[12,24].map(v=>`<button class="chip opc" data-p="${v}" aria-pressed="${v===plazo}">${v} meses · ${v===12?'1.5':'1.8'}% mensual</button>`).join('')}</div>
     <div class="cuenta"><span>Pagarás cada mes</span><span><b>${dinero(pago)}</b></span><span>Total a pagar</span><span>${dinero(total)}</span><span>Aprobación actual</span><span style="color:${S.apr>=AUTO_APR?'var(--bien)':'var(--mal)'}">${S.apr}%</span></div>`}
@@ -2670,7 +2705,7 @@ function comercio(volver){ const cerrar=typeof volver==='function'?volver:cerrar
       <span>Por carretera, este mes</span><span>${dinero(L.reduce((s,x)=>s+x.v*x.p.tierra/100,0))}</span>
       <span>Tren: acumulado del trimestre</span><span>${dinero((S.comTren||0)+c.trenMes)} · se cobra ${faltan?`en ${faltan+1} meses`:'al pasar este mes'}</span>
       <span>Barco: lo que sale este mes</span><span>${dinero(c.marMes)} · llega en 6 meses</span>
-      ${barcos.length?`<span>Barcos en camino</span><span>${barcos.map(x=>`${dinero(x.val)} en ${MESES[(x.llega-1)%12].toLowerCase()}`).join(' · ')}</span>`:''}
+      ${barcos.length?`<span>Barcos en camino</span><span>${barcos.map(x=>`${dinero(x.val)} en ${MESES[calI(x.llega)].toLowerCase()}`).join(' · ')}</span>`:''}
       <span>Riesgo de asalto</span><span style="color:${riesgoCom('mar')>.12?'var(--mal)':'var(--bien)'}">tren ${Math.round(riesgoCom('tren')*100)}% · barco ${Math.round(riesgoCom('mar')*100)}% al mes</span></div>
     <div class="cuenta"><span class="t">Protección del tren y el barco</span></div>
     <div class="chips">${Object.entries(PROTE).map(([k,P])=>`<button class="chip opc" data-p="${k}" aria-pressed="${k===S.prot}">${P.nom}: ${P.txt}</button>`).join('')}</div>
@@ -2701,7 +2736,7 @@ function cobrarComercio(c){
     if(Math.random()<riesgoCom('tren')){ const perd=v*(.5+Math.random()*.5), paga=P.cubre?perd*P.cubre:0; v-=perd-paga; res.push({ok:false,txt:`🚆 Saquearon vagones del tren: se perdieron ${dinero(perd-paga)}${paga?` (el seguro cubrió ${dinero(paga)})`:''}`}); }
     S.comTren=(S.comTren||0)+v; }
   // barcos que llegan
-  for(const x of S.barcos.filter(x=>x.llega<=S.mes)) res.push({ok:x.val>0,txt:x.val>0?`🚢 Llegó el pago del barco que salió en ${MESES[(x.sale-1)%12].toLowerCase()}: +${dinero(x.val)}${x.nota?' ('+x.nota+')':''}`:`🚢 ${x.nota}`});
+  for(const x of S.barcos.filter(x=>x.llega<=S.mes)) res.push({ok:x.val>0,txt:x.val>0?`🚢 Llegó el pago del barco que salió en ${MESES[calI(x.sale)].toLowerCase()}: +${dinero(x.val)}${x.nota?' ('+x.nota+')':''}`:`🚢 ${x.nota}`});
   S.barcos=S.barcos.filter(x=>x.llega>S.mes);
   // barco que sale este mes
   if(c.marMes>0){ const r=Math.random(), rg=riesgoCom('mar'); const b={sale:S.mes,llega:S.mes+6,val:c.marMes};
@@ -3407,7 +3442,7 @@ $('pasar').onclick=async()=>{
   pasando=true; $('pasar').disabled=true;
   ponerModo('ver');
   const sig=S.mes+1;
-  await transicionMes(`${MESES[(sig-1)%12].toUpperCase()}<br><span style="font-size:.6em">AÑO ${Math.floor((sig-1)/12)+1}</span>`);
+  await transicionMes(`${MESES[calI(sig)].toUpperCase()}<br><span style="font-size:.6em">AÑO ${Math.floor((sig-1)/12)+1}</span>`);
   const r=pasarMes();
   if(!lsGet('trienio.tour')){ lsSet('trienio.tour','1'); try{ if(NUBE.ok&&NUBE.user){ const {FS}=NUBE.fb; FS.setDoc(FS.doc(NUBE.fb.db,'usuarios',NUBE.user.uid),{veterano:true},{merge:true}).catch(()=>{}); } }catch(e){} }
   for(const [x,y] of r.talas||[]) S.ter[idx(x,y)]='tierra';
@@ -3415,8 +3450,8 @@ $('pasar').onclick=async()=>{
   await new Promise(res=>reporte(r,res));
   await atenderConflictos(); S.conflictos=(S.conflictos||[]).filter(x=>x.estado!=='fin');
   for(const ev of r.eventos) await resolverReto(ev);
-  if(S.mes<=36&&(S.mes-1)%12===0&&S.ramosAnio!==Math.floor((S.mes-1)/12)+1) await gobierno('fondo',true);
-  if(S.mision&&S.mision.id==='mazatlan'&&S.mes<=36&&(S.mes-1)%12===1) await decidirCarnaval();
+  if(S.mes<=36&&calI(S.mes)===0&&S.ramosAnio!==Math.floor((S.mes-1+(S.ofs||0))/12)+1) await gobierno('fondo',true);
+  if(S.mision&&S.mision.id==='mazatlan'&&S.mes<=36&&calI(S.mes)===1) await decidirCarnaval();
   if(S.mes===30&&!S.campana) await iniciarCampana();
   if(S.mes<=36&&Math.random()<probCatastrofe()){ await jugarCarta(CATAS[Math.floor(Math.random()*CATAS.length)],{titulo:'¡CATÁSTROFE!'}); reponerAgentes(); }
   if(S.mes<=36) await jugarCarta(sacarCarta());
@@ -3443,7 +3478,7 @@ function reporte(r,listo){
   if(r.tec) chips.push(['bien',`Investigación lista: ${r.tec.nom}${r.tec.abre?' (ya puedes construirlo)':''}`]);
   else if(!S.tec.actual) chips.push(['',`Elige qué investigar: llevas ${Math.round(S.tec.pts)} puntos`]);
   if(Math.abs(c.aprGob)>=.5) chips.push([c.aprGob>0?'bien':'mal',`Fondo, impuestos y programas: aprobación ${c.aprGob>0?'+':''}${c.aprGob.toFixed(1)}`]);
-  if((S.mes-1)%12===0&&S.mes<=36) chips.push(['','Es enero: toca repartir el fondo federal']);
+  if(calI(S.mes)===0&&S.mes<=36) chips.push(['','Es enero: toca repartir el fondo federal']);
   if(tieneTec('agua')&&S.eds.some(e=>e.t==='agua')&&c.cob.agua<.5) chips.push(['mal',`Agua potable: ${Math.round(c.cob.agua*100)}% de las casas`]);
   if(c.egrNec&&c.fEgr<1) chips.push(['mal',`Faltan egresados: ${c.egresados} de ${c.egrNec} para las fábricas`]);
   const dan=S.eds.filter(e=>e.dano).length; if(dan) chips.push(['mal',`${dan} edificio${dan>1?'s':''} dañado${dan>1?'s':''}: repáralo${dan>1?'s':''} desde su ficha`]);
@@ -3462,7 +3497,7 @@ function reporte(r,listo){
   const bloque=(G,signo)=>G.map(g=>`<details class="rub"><summary><span>${g.n}</span><b>${signo<0?'−':''}${dinero(g.t)}</b></summary>${g.l.map(x=>`<div class="lin"><span>${x[0]}</span><span>${signo<0?'−':''}${dinero(x[1])}</span></div>`).join('')}</details>`).join('');
   const orden={mal:0,bien:1,'':2}; chips.sort((a,b)=>orden[a[0]]-orden[b[0]]);
   const chip=([k,t])=>`<span class="chip ${k}">${t}</span>`, desem=c.fuerza?Math.round((1-c.ocupados/c.fuerza)*100):0;
-  modal(`<h2>INFORME DE ${MESES[(r.mes-1)%12].toUpperCase()} · AÑO ${Math.floor((r.mes-1)/12)+1}</h2>
+  modal(`<h2>INFORME DE ${MESES[calI(r.mes)].toUpperCase()} · AÑO ${Math.floor((r.mes-1)/12)+1}</h2>
   <div class="resumen"><div><small>Entradas</small><b style="color:var(--bien)">${dinero(c.tIng)}</b></div><div><small>Salidas</small><b style="color:var(--mal)">−${dinero(c.tGas)}</b></div><div><small>Balance del mes</small><b style="color:${c.bal>=0?'var(--bien)':'var(--mal)'}">${c.bal>=0?'+':''}${dinero(c.bal)}</b></div><div><small>Caja</small><b>${dinero(r.despues.din)}</b></div></div>
   <div class="cols"><div><div class="cuenta"><span class="t">Entradas por rubro</span></div>${bloque(ING,1)}</div><div><div class="cuenta"><span class="t">Salidas por rubro</span></div>${bloque(GAS,-1)}</div></div>
   <details class="rub"><summary><span>El pueblo: ${r.despues.pob} habitantes (${dp>=0?'+':''}${dp}) · aprobación ${r.despues.apr}% (${da>=0?'+':''}${da}) · desempleo ${desem}%</span><b></b></summary>
@@ -3640,8 +3675,9 @@ $('btnMenu').onclick=()=>{
    <span>Construir</span><span>Clic (la pieza sigue al cursor) · Enter</span><span>Cancelar / cerrar</span><span>Esc</span><span>Girar la pieza</span><span>R</span><span>Girar el mapa</span><span>Q / E</span>
    <span>Pasar mes</span><span>Espacio</span><span>Categorías</span><span>1 a 6</span><span>Calle · Demoler · Capas</span><span>C · X · L</span><span>Investigar · Gobierno · Cartas</span><span>I · G · K</span><span>Pantalla completa</span><span>F11</span></div></details>
   <details class="desg"><summary>Cartas del mes</summary><p style="font-size:14px">Cada mes sacas una carta. En la mayoría, el dado (1 · 1 · 1 · 2 · 2 · 3) multiplica su efecto; en los <b>dilemas</b> no hay dado: eliges una de tres opciones y cada una tiene consecuencias. Las cartas de mano se guardan en <b>Cartas</b>. Mientras mejor vas, más salen cartas malas y más probable es una catástrofe: terremoto, inundación del río o huracán. Los edificios dañados dejan de funcionar hasta que los repares desde su ficha. A veces aparece un <b>reto relámpago</b> (bacheo o memorama) que da dinero y aprobación si lo ganas.</p></details>
-  <div class="fila"><button class="btn" id="mFull">Pantalla completa</button><button class="btn" id="mTour">Repetir recorrido</button><button class="btn" id="mCta">Cuenta</button><button class="btn" id="mPart">Partidas guardadas</button><button class="btn" id="mNueva">Nueva partida</button><button class="btn" id="mPortada">Menú principal</button><button class="btn-sol btn" id="mCerrar">Volver al juego</button></div>`);
+  <div class="fila"><button class="btn" id="mFull">Pantalla completa</button><button class="btn" id="mTour">Repetir recorrido</button><button class="btn" id="mCta">Cuenta</button><button class="btn" id="mPart">Partidas guardadas</button><button class="btn" id="mNueva">Nueva partida</button><button class="btn" id="mCompartir">Compartir</button><button class="btn" id="mPortada">Menú principal</button><button class="btn-sol btn" id="mCerrar">Volver al juego</button></div>`);
   $('mPart').onclick=()=>pantallaPartidas('juego');
+  $('mCompartir').onclick=()=>compartirJuego();
   $('mPortada').onclick=()=>{ guardar(); ponerModo('ver'); cerrarModal(); volverPortada(); };
   $('mCerrar').onclick=cerrarModal; $('mFull').onclick=()=>{cerrarModal(); pantallaCompleta();}; $('mTour').onclick=()=>{cerrarModal(); iniciarTour();}; $('mCta').onclick=()=>cuenta();
   if($('mPerfil')) $('mPerfil').onclick=()=>{guardar(); cerrarModal(); volverPortada(); elegirPerfil();};
@@ -3695,7 +3731,7 @@ function exito(){ return clamp((S.apr-50)/35,0,1)*.6+clamp(S.dinero/2500,0,1)*.4
 function pesosCartas(){ const x=exito(), malas=['retencion','peticion','contratiempo'];
   const df=difAct(), buenas=['mayor','recursos','usable'];
   return PESOS.map(([c,w])=>[c, malas.includes(c)?w*(1+1.2*x)*df.malas:w*(1-.4*x)*(buenas.includes(c)?df.buenas:1)]); }
-function probCatastrofe(){ if(S.mes<4) return 0; const m=((S.mes-1)%12)+1; return (.03+.08*exito()+((m>=8&&m<=10)?.03:0))*difAct().catas; }
+function probCatastrofe(){ if(S.mes<4) return 0; const m=calI(S.mes)+1; return (.03+.08*exito()+((m>=8&&m<=10)?.03:0))*difAct().catas; }
 // edificios dañados: dejan de funcionar hasta repararlos
 function dañar(lista,n){ const c=lista.filter(e=>!e.dano&&e.t!=='palacio'&&e.t!=='presa'&&e.t!=='parcela'); const out=[];
   for(let k=0;k<n&&c.length;k++){ const e=c.splice(Math.floor(Math.random()*c.length),1)[0]; e.dano=true; out.push(nombreDe(e)); } limpiarCacheD(); return out; }
@@ -3803,7 +3839,7 @@ function pref(){return perfil?`trienio.p.${perfil.id}.`:'trienio.';}
 const AVA={};
 function avatar(fig,cuerpo){const k=fig+(cuerpo?'c':''); if(AVA[k]) return AVA[k]; const im=IMG.gente; if(!im) return '';
   const [x,w]=GENTE[fig]; const h=cuerpo?96:50; const c=lienzo(w,h); c.getContext('2d').drawImage(im,x,0,w,h,0,0,w,h); try{AVA[k]=c.toDataURL();}catch(e){AVA[k]='';} return AVA[k];}
-function detPartida(o){return o?`${MESES[(o.mes-1)%12]} · Año ${Math.floor((o.mes-1)/12)+1}`:'Sin partida';}
+function detPartida(o){return o?`${MESES[calI(o.mes,o)]} · Año ${Math.floor((o.mes-1)/12)+1}`:'Sin partida';}
 function cuando(t){ if(!t) return ''; const d=new Date(t), h=new Date(); const mismo=d.toDateString()===h.toDateString();
   return mismo?'hoy '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); }
 // pantalla de partidas guardadas. modo: 'portada' (cargar / nueva) o 'juego' (además, guardar aquí)
@@ -3975,14 +4011,21 @@ const CARNAVAL={
  grande:{nom:'Carnaval en grande',costo:900,apr:5,tur:1.6,carros:3,txt:'Tres carros alegóricos por el malecón, conciertos y combate naval. Los hoteles se llenan ese mes.'},
  austero:{nom:'Carnaval austero',costo:400,apr:1,tur:1.2,carros:1,txt:'Un desfile sencillo por el malecón. Cumple, pero no luce.'},
  nada:{nom:'Sin carnaval',costo:0,apr:-12,tur:.85,carros:0,txt:'Te ahorras el dinero, pero el puerto no lo perdona y ese mes llegan menos turistas.'}};
+function mesesCarnaval(){ return ((1-calI(S.mes))%12+12)%12; }   // meses que faltan para febrero
+function panelCarnaval(){ const m=S.mision, falta=mesesCarnaval(), meta=CARNAVAL.grande.costo, f=m.fondoC||0, proy=f+(m.aporteC||0)*falta;
+  return `<div class="cuenta"><span class="t">Fondo del Carnaval</span>
+   <span>Juntado</span><span><b style="color:var(--sol)">${dinero(f)}</b> de ${dinero(meta)}</span>
+   <span>Apartas cada mes</span><span class="pc"><button class="btn mini2" data-ap="-25" aria-label="Menos">−</button><b>${dinero(m.aporteC||0)}</b><button class="btn mini2" data-ap="25" aria-label="Más">+</button></span>
+   <span>${falta?`Al llegar febrero (en ${falta} mes${falta>1?'es':''})`:'Este mes es el carnaval'}</span><span style="color:${proy>=meta?'var(--bien)':'var(--mal)'}">${dinero(proy)}${proy>=meta?' · alcanza para el grande':proy>=CARNAVAL.austero.costo?' · alcanza para el austero':' · no alcanza'}</span></div>`; }
 function carnavalHoy(){ const m=S&&S.mision; return m&&m.id==='mazatlan'&&m.carn&&m.carn.mes===S.mes?m.carn.nivel:null; }
 function factorCarnaval(){ const n=carnavalHoy(); return n?CARNAVAL[n].tur:1; }
 function decidirCarnaval(){ return new Promise(fin=>{ const anio=Math.floor((S.mes-1)/12)+1, m=S.mision;
-  const op=k=>{ const c=CARNAVAL[k], no=c.costo>S.dinero;
-    return `<button class="btn opc2" data-carn="${k}" ${no?'disabled':''}><b>${c.nom}</b><span>${c.costo?'Cuesta '+dinero(c.costo):'Sin costo'} · aprobación ${c.apr>0?'+':''}${c.apr}</span><span style="font-weight:400">${c.txt}${no?' No te alcanza la caja.':''}</span></button>`; };
-  modal(`<h2>CARNAVAL DE MAZATLÁN · AÑO ${anio}</h2><p>Llegó febrero y el puerto espera su carnaval. ¿Cuánto le dedicas este año?</p><div class="opcs" style="width:100%">${['grande','austero','nada'].map(op).join('')}</div>`);
+  const fondo=m.fondoC||0;
+  const op=k=>{ const c=CARNAVAL[k], no=c.costo>S.dinero+fondo;
+    return `<button class="btn opc2" data-carn="${k}" ${no?'disabled':''}><b>${c.nom}</b><span>${c.costo?'Cuesta '+dinero(c.costo)+(fondo?` (${dinero(Math.min(fondo,c.costo))} del fondo)`:''):'Sin costo'} · aprobación ${c.apr>0?'+':''}${c.apr}</span><span style="font-weight:400">${c.txt}${no?' No te alcanza la caja.':''}</span></button>`; };
+  modal(`<h2>CARNAVAL DE MAZATLÁN · AÑO ${anio}</h2><p>Llegó febrero y el puerto espera su carnaval. En el Fondo del Carnaval tienes <b>${dinero(fondo)}</b>; lo que falte sale de la caja y lo que sobre se queda para el próximo año. ¿Cuánto le dedicas?</p><div class="opcs" style="width:100%">${['grande','austero','nada'].map(op).join('')}</div>`);
   $('modal').querySelectorAll('[data-carn]').forEach(b=>b.onclick=()=>{ const k=b.dataset.carn, c=CARNAVAL[k];
-    S.dinero-=c.costo; S.apr=clamp(S.apr+c.apr,1,99); m.carn={mes:S.mes,nivel:k}; if(k==='grande') m.grandes=(m.grandes||0)+1; if(k==='nada') m.sinCarnaval=(m.sinCarnaval||0)+1;
+    const delF=Math.min(fondo,c.costo); m.fondoC=fondo-delF; S.dinero-=c.costo-delF; S.apr=clamp(S.apr+c.apr,1,99); m.carn={mes:S.mes,nivel:k}; if(k==='grande') m.grandes=(m.grandes||0)+1; if(k==='nada') m.sinCarnaval=(m.sinCarnaval||0)+1;
     cerrarModal(); recalcular(); hud(); guardarPronto();
     aviso(k==='nada'?'Este año no hubo carnaval: aprobación −12':`${c.nom}: el desfile recorre el malecón todo febrero`,4200); fin(); }); }); }
 // el desfile va por el tramo de malecón más largo
@@ -4092,11 +4135,11 @@ const MISIONES=[
   estrellasOk:v=>[S.eds.some(e=>e.t==='fuerte'), v>=60, !S.mision.credito]},
  // ---------- Mazatlán ----------
  {id:'mazatlan',mun:'Mazatlán',reg:'Sur',jugable:true,lema:'Muchos hoteles, pocos servicios',
-  intro:'El puerto vive del turismo: hoteles, palapas y malecón llenos de visitantes. Pero las colonias no tienen clínica ni escuela cerca y la gente está harta. Y cada febrero todo Mazatlán espera su carnaval. Hay que dar servicios sin espantar al turismo.',
-  regla:'El turismo paga el doble, pero cada mes las casas sin salud y escuela cerca te bajan hasta 3 de aprobación. Cada febrero decides cuánto le dedicas al Carnaval: en grande cuesta $900 mil y llena los hoteles; si no hay carnaval, la aprobación cae 12 puntos.',
+  intro:'El puerto vive del turismo: hoteles, palapas y malecón llenos de visitantes. Pero las colonias no tienen clínica ni escuela cerca y la gente está harta. Arrancas en marzo, recién pasado el carnaval: tienes 11 meses para juntar el del próximo febrero. Hay que dar servicios sin espantar al turismo.',
+  regla:'El turismo paga el doble, pero cada mes las casas sin salud y escuela cerca te bajan hasta 3 de aprobación. Cada febrero decides cuánto le dedicas al Carnaval: en grande cuesta $900 mil y llena los hoteles; austero, $400 mil; si no hay carnaval, la aprobación cae 12 puntos. Aparta cada mes al Fondo del Carnaval (toca 🎯) para llegar con el dinero.',
   objetivo:{txt:'Gana con 65% de los votos sin que el turismo baje de 40% del ingreso',meta:65},
   estrellas:[{txt:'Carnaval en grande los 3 años'},{txt:'Clínica y escuela para 90% de las casas'},{txt:'Ganar sin pedir crédito'}],
-  inicio:()=>{ S.mods.turismo=(S.mods.turismo||1)*2;
+  inicio:()=>{ S.ofs=2; S.mision.aporteC=85; S.mision.fondoC=0; S.mods.turismo=(S.mods.turismo||1)*2;
     const c=(i,j)=>{ if(dentro(i,j)&&!occ[idx(i,j)]&&!RIO[idx(i,j)]) S.ter[idx(i,j)]='calle'; };
     const AV=PLAYA_J-2;                                  // avenida del Mar: corre pegada al malecón, entre él y los hoteles
     for(let i=OX+1;i<=OX+38;i++){ const k=idx(i,AV); if(!occ[k]) S.ter[k]='calle'; }
@@ -4108,9 +4151,13 @@ const MISIONES=[
     for(const i of [12,13,14,15]) for(const j of [OY+20,OY+21]) { if(!occ[idx(OX+i,j)]&&S.ter[idx(OX+i,j)]!=='calle') agregar('humilde',OX+i,j,false,true); }
     S.pob=Math.max(S.pob,60); },
   mes:c=>{ const m=S.mision; if((S.creditos||[]).length) m.credito=true; m.turMin=Math.min(m.turMin==null?1:m.turMin,partTurismo()); m.cuenta=Math.round(partTurismo()*100);
-    const out=[]; const n=carnavalHoy(); if(n) out.push([n==='nada'?'mal':'bien',n==='nada'?'Febrero sin carnaval: menos turistas':`${CARNAVAL[n].nom}: turismo ×${CARNAVAL[n].tur} este mes`]);
+    const out=[]; if(calI(S.mes)!==1){ const ap=Math.min(m.aporteC||0,Math.max(0,S.dinero)); if(ap>0){ S.dinero-=ap; m.fondoC=(m.fondoC||0)+ap; } }
+    { const falta=(mesesCarnaval()+11)%12, meta=CARNAVAL.grande.costo, f=m.fondoC||0, proy=f+(m.aporteC||0)*falta;
+      if(falta>0&&falta<=11&&f<meta) out.push([proy>=meta?'':'mal',`Fondo del Carnaval: ${dinero(f)} de ${dinero(meta)} · faltan ${falta} mes${falta>1?'es':''}${proy>=meta?'':`. Aparta ${dinero(Math.ceil((meta-f)/Math.max(1,falta)/5)*5)} al mes (toca 🎯)`}`]); }
+    const n=carnavalHoy(); if(n) out.push([n==='nada'?'mal':'bien',n==='nada'?'Febrero sin carnaval: menos turistas':`${CARNAVAL[n].nom}: turismo ×${CARNAVAL[n].tur} este mes`]);
     const falta=((1-c.cob.salud)+(1-c.cob.educacion))/2, q=Math.round(falta*3); if(q>0){ S.apr=clamp(S.apr-q,1,99); out.push(['mal',`Colonias sin clínica ni escuela cerca: aprobación −${q}`]); } return out; },
   avance:()=>`Turismo: ${Math.round(partTurismo()*100)}% del ingreso (no bajar de 40%) · necesitas 65% de los votos · carnavales en grande: ${(S.mision.grandes||0)} de 3`,
+  panel:()=>panelCarnaval(),
   hud:()=>`${Math.round(partTurismo()*100)}%`,
   logrado:v=>partTurismo()>=.4&&(v==null||v>=65),
   estrellasOk:v=>{ const c=S.calc||recalcular(); return [(S.mision.grandes||0)>=3, c.cob.salud>=.9&&c.cob.educacion>=.9, !S.mision.credito]; }},
@@ -4121,7 +4168,7 @@ const MISIONES=[
   objetivo:{txt:'Llega a 400 habitantes y gana con 65% de los votos',meta:400},
   estrellas:[{txt:'Pasar el tren por el Puente Negro'},{txt:'Salud para 80% de las casas'},{txt:'Terminar con delincuencia bajo 25'}],
   inicio:()=>{ S.deli=clamp(S.deli+10,0,100); mapaCuliacan(); },
-  mes:c=>{ const m=S.mision; m.cuenta=S.pob; const mesA=((S.mes-1)%12)+1, out=[];
+  mes:c=>{ const m=S.mision; m.cuenta=S.pob; const mesA=calI(S.mes)+1, out=[];
     if(mesA===9&&!S.eds.some(e=>e.t==='presa')){ const l=dañar(S.eds.filter(e=>cercaRio(e,2)),2); S.efectos.push({tipo:'inundacion',nom:'Inundación del río',meses:2}); out.push(['mal',`Se desbordó el río${l.length?': se dañaron '+l.join(', '):''}. Una presa lo evitaría.`]); }
     return out; },
   avance:()=>`Habitantes: ${S.pob} de 400 · necesitas 65% de los votos`,
@@ -4194,7 +4241,9 @@ function verMision(inicio){ return new Promise(fin=>{ const m=misionDe(S.mision.
    <div class="cuenta"><span class="t">Objetivo</span><span>${esc(m.objetivo.txt)}</span><span></span><span>${esc(m.avance())}</span><span>${m.logrado()?'✓':''}</span></div>
    <p style="font-size:14px">${esc(m.regla)}</p>
    <div class="cuenta"><span class="t">Estrellas (se revisan en la elección)</span>${m.estrellas.map(e=>`<span>★ ${esc(e.txt)}</span><span></span>`).join('')}</div>
+   <div id="misPanel">${m.panel?m.panel():''}</div>
    <div class="fila"><button class="btn-sol btn" id="mOkM">${inicio?'A gobernar':'Listo'}</button></div>`);
+  const atar=()=>$('modal').querySelectorAll('[data-ap]').forEach(b=>b.onclick=()=>{ S.mision.aporteC=clamp((S.mision.aporteC||0)+(+b.dataset.ap),0,500); $('misPanel').innerHTML=m.panel(); atar(); guardarPronto(); }); atar();
   $('mOkM').onclick=()=>{cerrarModal(); fin();}; }); }
 function hudMision(){ const b=$('tMision'); if(!b) return; b.hidden=!(S&&S.mision); if(S&&S.mision){ const m=misionDe(S.mision.id); b.innerHTML='🎯 '+(m.hud?m.hud():`${Math.min(S.mision.cuenta||0,m.objetivo.meta)}/${m.objetivo.meta}`); } }
 function finMision(v,gana){
@@ -4240,11 +4289,19 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 let pidaInstalar=null;
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
 window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
 $('pInstalar').onclick=async()=>{ if(!pidaInstalar) return; pidaInstalar.prompt(); const r=await pidaInstalar.userChoice; pidaInstalar=null; if(r.outcome==='accepted') $('pInstalar').hidden=true; };
+$('pCompartir').onclick=compartirJuego;
+async function compartirJuego(){ const url=location.origin+location.pathname.replace(/index\.html$/,'');
+  const txt='Gobierna tu pueblo sinaloense en El Trienio: cosechas, la maña, el Carnaval y la elección. ¡Juégalo gratis!';
+  try{ if(navigator.share){ await navigator.share({title:'El Trienio: Gobierna tu pueblo',text:txt,url}); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
+  modal(`<h2>COMPARTIR EL TRIENIO</h2><p>Manda este enlace a quien quieras invitar:</p><p style="word-break:break-all"><b>${esc(url)}</b></p>
+   <div class="fila"><a class="btn" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--crema)" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt+' '+url)}">WhatsApp</a><a class="btn" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--crema)" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}">Facebook</a><button class="btn" id="shCopiar">Copiar enlace</button><button class="btn-sol btn" id="mCerrar">Listo</button></div>`);
+  $('mCerrar').onclick=cerrarModal;
+  $('shCopiar').onclick=async()=>{ try{ await navigator.clipboard.writeText(url); aviso('Enlace copiado'); }catch(e){ aviso('No se pudo copiar: selecciónalo y cópialo'); } }; }
 $('pMis').onclick=()=>conPerfil(()=>pantallaMisiones()); $('pLegado').onclick=()=>verLegado(); $('pCuenta').onclick=()=>cuenta();
 $('tourSig').onclick=()=>{ TOUR.paso++; if(TOUR.paso>=PASOS.length) return terminarTour(); mostrarPaso(); }; $('tourHaz').onclick=()=>{ const P=PASOS[TOUR.paso]; if(P&&P.haz) P.haz(); };
 $('tourSal').onclick=()=>terminarTour('Puedes repetir el recorrido desde el menú ≡');
