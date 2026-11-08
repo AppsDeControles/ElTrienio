@@ -465,6 +465,8 @@ const DEF={
  congeladora:{nom:'Congeladora',cat:'industria',spr:'edif-congeladora-a',A:6,B:2,costo:420,mant:4,empleos:70,ingreso:20,necesita:'muelle',lote:'ind'},
  granja:{nom:'Granja acuícola',cat:'produccion',spr:'edif-granja-a',A:4,B:4,costo:280,mant:2,empleos:25,ingreso:15,suelo:'costa',contamina:3},
  hotel:{nom:'Hotel de playa',cat:'comercio',spr:'edif-hotel-a',A:4,B:4,costo:480,mant:4,empleos:40,ingreso:24,suelo:'costa',turismo:true,lote:'plaza'},
+ hoteltorre:{nom:'Hotel Torre Azul',cat:'comercio',spr:'edif-hoteltorre-a',A:4,B:4,costo:720,mant:6,empleos:55,ingreso:36,suelo:'costa',turismo:true,lote:'plaza',desc:'Seis pisos con balcones al mar y alberca en la azotea.'},
+ hotelflamingo:{nom:'Hotel Flamingo',cat:'comercio',spr:'edif-hotelflamingo-a',A:5,B:5,costo:1100,mant:9,empleos:80,ingreso:58,suelo:'costa',turismo:true,lote:'plaza',desc:'El hotel más grande de la costa, con su flamingo gigante en la fachada.'},
  palapa:{nom:'Palapa de mariscos',cat:'comercio',spr:'edif-palapa-a',A:2,B:2,costo:60,mant:.5,empleos:8,ingreso:5,suelo:'costa',turismo:true,serv:'diversion',radio:7},
  tortugas:{nom:'Campamento tortuguero',cat:'comercio',spr:'edif-tortugas-a',A:3,B:3,costo:60,mant:1,empleos:4,serv:'diversion',radio:8,suelo:'playa',turismo:true,unico:true,desc:'Cuida los nidos de tortuga en la playa. En Elota es lo único que se puede poner en la playa Ceuta sin enojar a la gente.'},
  malecon:{nom:'Malecón',cat:'comercio',spr:'edif-malecon-a',variantes:['edif-malecon-a','edif-malecon-a','edif-malecon-palma-a'],A:1,B:1,costo:12,mant:.2,serv:'diversion',radio:6,suelo:'malecon',lote:'plaza',turismo:true,poco:1/3,desc:'Paseo frente al mar o a la orilla del río. Se traza arrastrando, como la calle, en tierra firme junto a la arena o al río.'},
@@ -2051,7 +2053,7 @@ const ORDEN={vivienda:['humilde','media','buena','buenab','cuartos','vecindad','
  publica:['calle','autobus','comandancia','panteon','basura','agua','subestacion','presa','prision'],
  social:['canchas','kiosco','escuela','clinica','iglesia','universidad','estadio'],
  produccion:['parcela','aserradero','mina','muelle','engorda','granja','veterinaria','bodega','agro','minaind'],
- comercio:['tacos','minisuper','malecon','palapa','cafe','sushi','mercado','ecoturismo','hotel'],
+ comercio:['tacos','minisuper','malecon','palapa','cafe','sushi','mercado','ecoturismo','hotel','hoteltorre','hotelflamingo'],
  industria:['empacadora','rastro','congeladora','fabrica']};
 function lista(){
   const O=ORDEN[cat]||[], pos=k=>{const n=O.indexOf(k); return n<0?100+(DEF[k].costo||0)/1000:n;};
@@ -4289,7 +4291,7 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={reconstruirOcc:()=>reconstruirOcc(),elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 let pidaInstalar=null;
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
 window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
