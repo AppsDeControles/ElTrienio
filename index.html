@@ -173,9 +173,9 @@ body.panel-cerrado #pasar{right:max(12px,env(safe-area-inset-right,0px))}
 /* portada */
 #portada{position:absolute;inset:0;z-index:30;display:flex;align-items:center;background:linear-gradient(90deg,rgba(11,9,6,.92) 0,rgba(11,9,6,.78) 46%,rgba(11,9,6,.15) 75%);
   padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-#portada .col{display:flex;flex-direction:column;gap:12px;max-width:420px}
+#portada .col{display:flex;flex-direction:column;gap:12px;max-width:min(660px,48vw)}
 #portada h1{margin:0;line-height:0}
-#portada h1 img{width:min(420px,46vw);height:auto;filter:drop-shadow(0 6px 0 rgba(11,9,6,.6))}
+#portada h1 img{width:min(620px,44vw);height:auto;filter:drop-shadow(0 6px 0 rgba(11,9,6,.6))}
 #portada .mono{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:0;height:min(92%,560px);width:auto;max-width:48vw;object-fit:contain;object-position:bottom right;pointer-events:none}
 #cargando{position:absolute;inset:0;z-index:40;background:#1E1A16;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:opacity .5s}
 #cargando img{height:min(78vh,78vw);width:auto;max-width:92vw}
@@ -183,16 +183,24 @@ body.panel-cerrado #pasar{right:max(12px,env(safe-area-inset-right,0px))}
 body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portada #pasar{visibility:hidden}
 #cargaTxt{font-size:14px;color:var(--tenue);font-variant-numeric:tabular-nums}
 #portada .sub{font-family:var(--f-display);font-weight:800;font-size:14px;letter-spacing:2px}
-#portada .acciones{display:flex;flex-direction:column;gap:8px;width:280px;margin-top:6px}
-#portada .acciones button{height:46px;text-align:left;padding:0 16px;font-family:var(--f-display);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+#portada .acciones{display:flex;flex-direction:column;gap:10px;width:min(380px,40vw);margin-top:6px}
+#portada .acciones button{height:54px;text-align:left;padding:0 16px;font-family:var(--f-display);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center}
 #portada .acciones button span{font-family:var(--f-body);font-size:13px;font-weight:600}
 #portada{overflow-y:auto}
 @media (max-height:560px){#portada .col{gap:7px;padding:10px 0} #portada h1 img{width:min(300px,34vw)} #portada .col>p{display:none} #portada .sub{font-size:12px}
- #portada .acciones{display:grid;grid-template-columns:1fr 1fr;width:min(460px,52vw);gap:6px;margin-top:0} #portada .acciones button{height:40px;padding:0 10px;font-size:12.5px}
+ #portada .acciones{display:grid;grid-template-columns:1fr 1fr;width:min(460px,52vw);gap:6px;margin-top:0} #portada .acciones button{height:42px;padding:0 10px;font-size:12.5px} #portada .extras{bottom:max(8px,env(safe-area-inset-bottom,0px))} #pJugar span{display:none} #portada .extras small{display:none} #portada .extras .btn{min-height:30px}
  #portada .acciones #pCont{grid-column:1/-1} #pPerfil{width:min(460px,52vw);padding:4px 6px} #pPerfil img{width:38px;height:38px} #portada .col>small{display:none}}
 #carga{font-size:13px;color:var(--tenue)}
 #modal{z-index:35} #aviso{z-index:36}
-#pPerfil{display:flex;align-items:center;gap:10px;background:rgba(30,26,22,.88);border:2px solid var(--borde);padding:6px 8px 6px 6px;width:280px;box-sizing:border-box}
+#pPerfil{display:flex;align-items:center;gap:10px;background:rgba(30,26,22,.88);border:2px solid var(--borde);padding:6px 8px 6px 6px;width:min(380px,40vw);box-sizing:border-box}
+#portada .extras{position:absolute;left:max(28px,env(safe-area-inset-left,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1}
+#portada .extras .btn{min-height:34px;padding:0 12px;font-size:13px;font-weight:700;display:flex;gap:6px;align-items:center} #portada .extras .btn span{color:var(--tenue);font-weight:500}
+#portada .extras small{color:var(--tenue);font-size:12px}
+.jugar-ops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.jugar-ops button{display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;padding:14px;min-height:130px;background:var(--panel2);border:3px solid var(--hondo);box-shadow:inset 0 0 0 2px var(--borde);color:var(--crema);cursor:pointer;font:inherit}
+.jugar-ops button:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--sol)} .jugar-ops button:disabled{opacity:.45;cursor:default}
+.jugar-ops b{font-family:var(--f-display);font-size:17px;color:var(--sol)} .jugar-ops span{font-size:13px;color:var(--tenue);line-height:1.35} .jugar-ops i{font-style:normal;font-size:26px}
+@media (max-width:700px){.jugar-ops{grid-template-columns:1fr} .jugar-ops button{min-height:0;flex-direction:row;align-items:center;gap:10px;padding:10px}}
 #pPerfil img{width:48px;height:48px;object-fit:cover;background:var(--hondo)}
 #pPerfil .q{min-width:0} #pPerfil b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} #pPerfil small{display:block;color:var(--tenue);font-size:12px}
 #pPerfil button{margin-left:auto;min-height:34px;font-size:13px;padding:0 10px;flex:none}
@@ -404,15 +412,16 @@ body.herr-plegada #herr>:not(#tMas){display:none!important}
       <div id="pPerfil" hidden></div>
       <div class="acciones">
         <button class="btn-sol" id="pCont" hidden>CONTINUAR <span id="pContDet"></span></button>
-        <button class="btn" id="pPartidas" hidden>PARTIDAS GUARDADAS <span id="pPartDet"></span></button>
-        <button class="btn" id="pMis">MISIONES <span>Sinaloa</span></button>
-        <button class="btn" id="pNueva">NUEVA PARTIDA</button>
+        <button class="btn" id="pJugar">NUEVA PARTIDA <span>Libre · Misión · Guardada</span></button>
         <button class="btn" id="pLegado">SALÓN DEL LEGADO</button>
-        <button class="btn" id="pCuenta">CUENTA <span>…</span></button>
-        <button class="btn" id="pCompartir">COMPARTIR <span>Invita a jugar</span></button>
-        <button class="btn" id="pInstalar" hidden>INSTALAR <span>En este equipo</span></button>
       </div>
-      <small style="color:var(--tenue)">Versión 0.11 · prueba</small>
+      <div hidden><button id="pPartidas" hidden>PARTIDAS GUARDADAS <span id="pPartDet"></span></button><button id="pMis">MISIONES</button><button id="pNueva">NUEVA PARTIDA</button></div>
+    </div>
+    <div class="extras" aria-label="Más opciones">
+      <button class="btn" id="pCuenta">Cuenta <span>…</span></button>
+      <button class="btn" id="pCompartir">Compartir</button>
+      <button class="btn" id="pInstalar" hidden>Instalar</button>
+      <small>Versión 0.11 · prueba</small>
     </div>
   </section>
   <div id="tour" hidden><div class="blq"></div><div class="blq"></div><div class="blq"></div><div class="blq"></div><div id="tourAro"></div>
@@ -3709,7 +3718,7 @@ $('btnMenu').onclick=()=>{
   $('mNueva').onclick=()=>{ guardar(); const g=ranuraLibre();
     if(g>=0){ $('modal').querySelector('.fila').innerHTML=`<span style="align-self:center;font-size:13px">Tu partida actual queda guardada; la nueva va en la ranura ${g+1}.</span><button class="btn" id="mNo">No</button><button class="btn-sol btn" id="mSi">Empezar</button>`;
       $('mNo').onclick=cerrarModal; $('mSi').onclick=()=>{cerrarModal(); partida=g; iniciar(true);}; }
-    else pantallaPartidas('juego'), aviso(`Ya tienes ${MAXP} partidas: borra una para empezar otra`,3200); };
+    else pantallaPartidas('portada',{txt:'Empezar aquí',fn:g2=>{ partida=g2; iniciar(true); }}), aviso(`Ya tienes ${MAXP} partidas: borra una para empezar otra`,3200); };
 };
 
 
@@ -4262,26 +4271,26 @@ function detPartida(o){return o?`${MESES[calI(o.mes,o)]} · Año ${Math.floor((o
 function cuando(t){ if(!t) return ''; const d=new Date(t), h=new Date(); const mismo=d.toDateString()===h.toDateString();
   return mismo?'hoy '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); }
 // pantalla de partidas guardadas. modo: 'portada' (cargar / nueva) o 'juego' (además, guardar aquí)
-function pantallaPartidas(modo){
+function pantallaPartidas(modo,pend){
   const enJuego=modo==='juego'&&S&&$('portada').hidden;
   if(enJuego) guardar();
   const L=[]; for(let g=0;g<MAXP;g++) L.push(cargarG(g));
   const fila=(o,g)=>{ const act=enJuego&&g===partida;
-    if(!o) return `<div class="pf vacia"><span class="num">${g+1}</span><span class="q"><b>Vacía</b><small>Sin partida en esta ranura</small></span>${enJuego?`<button class="btn" data-aqui="${g}">Guardar aquí</button>`:`<button class="btn btn-sol" data-nueva="${g}">Nueva aquí</button>`}</div>`;
+    if(!o) return `<div class="pf vacia"><span class="num">${g+1}</span><span class="q"><b>Vacía</b><small>Sin partida en esta ranura</small></span>${enJuego?`<button class="btn" data-aqui="${g}">Guardar aquí</button>`:`<button class="btn btn-sol" data-nueva="${g}">${pend?pend.txt:'Nueva aquí'}</button>`}</div>`;
     const ret=o.alcalde?retrato(o.alcalde):retrato(perfil?perfil.ret:1);
     return `<div class="pf" aria-current="${act}"><img alt="" src="${ret}"><span class="q"><b>${esc(o.nomP)}${act?' · <span style="color:var(--sol)">jugando</span>':''}</b><small>${detPartida(o)} · Trienio ${(o.eleccion||0)+1} · ${(o.pob||0).toLocaleString('es-MX')} hab. · ${o.apr||0}%</small><small>Guardada ${cuando(o.t)}</small></span>
       <span class="acc">${act?'':`<button class="btn btn-sol" data-cargar="${g}">${enJuego?'Cargar':'Jugar'}</button>`}${enJuego&&!act?`<button class="btn" data-aqui="${g}">Guardar aquí</button>`:''}<button class="btn borrar" data-ren="${g}">Renombrar</button>${act?'':`<button class="btn borrar" data-bor="${g}">Borrar</button>`}</span></div>`; };
-  modal(`<h2>PARTIDAS GUARDADAS</h2><p style="font-size:14px">${perfil?esc(perfil.nombre)+': ':''}tienes ${L.filter(Boolean).length} de ${MAXP}. Cada partida se guarda sola cada mes y al construir${NUBE.user?' y se sube a tu cuenta':''}.</p>
+  modal(`<h2>PARTIDAS GUARDADAS</h2>${pend?`<p style="font-size:14px;color:var(--sol)">No hay espacio libre: borra una partida y ${pend.txt.toLowerCase()} en esa ranura.</p>`:''}<p style="font-size:14px">${perfil?esc(perfil.nombre)+': ':''}tienes ${L.filter(Boolean).length} de ${MAXP}. Cada partida se guarda sola cada mes y al construir${NUBE.user?' y se sube a tu cuenta':''}.</p>
     <div class="perfiles partidas">${L.map(fila).join('')}</div><div class="fila"><button class="btn-sol btn" id="mCerrar">Volver</button></div>`);
-  const M=$('modal'), volver=()=>pantallaPartidas(modo);
+  const M=$('modal'), volver=()=>pantallaPartidas(modo,pend);
   $('mCerrar').onclick=()=>{ cerrarModal(); if(!enJuego) refrescarPortada(); };
   const confirma=(b,txt,si,ok)=>{ const f=b.closest('.pf'); f.innerHTML=`<span class="q" style="color:var(--mal);font-size:13px">${txt}</span><button class="btn" data-no>No</button><button class="btn btn-sol" data-si>${si}</button>`; f.querySelector('[data-no]').onclick=volver; f.querySelector('[data-si]').onclick=ok; };
   M.querySelectorAll('[data-cargar]').forEach(b=>b.onclick=()=>{ const g=+b.dataset.cargar; const o=cargarG(g); if(!o) return volver(); cerrarModal(); abrirPartida(o); aviso(`Cargaste «${o.nomP}»`); });
-  M.querySelectorAll('[data-nueva]').forEach(b=>b.onclick=()=>{ partida=+b.dataset.nueva; cerrarModal(); iniciar(true); });
+  M.querySelectorAll('[data-nueva]').forEach(b=>b.onclick=()=>{ const g=+b.dataset.nueva; cerrarModal(); if(pend) return pend.fn(g); partida=g; iniciar(true); });
   M.querySelectorAll('[data-aqui]').forEach(b=>b.onclick=()=>{ const g=+b.dataset.aqui, o=L[g];
     const hacer=()=>{ partida=g; guardar(); aviso(`Guardada en la ranura ${g+1}; sigues jugando en ella`,3000); volver(); };
     if(o) confirma(b,`¿Reemplazar «${esc(o.nomP)}» con la partida actual?`,'Reemplazar',hacer); else hacer(); });
-  M.querySelectorAll('[data-bor]').forEach(b=>b.onclick=()=>{ const g=+b.dataset.bor; confirma(b,`¿Borrar «${esc(L[g].nomP)}»? No se puede deshacer.`,'Borrar',()=>{ borrarG(g); volver(); }); });
+  M.querySelectorAll('[data-bor]').forEach(b=>b.onclick=()=>{ const g=+b.dataset.bor; confirma(b,`¿Borrar «${esc(L[g].nomP)}»? No se puede deshacer.`,pend?'Borrar y '+pend.txt.toLowerCase():'Borrar',()=>{ borrarG(g); if(pend){ cerrarModal(); return pend.fn(g); } volver(); }); });
   M.querySelectorAll('[data-ren]').forEach(b=>b.onclick=()=>{ const g=+b.dataset.ren, f=b.closest('.pf'), viejo=L[g].nomP;
     f.innerHTML=`<input class="ren" maxlength="24" value="${esc(viejo)}" aria-label="Nombre de la partida"><button class="btn" data-no>Cancelar</button><button class="btn btn-sol" data-si>Guardar</button>`;
     const inp=f.querySelector('input'); inp.focus(); inp.select();
@@ -4654,7 +4663,7 @@ function fichaMision(id,dif){
   $('mVolver').onclick=pantallaMisiones;
   $('modal').querySelectorAll('[data-dif]').forEach(b=>b.onclick=()=>fichaMision(id,b.dataset.dif));
   $('mJugar').onclick=()=>conPerfil(()=>{ const a=leerAvance(); a[id]=Object.assign(a[id]||{},{ultDif:dif}); guardarAvance(a);
-    const g=ranuraLibre(); if(g<0){ modal(`<h2>SIN ESPACIO</h2><p>Ya tienes ${MAXP} partidas guardadas. Borra una para empezar la misión.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Ver partidas</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>pantallaPartidas('portada'); return; }
+    const g=ranuraLibre(); if(g<0){ modal(`<h2>SIN ESPACIO</h2><p>Ya tienes ${MAXP} partidas guardadas. Borra una para empezar la misión.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Ver partidas</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>pantallaPartidas('portada',{txt:'Empezar la misión',fn:g2=>{ partida=g2; misionPend={id,dif}; iniciar(true); }}); return; }
     partida=g; misionPend={id,dif}; cerrarModal(); iniciar(true); });
 }
 // se llama dentro de nuevaPartida
@@ -4736,8 +4745,15 @@ window.addEventListener('resize',()=>{ if(TOUR.on) tickTour(); });
 NUBE.iniciar();
 $('pCont').onclick=()=>conPerfil(()=>{ guardada=cargar(); if(!guardada) return refrescarPortada(); abrirPartida(guardada); });
 $('pPartidas').onclick=()=>conPerfil(()=>pantallaPartidas('portada'));
+$('pJugar').onclick=()=>conPerfil(()=>{ const n=[...Array(MAXP).keys()].filter(g=>cargarG(g)).length;
+  modal(`<h2>NUEVA PARTIDA</h2><p style="font-size:14px">¿Cómo quieres jugar?</p>
+   <div class="jugar-ops"><button id="jLibre"><i>🏛️</i><b>Partida libre</b><span>Tu municipio desde cero, sin reglas especiales. Gobierna 36 meses y gana la elección.</span></button>
+   <button id="jMision"><i>🎯</i><b>Misión</b><span>Un municipio de Sinaloa con su propio reto, reglas y tres estrellas por ganar.</span></button>
+   <button id="jGuardada" ${n?'':'disabled'}><i>💾</i><b>Partida guardada</b><span>${n?`Sigue una de tus ${n} partida${n>1?'s':''} guardada${n>1?'s':''} (de ${MAXP}).`:'Todavía no tienes partidas guardadas.'}</span></button></div>
+   <div class="fila"><button class="btn" id="mCerrar">Volver</button></div>`);
+  $('mCerrar').onclick=cerrarModal; $('jLibre').onclick=()=>{cerrarModal(); $('pNueva').onclick();}; $('jMision').onclick=()=>$('pMis').onclick(); $('jGuardada').onclick=()=>$('pPartidas').onclick(); });
 $('pNueva').onclick=()=>conPerfil(()=>{ const g=ranuraLibre(); if(g>=0){ partida=g; iniciar(true); return; }
-  modal(`<h2>NUEVA PARTIDA</h2><p>${esc(perfil.nombre)}, ya tienes ${MAXP} partidas guardadas. Elige cuál reemplazar o borra una.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Ver partidas</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>pantallaPartidas('portada'); });
+  modal(`<h2>NUEVA PARTIDA</h2><p>${esc(perfil.nombre)}, ya tienes ${MAXP} partidas guardadas. Elige cuál reemplazar o borra una.</p><div class="fila"><button class="btn" id="nNo">Cancelar</button><button class="btn-sol btn" id="nSi">Ver partidas</button></div>`); $('nNo').onclick=cerrarModal; $('nSi').onclick=()=>pantallaPartidas('portada',{txt:'Empezar aquí',fn:g2=>{ partida=g2; iniciar(true); }}); });
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&S&&$('portada').hidden){ guardar(); NUBE.subir(true); }});
 window.addEventListener('pagehide',()=>{if(S&&$('portada').hidden) guardar();});
 })();
