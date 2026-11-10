@@ -4138,20 +4138,22 @@ const corto=n=>PERSONAJES[n].nom.replace(/^(Ing\.|Lic\.|Dra\.|Don|Doña|Padre) /
 function quitarAlcaldeCaminante(){ for(let q=agentes.length-1;q>=0;q--) if(agentes[q].alc) agentes.splice(q,1); }
 function trienioAct(){return (S.eleccion||0)+1;}
 // elegir personaje: al iniciar partida o como candidato
-function elegirPersonaje({titulo,texto,lista,motivo,etiqueta,obligado,inicial}){ return new Promise(fin=>{
+function elegirPersonaje({titulo,texto,lista,motivo,etiqueta,obligado,inicial,crear}){ return new Promise(fin=>{
   let sel=(inicial&&!motivo(inicial))?inicial:(lista.find(n=>!motivo(n))||lista[0]);
   const pinta=()=>{ const P=PERSONAJES[sel], no=motivo(sel);
     modal(`<h2>${titulo}</h2><p style="font-size:14px">${texto}</p>
      <div class="alcaldes">${lista.map(n=>{const m=motivo(n); return `<button data-f="${n}" aria-pressed="${n===sel}" ${m?'style="opacity:.45"':''} title="${esc(PERSONAJES[n].nom)}"><img alt="" src="${retrato(n)}"><span>${esc(corto(n))}</span>${etiqueta&&etiqueta(n)?`<span style="color:var(--sol)">${etiqueta(n)}</span>`:''}</button>`;}).join('')}</div>
      <div class="mini" style="flex-direction:row;gap:10px;align-items:center"><img alt="" src="${retrato(sel)}" style="width:56px;height:56px;object-fit:cover"><span style="display:flex;flex-direction:column;gap:2px"><b>${esc(P.nom)}</b><span>${esc(P.rol)}</span><span style="color:var(--bien)">${PERK[sel]}</span>${no?`<span style="color:var(--mal)">${no}</span>`:''}</span></div>
-     <div class="fila">${obligado?'':'<button class="btn" id="pjNo">Cancelar</button>'}<button class="btn-sol btn" id="pjOk" ${no?'disabled':''}>Elegir a ${esc(corto(sel))}</button></div>`);
+     <div class="fila">${crear?`<button class="btn" id="pjCrear" style="margin-right:auto">${lista.includes(PROPIO)?'Editar mi personaje':'✚ Crear mi personaje'}</button>`:''}${obligado?'':'<button class="btn" id="pjNo">Cancelar</button>'}<button class="btn-sol btn" id="pjOk" ${no?'disabled':''}>Elegir a ${esc(corto(sel))}</button></div>`);
     $('modal').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{sel=+b.dataset.f; pinta();});
     if($('pjNo')) $('pjNo').onclick=()=>{cerrarModal(); fin(null);};
+    if($('pjCrear')) $('pjCrear').onclick=async()=>{ const r=await CREADOR.abrir(perfil&&perfil.pj,perfil&&perfil.nombre);
+      if(r&&perfil){ perfil.pj=r; perfil.ret=PROPIO; guardarPerfiles(); ponerPropio(r); if(!lista.includes(PROPIO)) lista=[PROPIO,...lista]; sel=PROPIO; } pinta(); };
     $('pjOk').onclick=()=>{cerrarModal(); fin(sel);}; };
   pinta(); }); }
 async function elegirAlcaldeInicial(){
   if(perfil&&perfil.pj) ponerPropio(perfil.pj);
-  const n=await elegirPersonaje({titulo:'¿QUIÉN SERÁ TU ALCALDE?',texto:'Elige al presidente municipal de tu partido. Cada uno tiene su propia ventaja durante su gobierno.',lista:perfil&&perfil.pj?[PROPIO,...PARTIDO]:PARTIDO,inicial:perfil&&perfil.pj?PROPIO:null,motivo:()=>'',obligado:true});
+  const n=await elegirPersonaje({titulo:'¿QUIÉN SERÁ TU ALCALDE?',texto:'Elige al presidente municipal de tu partido. Cada uno tiene su propia ventaja durante su gobierno.',crear:true,lista:perfil&&perfil.pj?[PROPIO,...PARTIDO]:PARTIDO,inicial:perfil&&perfil.pj?PROPIO:null,motivo:()=>'',obligado:true});
   if(n===PROPIO){ S.pj=JSON.parse(JSON.stringify(perfil.pj)); ponerPropio(S.pj); }
   S.alcalde=n; S.hist={[n]:{cons:1,ultimo:1}}; hud(); quitarAlcaldeCaminante(); reponerAgentes(); guardar(); }
 // dificultad: mientras mejor vas, más pesan las cartas malas y más probable es una catástrofe
