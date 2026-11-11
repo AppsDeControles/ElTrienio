@@ -4713,7 +4713,7 @@ function iniciar(nueva){
   if(Radio.quiereSonar()&&!Radio.on) try{Radio.encender();}catch(e){}
 }
 function cargarSprites(){
-  const FLIP=['palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
+  const FLIP=['departamentos','vecindad','unidad','palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
   const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-loco-atras','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
   let listos=0;
   return Promise.all(nombres.map(n=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[n]=im;listos++;$('cargaTxt').textContent=`Cargando piezas… ${listos} de ${nombres.length}`;res();};im.onerror=()=>{listos++;res();};im.src=`sprites/${n}.png`;})));
