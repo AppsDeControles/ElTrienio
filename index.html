@@ -1657,7 +1657,7 @@ function dibujarAgente(a){
 }
 // ---------- tren de carga FierroSin: cruza el municipio por la vía ----------
 const TREN={ini:0,s:-6,fase:'fuera',espera:6,vagones:3,on:false,t:0,v:0,largo:8};
-const PIEZA={loco:{ax:144.8,ay:211.6,largo:2.4},tanque:{ax:64.8,ay:136.3,largo:1.4},chiepe:{ax:186.7,ay:172.5,largo:3.2}}, KT=.67;
+const PIEZA={loco:{ax:144.8,ay:211.6,largo:2.4},locoAtras:{ax:144.8,ay:211.6},tanque:{ax:64.8,ay:136.3,largo:1.4},chiepe:{ax:186.7,ay:172.5,largo:3.2}}, KT=.67;
 function tPara(){ const c=S&&S.eds&&S.eds.find(e=>e.t==='chepe'); return c?c.j+3.7:VIA_FIN+.8; }   // con la terminal, los vagones quedan junto al andén
 // llega de la sierra con la locomotora por delante, se detiene en la estación, carga y regresa con la locomotora de cola por delante
 function trenSalir(extra){ if(viaCortada()){ TREN.on=false; TREN.espera=20; return; } let ini=VIA_FIN; while(ini>0&&PROP[idx(VIA_I,ini-1)]) ini--; TREN.ini=Math.max(0,ini-3); TREN.vagones=2+Math.floor(Math.random()*3)+(extra||0); TREN.s=TREN.ini-1; TREN.on=true; TREN.fase='llega'; TREN.v=1.3; }
@@ -1688,6 +1688,10 @@ function dibujarVagon(a){
   if(sx<-w-50||sx>VW+w+50||sy<-h-50||sy>VH+h) return;
   const imF=espejo&&IMG['tren-'+a.p+'-f'];   // versión espejo con el letrero legible
   g.globalAlpha=al; g.save(); g.translate(sx,sy+6*z-alturaPuente(a.wy)*z);
+  // la locomotora que se aleja de la cámara se dibuja de espaldas, con la punta hacia donde avanza (sprite tren-loco-atras: punta arriba a la derecha)
+  const imA=a.p==='loco'&&IMG['tren-loco-atras'];
+  if(imA){ const [x0,y0]=proj(a.wx,a.wy), [x1,y1]=proj(a.wx,a.wy+a.dj);
+    if(y1<y0){ const PA=PIEZA.locoAtras; if(x1<x0){ g.scale(-1,1); } g.drawImage(imA,-PA.ax*k,-PA.ay*k,imA.width*k,imA.height*k); g.restore(); g.globalAlpha=1; return; } }
   if(imF) g.drawImage(imF,-(im.width-P.ax)*k,-P.ay*k,w,h); else { if(espejo) g.scale(-1,1); g.drawImage(im,-P.ax*k,-P.ay*k,w,h); }
   g.restore(); g.globalAlpha=1;
 }
@@ -4404,7 +4408,7 @@ function frentePuente(e){ const q=geo(e), im=IMG['edif-puentenegro-frente']; if(
   if(q.mir){g.save();g.translate(sx+im.width*z,sy);g.scale(-1,1);g.drawImage(im,0,0,im.width*z,im.height*z);g.restore();} else g.drawImage(im,sx,sy,im.width*z,im.height*z); }
 // perfil de la vía sobre el Puente Negro: la cubierta del dibujo va de 47 px (lado norte) a 60 px (lado sur) sobre el suelo;
 // cuatro cuadros de terraplén en cada orilla suben de forma pareja hasta la orilla de la cubierta
-const PUENTE_N={dj:-.547,h:47}, PUENTE_S={dj:4.078,h:60}, LARGO_RAMPA=4;
+const PUENTE_N={dj:.1,h:47}, PUENTE_S={dj:4.078,h:60}, LARGO_RAMPA=4;
 function perfilPuente(p){ const jn=p.j+PUENTE_N.dj, js=p.j+PUENTE_S.dj; return {jA:Math.floor(jn)-LARGO_RAMPA, jn, hn:PUENTE_N.h, js, hs:PUENTE_S.h, jB:Math.floor(js)+LARGO_RAMPA}; }
 function alturaPuente(wy){ const p=puenteNegro(); if(!p) return 0; const P=perfilPuente(p);
   if(wy<=P.jA||wy>=P.jB) return 0;
@@ -4414,7 +4418,7 @@ function alturaPuente(wy){ const p=puenteNegro(); if(!p) return 0; const P=perfi
 const ALTO_PUENTE=47;
 function enRampa(i,j){ const p=puenteNegro(); if(!p||i!==VIA_I) return false; const P=perfilPuente(p); return j>=P.jA&&j<P.jB; }   // ahí no se pinta la vía del suelo
 function piezasRampa(){ const p=puenteNegro(); if(!p) return []; const P=perfilPuente(p);
-  return [{k:'rampa',ya:P.jA,yb:P.jn,ha:0,hb:P.hn,caja:[VIA_I+.1,P.jA,.8,P.jn-P.jA]},{k:'rampa',ya:P.js,yb:P.jB,ha:P.hs,hb:0,caja:[VIA_I+.1,Math.max(P.js,p.j+4),.8,P.jB-Math.max(P.js,p.j+4)]}]; }
+  return [{k:'rampa',ya:P.jA,yb:P.jn,ha:0,hb:P.hn,caja:[VIA_I+.1,P.jA,.8,Math.min(P.jn,p.j)-P.jA]},{k:'rampa',ya:P.js,yb:P.jB,ha:P.hs,hb:0,caja:[VIA_I+.1,Math.max(P.js,p.j+4),.8,P.jB-Math.max(P.js,p.j+4)]}]; }
 function dibujarRampa(a){ const z=cam.z, x0=VIA_I+.16, x1=VIA_I+.84;
   const hEn=y=>a.ha+(a.hb-a.ha)*(y-a.ya)/(a.yb-a.ya);
   const Q=(x,y,h)=>{ const [sx,sy]=aPantalla(...proj(x,y)); return [sx,sy-(h==null?hEn(y):h)*z]; };
@@ -4710,7 +4714,7 @@ function iniciar(nueva){
 }
 function cargarSprites(){
   const FLIP=['palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
-  const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
+  const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-loco-atras','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
   let listos=0;
   return Promise.all(nombres.map(n=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[n]=im;listos++;$('cargaTxt').textContent=`Cargando piezas… ${listos} de ${nombres.length}`;res();};im.onerror=()=>{listos++;res();};im.src=`sprites/${n}.png`;})));
 }
