@@ -862,7 +862,7 @@ function agregar(tipo,i,j,flip,gratis,cult){
   const d=DEF[tipo]; const [A,B]=huella(d,flip);
   const e={id:S.sig++,t:tipo,i,j,f:!!flip};
   if(tipo==='malecon'){ e.f=false; e.m1=1; }
-  if(tipo==='puentenegro') for(let jj=Math.floor(j+PUENTE_N.dj)-LARGO_RAMPA;jj<Math.floor(j+PUENTE_S.dj)+LARGO_RAMPA;jj++){ if(jj>=j&&jj<j+4) continue; const k=idx(VIA_I,jj); if(dentro(VIA_I,jj)&&S.ter[k]!=='calle'&&S.ter[k]!=='rio') S.ter[k]='tierra'; }   // terraplén de las rampas
+  if(tipo==='puentenegro') for(let jj=0;jj<=VIA_FIN;jj++){ if(jj>=j&&jj<j+4) continue; const k=idx(VIA_I,jj); if(dentro(VIA_I,jj)&&S.ter[k]!=='calle'&&S.ter[k]!=='rio') S.ter[k]='tierra'; }   // terraplén de las rampas
   if(tipo==='parcela'){e.cult=cult||selCult; e.sem=S.mes;}
   if(tipo==='mina'||tipo==='minaind'){e.min=selMin; e.sem=S.mes;}
   if(tipo==='mina'||tipo==='minaind') despejarMonte(e,A,B);
@@ -1719,7 +1719,7 @@ function piezasTren(){ const l=[]; if(!TREN.on) return l; const c0=TREN.s-1.2;
   c-=V.fin; l.push({k:'tren',p:'loco',wx:VIA_I+.5,wy:c,largo:2.4,dj:-1});
   TREN.largo=TREN.s-(c-1.2);
   const pz=puenteNegro(); if(pz){ const lado=ladoPuente(pz);   // sobre el puente: encima de la cubierta y debajo de la armadura de enfrente
-    for(const p of l) if(p.wy+p.largo/2>pz.j-LARGO_RAMPA-1.4&&p.wy-p.largo/2<pz.j+4+LARGO_RAMPA+1.4) p.caja=[lado>0?pz.i+2.02:pz.i-.42,p.wy-p.largo/2,.4,p.largo];
+    for(const p of l) p.caja=[lado>0?pz.i+2.02:pz.i-.42,p.wy-p.largo/2,.4,p.largo];
     l.push({k:'puenteFrente',e:pz,caja:[lado>0?pz.i+2.5:pz.i-.8,pz.j,.3,4]}); }
   return l; }
 function moverTren(dt){
@@ -1747,11 +1747,12 @@ function dibujarVagon(a){
 }
 // estación de carga: andén con techito, bodega y tope al final de la vía (se arman con cajas, giran con el mapa)
 function piezasEstacion(){ const l=[];
-  if(ESTOK.anden) l.push({k:'estacion',p:'anden',wx:4.5,wy:27.5,dir:[0,1],caja:[4,24,1,7]});
-  if(ESTOK.bodega) l.push({k:'estacion',p:'bodega',wx:6,wy:27,dir:[0,1],caja:[5,25,2,4]});
+  if(ESTOK.anden) l.push({k:'estacion',p:'anden',wx:OX+4.5,wy:OY+27.5,dir:[0,1],caja:[OX+4,OY+24,1,7]});
+  if(ESTOK.bodega) l.push({k:'estacion',p:'bodega',wx:OX+6,wy:OY+27,dir:[0,1],caja:[OX+5,OY+25,2,4]});
   if(VIA[idx(VIA_I,VIA_FIN)]) l.push({k:'estacion',p:'tope',wx:VIA_I+.5,wy:VIA_FIN+.94,dir:[0,1],caja:[VIA_I+.25,VIA_FIN+.88,.5,.12]});
   return l; }
-function dibujarEstacion(a){
+function dibujarEstacion(a){ if(puenteNegro()&&a.p!=='bodega'){ g.save(); g.translate(0,-PUENTE_S.h*cam.z); dibujarEstacion0(a); g.restore(); } else dibujarEstacion0(a); }
+function dibujarEstacion0(a){
   const [cx,cy]=aPantalla(...proj(a.wx,a.wy)); if(cx<-300||cy<-300||cx>VW+300||cy>VH+300) return;
   const M=marco(a), P=M.P, orden=(l)=>l.sort((p,q)=>(M.fa+M.fb)*(p[0]-q[0])+(M.sa+M.sb)*(p[1]-q[1]));
   if(a.p==='anden'){
@@ -4473,20 +4474,27 @@ function frentePuente(e){ const q=geo(e), im=IMG['edif-puentenegro-frente']; if(
 // perfil de la vía sobre el Puente Negro: la cubierta del dibujo va de 47 px (lado norte) a 60 px (lado sur) sobre el suelo;
 // cuatro cuadros de terraplén en cada orilla suben de forma pareja hasta la orilla de la cubierta
 const PUENTE_N={dj:.1,h:47}, PUENTE_S={dj:4.078,h:60}, LARGO_RAMPA=4;
-function perfilPuente(p){ const jn=p.j+PUENTE_N.dj, js=p.j+PUENTE_S.dj; return {jA:Math.floor(jn)-LARGO_RAMPA, jn, hn:PUENTE_N.h, js, hs:PUENTE_S.h, jB:Math.floor(js)+LARGO_RAMPA}; }
+// con el puente, toda la vía corre sobre un terraplén parejo a la altura de la cubierta: sin rampas
+function perfilPuente(p){ const jn=p.j+PUENTE_N.dj, js=p.j+PUENTE_S.dj; return {jA:0, jn, hn:PUENTE_N.h, js, hs:PUENTE_S.h, jB:VIA_FIN+1}; }
 function alturaPuente(wy){ const p=puenteNegro(); if(!p) return 0; const P=perfilPuente(p);
-  if(wy<=P.jA||wy>=P.jB) return 0;
-  if(wy<P.jn) return P.hn*(wy-P.jA)/(P.jn-P.jA);
+  if(wy<P.jA||wy>P.jB) return 0;
+  if(wy<P.jn) return P.hn;
   if(wy<=P.js) return P.hn+(P.hs-P.hn)*(wy-P.jn)/(P.js-P.jn);
-  return P.hs*(P.jB-wy)/(P.jB-P.js); }
+  return P.hs; }
 const ALTO_PUENTE=47;
 function enRampa(i,j){ const p=puenteNegro(); if(!p||i!==VIA_I) return false; const P=perfilPuente(p); return j>=P.jA&&j<P.jB; }   // ahí no se pinta la vía del suelo
 function piezasRampa(){ const p=puenteNegro(); if(!p) return []; const P=perfilPuente(p);
-  return [{k:'rampa',ya:P.jA,yb:P.jn,ha:0,hb:P.hn,caja:[VIA_I+.1,P.jA,.8,Math.min(P.jn,p.j)-P.jA]},{k:'rampa',ya:P.js,yb:P.jB,ha:P.hs,hb:0,caja:[VIA_I+.1,Math.max(P.js,p.j+4),.8,P.jB-Math.max(P.js,p.j+4)]}]; }
-function dibujarRampa(a){ const z=cam.z, x0=VIA_I+.16, x1=VIA_I+.84;
+  const L=[], tramo=(ya,yb,h,capA,capB)=>L.push({k:'rampa',ya,yb,ha:h,hb:h,capA,capB,caja:[VIA_I+.1,ya,.8,yb-ya]});
+  for(let y=P.jA;y<p.j;y++) tramo(y,Math.min(y+1,p.j),P.hn,y===P.jA,false);           // norte del puente, hasta la orilla de la cubierta
+  for(let y=p.j+4;y<P.jB;y++) tramo(y,Math.min(y+1,P.jB),P.hs,false,y+1>=P.jB);       // sur del puente, hasta el final de la vía
+  if(ESTOK.anden){ let pri=true; for(const t of L) if(t.ya>=OY+24-.01&&t.ya<OY+31){ t.x1=VIA_I+2; t.caja=[VIA_I+.1,t.ya,1.9,t.yb-t.ya]; if(pri){ t.capA=true; pri=false; } } }   // el andén también va arriba
+  // los trozos que tocan el puente llegan justo a la cubierta
+  L.find(t=>t.yb===p.j).yb=P.jn; L.find(t=>t.ya===p.j+4).ya=P.js;
+  return L; }
+function dibujarRampa(a){ const z=cam.z, x0=VIA_I+.16, x1=a.x1||VIA_I+.84;
   const hEn=y=>a.ha+(a.hb-a.ha)*(y-a.ya)/(a.yb-a.ya);
   const Q=(x,y,h)=>{ const [sx,sy]=aPantalla(...proj(x,y)); return [sx,sy-(h==null?hEn(y):h)*z]; };
-  const [cx,cy]=Q(VIA_I+.5,(a.ya+a.yb)/2,0); if(cx<-400||cx>VW+400||cy<-300||cy>VH+300) return;
+  const [cx,cy]=Q(VIA_I+.5,(a.ya+a.yb)/2,0); if(cx<-200*z-100||cx>VW+200*z+100||cy<-200||cy>VH+300) return;
   const poli=(P,col,borde)=>{ g.beginPath(); g.moveTo(...P[0]); for(const q of P.slice(1)) g.lineTo(...q); g.closePath(); if(col){g.fillStyle=col; g.fill();} if(borde){ g.strokeStyle=borde; g.lineWidth=Math.max(1,1.2*z); g.stroke(); } };
   const lado=x=>[Q(x,a.ya,0),Q(x,a.yb,0),Q(x,a.yb),Q(x,a.ya)];
   const cerca=Q(x1,a.ya,0)[1]+Q(x1,a.yb,0)[1]>Q(x0,a.ya,0)[1]+Q(x0,a.yb,0)[1];
@@ -4494,6 +4502,7 @@ function dibujarRampa(a){ const z=cam.z, x0=VIA_I+.16, x1=VIA_I+.84;
   poli([Q(xc,a.ya,0),Q(xc,a.yb,0),Q(xc+(cerca?.14:-.14),a.yb,0),Q(xc+(cerca?.14:-.14),a.ya,0)],'rgba(0,0,0,.18)');
   poli(lado(xl),'#5E4630','#3A2A1C');
   poli(lado(xc),'#86684A','#3A2A1C');
+  for(const [y,o] of [[a.ya,a.capA],[a.yb,a.capB]]) if(o){ const otro=y===a.ya?a.yb:a.ya; if(Q(.5+VIA_I,y,0)[1]>Q(.5+VIA_I,otro,0)[1]) poli([Q(x0,y,0),Q(x1,y,0),Q(x1,y),Q(x0,y)],'#735A40','#3A2A1C'); }
   g.strokeStyle='rgba(50,36,24,.5)'; g.lineWidth=Math.max(1,z);          // hiladas de piedra del muro
   for(let f=1;f<5;f++){ const u=f/5; g.beginPath(); let ini=true;
     for(let t=0;t<=1.001;t+=.05){ const y=a.ya+(a.yb-a.ya)*t; const P=Q(xc,y,hEn(y)*u); if(hEn(y)*u<2) continue; if(ini){g.moveTo(...P); ini=false;} else g.lineTo(...P); } g.stroke(); }
@@ -4505,7 +4514,10 @@ function dibujarRampa(a){ const z=cam.z, x0=VIA_I+.16, x1=VIA_I+.84;
   const aPlano=(x,y)=>{ const a_=((x-X0)/64+(y-Y0)/32)/2, b_=((y-Y0)/32-(x-X0)/64)/2; return deV(a_,b_); };
   for(let j=Math.floor(a.ya);j<Math.ceil(a.yb);j++){ const [ca,cb]=celV(VIA_I,j), [vx,vy]=topW(ca,cb);
     const S=[[vx-64,vy],[vx+64,vy],[vx-64,vy+64]].map(([x,y])=>{ const w=aPlano(x,y); const [sx,sy]=aPantalla(x,y); return [sx,sy-hEn(w[1])*z]; });
-    g.save(); g.transform((S[1][0]-S[0][0])/128,(S[1][1]-S[0][1])/128,(S[2][0]-S[0][0])/64,(S[2][1]-S[0][1])/64,S[0][0],S[0][1]); g.drawImage(tx,0,0,128,64); g.restore(); }
+    g.save(); g.transform((S[1][0]-S[0][0])/128,(S[1][1]-S[0][1])/128,(S[2][0]-S[0][0])/64,(S[2][1]-S[0][1])/64,S[0][0],S[0][1]); g.drawImage(tx,0,0,128,64); g.restore();
+    if(a.x1>VIA_I+1&&TEX['lote-ind']){ const [ca2,cb2]=celV(VIA_I+1,j), [ux,uy]=topW(ca2,cb2);   // piso del andén arriba del terraplén
+      const S2=[[ux-64,uy],[ux+64,uy],[ux-64,uy+64]].map(([x,y])=>{ const [sx,sy]=aPantalla(x,y); return [sx,sy-a.ha*z]; });
+      g.save(); g.transform((S2[1][0]-S2[0][0])/128,(S2[1][1]-S2[0][1])/128,(S2[2][0]-S2[0][0])/64,(S2[2][1]-S2[0][1])/64,S2[0][0],S2[0][1]); g.drawImage(TEX['lote-ind'],0,0,128,64); g.restore(); } }
   g.restore();
 }
 
