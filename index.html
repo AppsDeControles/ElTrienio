@@ -206,6 +206,7 @@ body.en-portada #hud,body.en-portada #panel,body.en-portada #herr,body.en-portad
 #pPerfil button{margin-left:auto;min-height:34px;font-size:13px;padding:0 10px;flex:none}
 #hAva{width:30px;height:30px;object-fit:cover;background:var(--hondo);border:2px solid var(--borde);flex:none}
 .alcaldes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.paleta{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0} .pint{width:30px;height:30px;border:2px solid var(--hondo);padding:0;cursor:pointer;color:var(--crema);background:#3a2e24;font-size:15px} .pint.on{outline:3px solid var(--sol);outline-offset:2px} .acc.pinta{flex-direction:column;align-items:stretch} .pnom{color:var(--tenue)}
 .cr{display:grid;grid-template-columns:minmax(0,230px) minmax(0,1fr);gap:14px;min-height:0;flex:1;overflow:hidden}
 .cr-ret{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center}
 .cr-ret img{width:100%;max-width:230px;image-rendering:pixelated;border:3px solid var(--hondo)}
@@ -450,8 +451,8 @@ const CAT_ICO={vivienda:'🏠',publica:'🛣️',social:'🏫',produccion:'🌾'
 const DEF={
  calle:{nom:'Calle',cat:'publica',costo:4,mant:.1,desc:'Conecta edificios. Arrastra para trazar.'},
  humilde:{nom:'Casa humilde',cat:'vivienda',spr:'casa-humilde-a',A:1,B:1,costo:15,casas:6,predial:.5,lote:'tierra'},
- departamentos:{nom:'Casa de departamentos',cat:'vivienda',spr:'edif-departamentos-a',A:2,B:2,costo:95,casas:20,predial:2.8,mant:.3,empleos:2,ingreso:1.5,serv:'abasto',radio:4,desc:'Tres pisos de departamentos con frutería y tiendita abajo.'},
- vecindad:{nom:'Vecindad La Alegría',cat:'vivienda',spr:'edif-vecindad-a',A:3,B:3,costo:200,casas:36,predial:4.5,mant:.5,empleos:4,ingreso:3,serv:'abasto',radio:6,desc:'Vecindad con plaza, frutería, tiendita y café: da abasto a las casas cercanas.'},
+ departamentos:{nom:'Casa de departamentos',cat:'vivienda',spr:'edif-departamentos-a',pinta:true,A:2,B:2,costo:95,casas:20,predial:2.8,mant:.3,empleos:2,ingreso:1.5,serv:'abasto',radio:4,desc:'Tres pisos de departamentos con frutería y tiendita abajo.'},
+ vecindad:{nom:'Vecindad La Alegría',cat:'vivienda',spr:'edif-vecindad-a',pinta:true,A:3,B:3,costo:200,casas:36,predial:4.5,mant:.5,empleos:4,ingreso:3,serv:'abasto',radio:6,desc:'Vecindad con plaza, frutería, tiendita y café: da abasto a las casas cercanas.'},
  unidad:{nom:'Unidad habitacional',cat:'vivienda',spr:'edif-unidad-a',A:3,B:3,costo:380,casas:56,predial:7,mant:.8,empleos:5,ingreso:4,serv:'abasto',radio:6,desc:'Seis pisos de departamentos con locales en la planta baja.'},
  lujo:{nom:'Residencial de lujo',cat:'vivienda',spr:'edif-lujo-a',A:3,B:3,costo:520,casas:40,predial:16,mant:1.2,lujo:true,desc:'Departamentos de lujo con jardín. Pagan predial doble y suben la aprobación, pero solo se llenan con centro de salud y comandancia cerca.'},
  residencial:{nom:'Edificio residencial',cat:'vivienda',spr:'edif-residencial-a',A:3,B:3,costo:340,casas:48,predial:9,mant:1,desc:'Departamentos para gente con más ingreso: paga más predial.'},
@@ -494,6 +495,17 @@ const DEF={
  malecon:{nom:'Malecón',cat:'comercio',spr:'edif-malecon-a',variantes:['edif-malecon-a','edif-malecon-a','edif-malecon-palma-a'],A:1,B:1,costo:12,mant:.2,serv:'diversion',radio:6,suelo:'malecon',lote:'plaza',turismo:true,poco:1/3,desc:'Paseo frente al mar o a la orilla del río. Se traza arrastrando, como la calle, en tierra firme junto a la arena o al río.'},
  parcela:{nom:'Parcela agrícola',cat:'produccion',A:3,B:3,costo:35,agri:true,lote:'tierra',desc:'Elige qué sembrar: maíz, sorgo, chile, tomate, plátano o mango.'},
  agro:{nom:'Empresa agroindustrial',cat:'produccion',spr:'edif-agro-a',A:6,B:6,costo:950,mant:8,empleos:45,ingreso:42,agroind:true,lote:'tierra',desc:'Campo tecnificado con silos y maquinaria. Necesita tierra de riego.'},
+ estetica:{nom:'Estética y Tienda de Ropa',cat:'comercio',spr:'edif-estetica-a',A:3,B:3,costo:230,casas:24,predial:3,mant:.6,empleos:6,ingreso:7,serv:'diversion',radio:7,pinta:true,desc:'Estética y tienda de ropa abajo, departamentos arriba.',efecto:'Da diversión a las casas cercanas'},
+ taller:{nom:'Taller Mecánico y Electrónica',cat:'comercio',spr:'edif-taller-a',A:3,B:3,costo:240,casas:24,predial:3,mant:.6,empleos:8,ingreso:7,pinta:true,desc:'Taller mecánico y tienda de electrónica abajo, departamentos arriba.',efecto:'Los autobuses cuestan 15% menos de mantener'},
+ herreria:{nom:'Herrería y Bicicletas',cat:'comercio',spr:'edif-herreria-a',A:3,B:3,costo:220,casas:24,predial:3,mant:.6,empleos:7,ingreso:6,pinta:true,desc:'Herrería y tienda de bicicletas abajo, departamentos arriba.',efecto:'Lo que construyas a 8 cuadros o menos cuesta 5% menos'},
+ carpinteria:{nom:'Carpintería y Mueblería',cat:'comercio',spr:'edif-carpinteria-a',A:3,B:3,costo:230,casas:24,predial:3,mant:.6,empleos:7,ingreso:7,pinta:true,desc:'Taller de carpintería y mueblería abajo, departamentos arriba.',efecto:'Rinde 25% más si hay un aserradero'},
+ lecheria:{nom:'Centro de Recolección y Quesería',cat:'comercio',spr:'edif-lecheria-a',A:3,B:3,costo:240,casas:24,predial:3,mant:.6,empleos:8,ingreso:7,pinta:true,desc:'Recolección de leche y quesería abajo, departamentos arriba.',efecto:'Rinde 25% más con un corral de engorda cerca'},
+ muebles:{nom:'Muebles y Electrodomésticos',cat:'comercio',spr:'edif-muebles-a',A:2,B:2,costo:90,mant:.4,empleos:3,ingreso:6,pinta:true,desc:'Salas, recámaras, refris y lavadoras.',efecto:'Rinde 25% más si hay una carpintería en el pueblo'},
+ gym:{nom:'Iron Gym',cat:'comercio',spr:'edif-gym-a',A:2,B:2,costo:70,mant:.3,empleos:2,ingreso:3,serv:'deporte',radio:7,pinta:true,desc:'Pesas, box y cardio para la colonia.',efecto:'Da deporte a las casas cercanas'},
+ spa:{nom:'Relax Spa',cat:'comercio',spr:'edif-spa-a',A:2,B:2,costo:95,mant:.4,empleos:3,ingreso:6,serv:'diversion',radio:6,turismo:true,pinta:true,desc:'Masajes, piedras calientes y alberca.',efecto:'Cuenta como turismo; rinde 25% más con un hotel cerca'},
+ papeleria:{nom:'Útiles y Papelería',cat:'comercio',spr:'edif-papeleria-a',A:2,B:2,costo:55,mant:.3,empleos:2,ingreso:4,serv:'abasto',radio:6,pinta:true,desc:'Cuadernos, colores y monografías.',efecto:'Las escuelas cercanas cubren 3 cuadros más'},
+ carniceria:{nom:'Carnicería y Charcutería',cat:'comercio',spr:'edif-carniceria-a',A:2,B:2,costo:65,mant:.3,empleos:3,ingreso:5,serv:'abasto',radio:8,pinta:true,desc:'Cortes, chorizo y carne seca.',efecto:'Rinde 25% más si hay rastro municipal'},
+ panaderia:{nom:'Panadería y Repostería',cat:'comercio',spr:'edif-panaderia-a',A:2,B:2,costo:45,mant:.3,empleos:2,ingreso:4,serv:'abasto',radio:8,pinta:true,desc:'Pan dulce, bolillo y pasteles.'},
  tacos:{nom:'Taquería',cat:'comercio',spr:'edif-tacos-a',A:2,B:2,costo:45,mant:.4,empleos:3,ingreso:4.5,serv:'diversion',radio:6,desc:'Tacos al pastor para la colonia.'},
  canchas:{nom:'Canchas deportivas',cat:'social',spr:'edif-canchas-a',A:4,B:2,costo:60,mant:1,empleos:1,serv:'deporte',radio:10,lote:'plaza',desc:'Fútbol rápido y básquet para el barrio.'},
  universidad:{nom:'Universidad',cat:'social',spr:'edif-universidad-a',A:3,B:3,costo:650,mant:12,empleos:22,serv:'educacion',radio:18,univ:true,lote:'plaza',desc:'Al ponerla eliges su enfoque: investigación o formar gente para la producción, el comercio o la industria.'},
@@ -620,7 +632,7 @@ function calidad(r){return r._c? Math.min(1, r.buses*2/r.paradas.length):0;}
 function cubreRuta(r,c){return r.paradas.some(p=>dist([p[0]+.5,p[1]+.5],c)<=5);}
 const RECURSOS=[['agri','Agricultura'],['gana','Ganadería'],['mar','Pesca y mar'],['tur','Turismo'],['com','Comercio local'],['mad','Madera'],['min','Minería'],['ind','Industria'],['otro','Otros negocios']];
 function recursoDe(e){const t=e.t; if(t==='mina'||t==='minaind') return 'min'; if(t==='fabrica') return 'ind'; if(['parcela','agro','bodega','empacadora','presa'].includes(t)) return 'agri'; if(['engorda','rastro','veterinaria'].includes(t)) return 'gana';
-  if(['muelle','congeladora','granja'].includes(t)) return 'mar'; if(['hotel','palapa','malecon'].includes(t)) return 'tur'; if(['minisuper','cafe','sushi','mercado'].includes(t)) return 'com'; if(t==='aserradero') return 'mad'; return 'otro';}
+  if(['muelle','congeladora','granja'].includes(t)) return 'mar'; if(['hotel','palapa','malecon'].includes(t)) return 'tur'; if(['minisuper','cafe','sushi','mercado','estetica','taller','herreria','carpinteria','lecheria','muebles','gym','papeleria','carniceria','panaderia'].includes(t)) return 'com'; if(t==='spa') return 'tur'; if(t==='aserradero') return 'mad'; return 'otro';}
 const SERV_NOM={salud:'Salud',educacion:'Escuela',seguridad:'Seguridad',diversion:'Diversión',abasto:'Abasto',deporte:'Deporte',agua:'Agua potable',limpieza:'Recolección de basura'};
 
 // ---------- estado ----------
@@ -628,6 +640,26 @@ const N=120, TW=128, TH=64, X0=N*64, Y0=420;
 let S=null;              // partida
 let occ=null;            // id de edificio por casilla
 const IMG={}, ALFA={};
+// pintura de fachadas: solo las paredes (máscara -m / -fm) cambian de color, conservando la luz y sombra del dibujo
+const PINTURAS=[['mostaza','Amarillo mostaza','#D3A043'],['verde','Verde','#5E9E58'],['rosa','Rosa mexicano','#D2568A'],['cal','Blanco cal','#E9E2D2'],['cielo','Azul cielo','#6AA7D3'],['terracota','Terracota','#B95C3C'],['lila','Lila','#9F86C4'],['naranja','Naranja','#E07F38']];
+const PINT_CACHE={};
+function mascaraDe(nombre){ return nombre.replace(/-a$/,'-m').replace(/-f$/,'-fm'); }
+function pintado(nombre,col){ const k=nombre+'|'+col; if(PINT_CACHE[k]!==undefined) return PINT_CACHE[k];
+  const im=IMG[nombre], mk=IMG[mascaraDe(nombre)], P=PINTURAS.find(p=>p[0]===col); if(!im||!mk||!P) return PINT_CACHE[k]=null;
+  const W=im.width,H=im.height, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d'); x.drawImage(im,0,0); const d=x.getImageData(0,0,W,H);
+  const cm=document.createElement('canvas'); cm.width=W; cm.height=H; const xm=cm.getContext('2d'); xm.drawImage(mk,0,0); const m=xm.getImageData(0,0,W,H).data;
+  const t=[1,3,5].map(i=>parseInt(P[2].slice(i,i+2),16)); let sy=0,n=0; const px=d.data;
+  for(let i=0;i<px.length;i+=4) if(m[i]>127){ sy+=.3*px[i]+.59*px[i+1]+.11*px[i+2]; n++; }
+  const ym=n?sy/n:128;
+  for(let i=0;i<px.length;i+=4){ const a=m[i]/255; if(a<.01) continue; const y=.3*px[i]+.59*px[i+1]+.11*px[i+2], f=Math.max(.35,Math.min(1.6,y/ym));
+    for(let q=0;q<3;q++) px[i+q]=Math.round(px[i+q]*(1-a)+Math.min(255,t[q]*f*.88)*a); }
+  x.putImageData(d,0,0); return PINT_CACHE[k]=c; }
+function colorDe(e){ return e._prevColor!==undefined?e._prevColor:e.color; }
+function contarGruposColor(){ const L=S.eds.filter(e=>e.color&&D0(e).pinta); const vis=new Set(); let n=0;
+  for(const e of L){ if(vis.has(e)) continue; const g=[e]; vis.add(e);
+    for(let k=0;k<g.length;k++) for(const o of L) if(!vis.has(o)&&dist(centro(o),centro(g[k]))<=6){ vis.add(o); g.push(o); }
+    if(g.length>=4&&new Set(g.map(x=>x.color)).size>=3) n++; }
+  return Math.min(3,n); }
 function idx(i,j){return j*N+i;}
 function dentro(i,j){return i>=0&&j>=0&&i<N&&j<N;}
 function rnd(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
@@ -772,7 +804,7 @@ function completarEstado(){
   if(S.bono===undefined) S.bono=null; S.callesGratis=S.callesGratis||0; S.cartas=S.cartas||0;
 }
 function costoDe(tipo){return tipo==='parcela'?CULT[selCult].costo:DEF[tipo].costo;}
-function costoReal(tipo){let c=costoDe(tipo); if(tipo!=='calle'&&perk(1)) c=Math.round(c*.95); if(tipo!=='calle'&&S.eds.some(e=>e.t==='fabrica'&&e.rub==='materiales')) c=Math.round(c*.92); const b=S.bono; if(!b||tipo==='calle') return c; if(b.tipo==='gratis') return c<=b.tope?0:c-b.tope; if(b.tipo==='desc') return Math.round(c*(1-b.pct)); return c;}
+function costoReal(tipo,pos){let c=costoDe(tipo); if(pos&&tipo!=='calle'&&S.eds.some(e=>e.t==='herreria'&&dist(centro(e),pos)<=8)) c=Math.round(c*.95); if(tipo!=='calle'&&perk(1)) c=Math.round(c*.95); if(tipo!=='calle'&&S.eds.some(e=>e.t==='fabrica'&&e.rub==='materiales')) c=Math.round(c*.92); const b=S.bono; if(!b||tipo==='calle') return c; if(b.tipo==='gratis') return c<=b.tope?0:c-b.tope; if(b.tipo==='desc') return Math.round(c*(1-b.pct)); return c;}
 // ---------- reglas de colocación ----------
 // edificios especiales (iglesia, estadio, panteón…): uno por cada región de 40 × 40 donde tengas terreno
 function maxUnico(){ const r=new Set(['12']); for(const id of (S&&S.bloques)||[]) r.add(id.slice(0,2)); return r.size; }
@@ -839,7 +871,7 @@ function agregar(tipo,i,j,flip,gratis,cult){
   S.eds.push(e);
   for(let a=0;a<A;a++)for(let b=0;b<B;b++) occ[idx(i+a,j+b)]=e.id;
   if(tipo==='chepe') marcarRio();   // la terminal ocupa la estación: se quitan el andén y la bodega de carga
-  if(!gratis){ const cr=costoReal(tipo); if(S.bono&&cr<costoDe(tipo)){aviso(`Carta usada: ahorraste ${dinero(costoDe(tipo)-cr)}`,3000); S.bono=null;} S.dinero-=cr; }
+  if(!gratis){ const cr=costoReal(tipo,[i+A/2,j+B/2]); if(S.bono&&cr<costoDe(tipo)){aviso(`Carta usada: ahorraste ${dinero(costoDe(tipo)-cr)}`,3000); S.bono=null;} S.dinero-=cr; }
   if(d.presa){ let n=0;
     for(const k of franjaRiego(e)) if(S.ter[k]==='temporal'||S.ter[k]==='tierra'){S.ter[k]='riego';n++;}
     if(!gratis) aviso(`La presa riega una franja de 20 casillas hasta el mar: ${n} casillas pasaron a riego`,4000);
@@ -877,6 +909,12 @@ function factorDe(e){
   if(e.t==='engorda'){const nn=[]; if(S.eds.some(v=>v.t==='veterinaria'&&dist(centro(v),c)<=14)){f*=1.25; nn.push('veterinaria cerca: +25%');}
     if(S.eds.some(v=>v.t==='parcela'&&v.cult==='sorgo'&&dist(centro(v),c)<=16)){f*=1.15; nn.push('sorgo cerca para el ganado: +15%');} if(nn.length) nota=nn.join(' · ');}
   if(d.fabrica&&d.rubro==='alimentos'&&S.eds.some(p=>p.t==='parcela'&&dist(centro(p),c)<=16)){f*=1.2; nota='Parcelas cerca: +20%';}
+  { const hay=t=>S.eds.some(x=>x.t===t), cerca=(ts,r)=>S.eds.some(x=>ts.includes(x.t)&&dist(centro(x),c)<=r);
+    if(e.t==='carpinteria'&&hay('aserradero')){f*=1.25; nota='Aserradero en el pueblo: +25%';}
+    if(e.t==='lecheria'&&cerca(['engorda'],12)){f*=1.25; nota='Corral de engorda cerca: +25%';}
+    if(e.t==='muebles'&&hay('carpinteria')){f*=1.25; nota='La carpintería le surte: +25%';}
+    if(e.t==='spa'&&cerca(['hotel','hoteltorre','hotelflamingo'],12)){f*=1.25; nota='Hotel cerca: +25%';}
+    if(e.t==='carniceria'&&hay('rastro')){f*=1.25; nota='Rastro municipal: +25%';} }
   if(d.bosque){const n=contarCerca(c,5,t=>t==='monte'?1:0); f=clamp(n/30,.25,1.4); nota=`Bosque alrededor: ${Math.round(f*100)}%`;}
   if(d.turismo&&!d.bosque){const extra=S.eds.reduce((s_,x)=>s_+(x!==e&&D(x).turismo?(D(x).poco||1):0),0); f*=1+Math.min(.5,extra*.08); if(extra>=.5) nota=`Zona turística: +${Math.round(Math.min(.5,extra*.08)*100)}%`;}
   return [f,nota];
@@ -901,7 +939,8 @@ function recalcular(){
   // cobertura de servicios
   const cob={}; for(const k of Object.keys(SERV_NOM)) cob[k]=0;
   const servs=S.eds.filter(e=>D(e).serv);
-  for(const h of casas){const c=centro(h); for(const k of Object.keys(cob)) if(servs.some(s=>D(s).serv===k&&dist(centro(s),c)<=D(s).radio)) cob[k]++;}
+  const paps=S.eds.filter(e=>e.t==='papeleria'&&!e.dano), radioS=s=>D(s).radio+(D(s).serv==='educacion'&&paps.some(p=>dist(centro(p),centro(s))<=8)?3:0);
+  for(const h of casas){const c=centro(h); for(const k of Object.keys(cob)) if(servs.some(s=>D(s).serv===k&&dist(centro(s),c)<=radioS(s))) cob[k]++;}
   const nc=Math.max(1,casas.length); for(const k in cob) cob[k]/=nc;
   const limp=servs.filter(s=>D(s).serv==='limpieza');
   let olor=0; for(const h of casas){const c=centro(h); if(limp.some(s=>dist(centro(s),c)<=D(s).radio)) continue; if(S.eds.some(x=>D(x).contamina&&dist(centro(x),c)<=D(x).contamina+2)) olor++;}
@@ -911,6 +950,7 @@ function recalcular(){
   const part=(30+.6*S.pob)*S.mods.part*(perk(9)?1.08:1)*(1+.02*atr('fed')); ing.push(['Participaciones federales',part]);
   const pred=casas.reduce((s,e)=>s+D(e).predial*e._lujo,0)*fImp('predial'); if(pred>0) ing.push(['Predial',pred]);
   const ef=t=>S.efectos.some(x=>x.tipo===t);
+  const gruposColor=contarGruposColor();
   let neg=0; const porRec={}; for(const e of S.eds) e._ing=0;
   // universidades: bono por enfoque y egresados para las fábricas
   const unis=S.eds.filter(e=>e.t==='universidad'), nEnf=k=>unis.filter(u=>(u.enf||'inv')===k).length;
@@ -930,7 +970,7 @@ function recalcular(){
   for(const e of S.eds){const d=D(e);
     if(d.mina){ let f=(e.dano?0:1)*llenado*S.mods.negocios*tecF(e,d,'min')*(d.maq?1.3:1); if(sinLuz(e)) f*=.7; e._ing=pagoMina(e,S.mes)*f; neg+=e._ing; porRec.min=(porRec.min||0)+e._ing; continue; }
     if(!d.ingreso) continue; let f=llenado*factorDe(e)[0]*S.mods.negocios*(1+.1*trans);
-    if(d.turismo) f*=S.mods.turismo*factorCarnaval();
+    if(d.turismo) f*=S.mods.turismo*factorCarnaval()*(1+.05*gruposColor);
     f*=tecF(e,d,recursoDe(e)); if(d.fabrica) f*=fEgr;
     if((d.campo||d.agri||d.agroind)&&ef('inundacion')) f*=prog('seguro')?.8:.6; if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=prog('seguro')?.75:.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=prog('seguro')?.8:.6; if(sinLuz(e)) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
     if(ef('clausura')&&e.t==='granja') f=0;
@@ -949,7 +989,7 @@ function recalcular(){
   const nb=S.rutas.reduce((s,r)=>s+(r._c?r.buses:0),0); if(nb) ing.push(['Pasajes de autobús',nb*2.5*(.5+.5*trans)]);
   const mant=S.eds.reduce((s,e)=>s+(D(e).mant||0),0)*(1-.02*atr('adm')); gas.push(['Mantenimiento y nómina',mant]);
   const calles=Math.max(0,S.ter.filter(t=>t==='calle').length-(S.callesLibres||0)); gas.push(['Calles',calles*DEF.calle.mant]);   // las calles que trae el municipio no cobran mantenimiento
-  const nbt=S.rutas.reduce((s,r)=>s+r.buses,0); if(nbt) gas.push(['Autobuses (choferes y diésel)',nbt*4.5]);
+  const nbt=S.rutas.reduce((s,r)=>s+r.buses,0); if(nbt) gas.push(['Autobuses (choferes y diésel)',nbt*4.5*(S.eds.some(e=>e.t==='taller'&&!e.dano)?.85:1)]);
   const pc=(S.creditos||[]).reduce((s,c)=>s+c.pago,0); if(pc) gas.push(['Pago de créditos',pc]);
   const cp=Object.keys(PROG).filter(prog).reduce((s,k)=>s+PROG[k].costo(),0); if(cp) gas.push(['Programas sociales',cp]);
   const piso=neg*S.mana/100*.4; if(piso>.05) gas.push(['Cobro de piso (la maña)',piso]);
@@ -966,15 +1006,23 @@ function recalcular(){
   const aprGob=aprGobierno(); obj+=aprGob;
   obj+=atr('car'); if(perk(2)) obj+=2+cob.diversion*6; if(perk(8)&&S.eds.some(e=>e.t==='clinica'&&!e.dano)) obj+=3;
   obj+=cob.agua*(tieneTec('drenaje')?10:7)+cob.deporte*4+cob.limpieza*3;
-  if(S.eds.some(e=>D(e).fe)) obj+=3;
-  obj+=Math.min(4,casas.filter(e=>e._lujoOk).length*1.5);   // el residencial de lujo bien servido presume al municipio
   if(S.dinero<0) obj-=15;
   if(cap<S.pob) obj-=6;
   obj-=S.deli*.12+S.mana*.05;
   obj=clamp(obj,3,97);
-  S.calc={grupos,cap,empleos,fuerza,ocupados,llenado,desempleo,cob,olor,trans,ing,gas,tIng,tIngBase,tGas,bal:tIng-tGas,obj,neg,aporte,trenMes,marMes,pagoTren,pagoMar,egresados,egrNec,fEgr,aprGob};
+  S.calc={grupos,cap,empleos,fuerza,ocupados,llenado,desempleo,cob,olor,trans,ing,gas,tIng,tIngBase,tGas,bal:tIng-tGas,obj,neg,aporte,trenMes,marMes,pagoTren,pagoMar,egresados,egrNec,fEgr,aprGob,gruposColor};
   return S.calc;
 }
+// aprobación con fracciones: el entero va en S.apr y lo que sobra se guarda para el mes siguiente
+function sumaApr(v){ const t=S.apr+(S.aprRes||0)+v; S.apr=clamp(Math.round(t),1,99); S.aprRes=clamp(t-S.apr,-.49,.49); }
+// bonos de edificios: el primer mes pegan completo, luego +0.2 al mes mientras sigan en pie
+function bonoApr(k,v){ S.bonosApr=S.bonosApr||{}; const nuevo=S.bonosApr[k]==null; S.bonosApr[k]=S.mes; const a=nuevo?v:.2; sumaApr(a); return a; }
+function bonosEdificios(c){ const out=[], f=v=>Number.isInteger(v)?v:v.toFixed(1);
+  if(S.eds.some(e=>D(e).fe&&!e.dano)) out.push(['La iglesia',bonoApr('fe',3)]);
+  S.eds.filter(e=>e._lujoOk).slice(0,3).forEach(e=>out.push([nombreDe(e)+' bien servido',bonoApr('lujo:'+e.id,1.5)]));
+  for(let k=1;k<=(c.gruposColor||0);k++) out.push(['Calle de colores',bonoApr('color'+k,2)]);
+  for(const k of Object.keys(S.bonosApr||{})) if(S.bonosApr[k]<S.mes&&!['cruz','tortugas'].includes(k)) delete S.bonosApr[k];
+  return out.map(([n,v])=>[n,f(v)]); }
 function pasarMes(){
   const antes={pob:S.pob,apr:S.apr,din:S.dinero};
   let c=recalcular(); const cMes=c;
@@ -1002,13 +1050,14 @@ function pasarMes(){
     for(let y=Math.max(0,Math.floor(cc[1]-8));y<=Math.min(N-1,cc[1]+8);y++)for(let x=Math.max(0,Math.floor(cc[0]-8));x<=Math.min(N-1,cc[0]+8);x++) if(S.ter[idx(x,y)]==='monte'&&!occ[idx(x,y)]&&PROP[idx(x,y)]){const dd=dist([x,y],cc); if(dd<md){md=dd;mejor=[x,y];}}
     if(mejor&&md<=7){talas.push(mejor);}}
   c=recalcular();
-  S.apr=clamp(Math.round(S.apr*.6+c.obj*.4),1,99);
+  sumaApr(clamp((c.obj-S.apr)*.4,-3,2));   // lo constante sube máximo 2 y baja máximo 3 por mes
+  const bonosEd=bonosEdificios(c);
   // efectos que terminan
   const terminados=[];
   for(const x of S.efectos){x.meses--; if(x.meses<=0) terminados.push(x.nom);} S.efectos=S.efectos.filter(x=>x.meses>0);
   for(const cr of S.creditos||[]){cr.meses--; cr.saldo=Math.max(0,cr.saldo-cr.pago); if(cr.meses<=0) terminados.push(`Crédito de ${dinero(cr.monto)} liquidado`);} S.creditos=(S.creditos||[]).filter(cr=>cr.meses>0);
   const embarques=cobrarComercio(cMes).concat(guardaditoMes(cMes),nuevosConflictos(cMes));
-  const rep={mes:S.mes,antes,c:cMes,despues:{pob:S.pob,apr:S.apr,din:S.dinero},terminados,talas,sucesos:embarques,minas,tec:tecLista};
+  const rep={mes:S.mes,antes,c:cMes,despues:{pob:S.pob,apr:S.apr,din:S.dinero},terminados,talas,sucesos:embarques,minas,tec:tecLista,bonosEd};
   rep.mis=S.mision?(misionDe(S.mision.id).mes(cMes)||[]):[]; if(S.mision) rep.despues.apr=S.apr;
   S.mes++;
   // retos
@@ -1214,7 +1263,8 @@ function geo(e){
   // vista trasera: si el lado de atrás (aguas arriba en la presa) mira hacia la cámara
   if(d.trasera&&IMG[d.trasera]){ const [ua,ub]=dirV(...(e.f?[-1,0]:[0,-1])); if(ua+ub>0) nombre=d.trasera; }
   if(espejo && /-a$/.test(nombre) && IMG[nombre.replace(/-a$/,'-f')]){nombre=nombre.replace(/-a$/,'-f'); mir=false;}   // variante con letreros legibles
-  const im=IMG[nombre]; if(!im) return null;
+  let im=IMG[nombre]; if(!im) return null;
+  const col=d.pinta&&colorDe(e); if(col){ const p=pintado(nombre,col); if(p) im=p; }
   const [bx,by]=topW(c.i1,c.j1);
   const q={im,nombre,mir,x:bx-Av*64+(SPR_DX[nombre]||0),y:by-im.height,c};
   if(e.t==='malecon'){ const w=aguaMalecon(e); if(w){ const [p0x,p0y]=proj(0,0),[p1x,p1y]=proj(w[0]*DJ_MAL,w[1]*DJ_MAL); q.x+=p1x-p0x; q.y+=p1y-p0y; } }   // el muro baja hacia el agua
@@ -1943,7 +1993,7 @@ function terrenoBase(i,j){return RIO[idx(i,j)]?'rio':(i+j)%2?'temporal':'riego';
 function validarFant(){
   fant.motivo=puede(sel,fant.i,fant.j,fant.flip);
   const d=DEF[sel];
-  const cr=costoReal(sel), cb=costoDe(sel), nm=D0({t:sel,cult:selCult,min:selMin,rub:selRub,enf:selEnf}).nom; $('cMsg').textContent=fant.motivo||(mov?`Mover ${nombreDe(mov.e)} · ${dinero(mov.c)}`:null)||`${nm} · ${cr<cb?(S.bono?(cr?dinero(cr)+' con carta':'gratis por carta'):dinero(cr)+' con descuento'):dinero(cb)}`; $('cMsg').className='msg'+(fant.motivo?' mal':'');
+  const cr=costoReal(sel,fant?(()=>{const [A_,B_]=huella(DEF[sel],fant.flip); return [fant.i+A_/2,fant.j+B_/2];})():null), cb=costoDe(sel), nm=D0({t:sel,cult:selCult,min:selMin,rub:selRub,enf:selEnf}).nom; $('cMsg').textContent=fant.motivo||(mov?`Mover ${nombreDe(mov.e)} · ${dinero(mov.c)}`:null)||`${nm} · ${cr<cb?(S.bono?(cr?dinero(cr)+' con carta':'gratis por carta'):dinero(cr)+' con descuento'):dinero(cb)}`; $('cMsg').className='msg'+(fant.motivo?' mal':'');
   $('cOk').disabled=!!fant.motivo; $('colocar').hidden=false;
 }
 function elegirCultivo(alElegir){
@@ -2086,7 +2136,7 @@ const ORDEN={vivienda:['humilde','media','buena','buenab','departamentos','vecin
  publica:['calle','autobus','comandancia','panteon','basura','agua','subestacion','presa','prision'],
  social:['canchas','kiosco','escuela','clinica','iglesia','universidad','estadio'],
  produccion:['parcela','aserradero','mina','muelle','engorda','granja','veterinaria','bodega','agro','minaind'],
- comercio:['tacos','minisuper','malecon','palapa','cafe','sushi','mercado','ecoturismo','hotel','hoteltorre','hotelflamingo'],
+ comercio:['tacos','panaderia','papeleria','carniceria','gym','minisuper','muebles','spa','malecon','palapa','cafe','sushi','mercado','herreria','estetica','carpinteria','taller','lecheria','ecoturismo','hotel','hoteltorre','hotelflamingo'],
  industria:['empacadora','rastro','congeladora','fabrica']};
 function lista(){
   const O=ORDEN[cat]||[], pos=k=>{const n=O.indexOf(k); return n<0?100+(DEF[k].costo||0)/1000:n;};
@@ -2129,6 +2179,7 @@ async function jugarMJ(e){ const [tipo]=mjDe(e); if(e.mj===S.mes) return; e.mj=S
   if(r.k==='dinero'){ const [m,top]=conTope(r.v); S.dinero+=m; aviso(`${r.txt}${top?' (llegó al tope)':''}: entra a la caja`,3200); }
   else { e.bono={mes:S.mes,pct:r.v}; aviso(`${nombreDe(e)}: ${r.txt}`,3200); }
   recalcular(); hud(); efectos(); guardarPronto(); ficha(); }
+function costoPintar(e){ return Math.max(5,Math.round(D0(e).costo*.1)); }
 function ficha(){
   const e=elegido, f=$('ficha'); if(!e){f.hidden=true;return;}
   const d=D(e), c=S.calc; const [fac,nota]=factorDe(e);
@@ -2152,6 +2203,8 @@ function ficha(){
   if(nota) filas.push(['Nota',nota]);
   if(e.bono&&e.bono.mes===S.mes) filas.push(['Bono del mes',`<span style="color:var(--bien)">+${Math.round(e.bono.pct*100)}% por ${e.t==='parcela'?'el riego':'alimentar al ganado'}</span>`]);
   if(d.contamina) filas.push(['Ojo','Huele: baja la aprobación de casas cercanas']);
+  if(d.efecto) filas.push(['Efecto',d.efecto]);
+  if(d.pinta&&e.color) filas.push(['Fachada',(PINTURAS.find(p=>p[0]===e.color)||[,'Original'])[1]]);
   const tiene=Object.keys(e.mej||{}).map(k=>MEJORAS[k].nom);
   if(tiene.length) filas.push(['Mejoras',tiene.join(', ')]);
   const disp=mejorasDe(e);
@@ -2161,9 +2214,19 @@ function ficha(){
   ${disp.length?`<div class="mejoras"><span class="t">Mejoras disponibles</span>${disp.map(k=>{const m=MEJORAS[k], cst=costoMejora(e,k); return `<button class="btn" data-mej="${k}" ${S.dinero<cst?'disabled':''}><b>${m.nom}</b><span>${m.txt} · ${dinero(cst)}</span></button>`;}).join('')}</div>`:''}
   ${e.dano?`<div class="acc"><button class="btn btn-sol" id="fRep" ${S.dinero<costoReparar(e)?'disabled':''}>Reparar · ${dinero(costoReparar(e))}</button></div>`:''}
   ${mjDe(e)?`<div class="acc"><button class="btn btn-sol" id="fMJ" ${e.mj===S.mes||e.dano?'disabled':''}>${mjDe(e)[1]}${e.mj===S.mes?' · ya este mes':''}</button></div>`:''}
+  ${d.pinta&&!e.dano&&IMG[mascaraDe(d.spr)]?`<div class="acc pinta" id="fPintaBox"><button class="btn" id="fPinta">Pintar fachada · ${dinero(costoPintar(e))}</button></div>`:''}
   <div class="acc"><button class="btn" id="fCerrar">Cerrar</button>${e.t==='parcela'?'<button class="btn" id="fCult">Cambiar cultivo</button>':''}${e.t==='fabrica'?'<button class="btn" id="fRub">Cambiar rubro</button>':''}${e.t==='universidad'?'<button class="btn" id="fEnf">Cambiar enfoque</button>':''}${e.t!=='presa'?'<button class="btn" id="fMov">Mover</button>':''}${e.t!=='palacio'?'<button class="btn" id="fDem">Demoler</button>':''}</div>`;
   f.hidden=false;
-  $('fCerrar').onclick=()=>{elegido=null;f.hidden=true;pedir();};
+  $('fCerrar').onclick=()=>{ delete e._prevColor; elegido=null;f.hidden=true;pedir();};
+  if($('fPinta')) $('fPinta').onclick=()=>{ const cst=costoPintar(e), box=$('fPintaBox'); let sel=e.color||'';
+    const dib=()=>{ box.innerHTML=`<div class="paleta">${[['','Original','']].concat(PINTURAS).map(([k,n,h])=>`<button class="pint${k===sel?' on':''}" data-pint="${k}" title="${n}" aria-label="${n}" style="${h?`background:${h}`:''}">${h?'':'↺'}</button>`).join('')}</div>
+      <small class="pnom">${(PINTURAS.find(p=>p[0]===sel)||[,'Color original'])[1]}</small>
+      <div class="fila"><button class="btn" id="fPNo">Cancelar</button><button class="btn btn-sol" id="fPOk" ${sel===(e.color||'')||S.dinero<cst?'disabled':''}>Pintar · ${dinero(cst)}</button></div>`;
+      box.querySelectorAll('[data-pint]').forEach(b=>b.onclick=()=>{ sel=b.dataset.pint; e._prevColor=sel||null; pedir(); dib(); });
+      $('fPNo').onclick=()=>{ delete e._prevColor; pedir(); ficha(); };
+      $('fPOk').onclick=()=>{ if(S.dinero<cst) return; S.dinero-=cst; delete e._prevColor; if(sel) e.color=sel; else delete e.color; recalcular(); hud(); guardarPronto(); pedir(); ficha();
+        aviso(sel?`${nombreDe(e)} quedó ${(PINTURAS.find(p=>p[0]===sel)||[,''])[1].toLowerCase()}`:`${nombreDe(e)} volvió a su color original`); }; };
+    dib(); };
   const renombrar=()=>{ const t=f.querySelector('.titf'); t.innerHTML=`<input id="fNomIn" maxlength="28" value="${esc(nombreDe(e))}" aria-label="Nuevo nombre"><button class="btn mini2" id="fNomOk">✓</button>`;
     const inp=$('fNomIn'); inp.focus(); inp.select();
     const ok=()=>{ const v=inp.value.trim().replace(/\s+/g,' '); e.nombre=(v&&v!==d.nom)?v:undefined; guardarPronto(); ficha(); aviso(v?`Ahora se llama “${v}”`:'Se quitó el nombre'); };
@@ -3507,6 +3570,7 @@ function reporte(r,listo){
   if(c.olor>.2) chips.push(['mal','Malos olores cerca de colonias']);
   if(c.bal<0) chips.push(['mal','Gastas más de lo que entra']);
   for(const t of r.terminados||[]) chips.push(['bien',`Terminó: ${t}`]);
+  for(const [n,v] of r.bonosEd||[]) chips.push(["bien",`${n}: aprobación +${v}`]);
   if((r.talas||[]).length) chips.push(['',`El aserradero taló ${r.talas.length} parcela${r.talas.length>1?'s':''} de monte`]);
   if(S.deli>45) chips.push(['mal',`Delincuencia alta (${Math.round(S.deli)}): construye una comandancia`]);
   if(S.mana>40) chips.push(['mal',`La maña cobra piso (${Math.round(S.mana)})`]);
@@ -4536,8 +4600,8 @@ const MISIONES=[
   objetivo:{txt:'Exporta tomate por tren o barco durante 12 meses y gana la elección',meta:12},
   estrellas:[{txt:'En la playa Ceuta, solo el campamento tortuguero'},{txt:'Una empacadora con segundo turno'},{txt:'Levantar el Monumento a la Cruz del Perdón'}],
   mes:c=>{ const m=S.mision; if(prodTomate()>0&&exportaHort()) m.cuenta=(m.cuenta||0)+1;
-    const ch=[]; if(S.eds.some(e=>e.t==='cruz')){ S.apr=clamp(S.apr+1,1,99); ch.push(['bien','La Cruz del Perdón: orgullo del pueblo (aprobación +1)']); }
-    if(S.eds.some(e=>e.t==='tortugas'&&enCeuta(e.i+1,e.j+1))){ S.apr=clamp(S.apr+1,1,99); ch.push(['bien','Campamento tortuguero en Ceuta: la gente lo agradece (aprobación +1)']); }
+    const ch=[]; if(S.eds.some(e=>e.t==='cruz')){ const v=bonoApr('cruz',1); ch.push(['bien',`La Cruz del Perdón: orgullo del pueblo (aprobación +${v<1?v.toFixed(1):v})`]); }
+    if(S.eds.some(e=>e.t==='tortugas'&&enCeuta(e.i+1,e.j+1))){ const v=bonoApr('tortugas',1); ch.push(['bien',`Campamento tortuguero en Ceuta: la gente lo agradece (aprobación +${v<1?v.toFixed(1):v})`]); }
     const n=edificiosEnCeuta().length; if(n){ m.ceutaRota=true; S.apr=clamp(S.apr-n,1,99); ch.push(['mal',`Playa Ceuta: ${n} edificio${n>1?'s':''} en el santuario de tortugas (aprobación −${n})`]); } return ch; },
   avance:()=>{ const m=S.mision; return `Tomate exportado: ${Math.min(m.cuenta||0,12)} de 12 meses`; },
   logrado:()=>(S.mision.cuenta||0)>=12,
@@ -4713,8 +4777,8 @@ function iniciar(nueva){
   if(Radio.quiereSonar()&&!Radio.on) try{Radio.encender();}catch(e){}
 }
 function cargarSprites(){
-  const FLIP=['departamentos','vecindad','unidad','palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
-  const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-loco-atras','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.keys(CULT).map(k=>'cult-'+k)))];
+  const FLIP=['departamentos','vecindad','unidad','estetica','taller','herreria','carpinteria','lecheria','muebles','gym','spa','papeleria','carniceria','panaderia','palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
+  const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-loco-atras','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.values(DEF).filter(d=>d.pinta).flatMap(d=>[d.spr.replace(/-a$/,'-m'),d.spr.replace(/-a$/,'-fm')]),Object.keys(CULT).map(k=>'cult-'+k)))];
   let listos=0;
   return Promise.all(nombres.map(n=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[n]=im;listos++;$('cargaTxt').textContent=`Cargando piezas… ${listos} de ${nombres.length}`;res();};im.onerror=()=>{listos++;res();};im.src=`sprites/${n}.png`;})));
 }
@@ -4732,7 +4796,7 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={reconstruirOcc:()=>reconstruirOcc(),elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={selEd:e=>{elegido=e; ficha();},reconstruirOcc:()=>reconstruirOcc(),elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 let pidaInstalar=null;
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
 window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
