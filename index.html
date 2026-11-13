@@ -1707,16 +1707,28 @@ function dibujarAgente(a){
 }
 // ---------- tren de carga FierroSin: cruza el municipio por la vía ----------
 const TREN={ini:0,s:-6,fase:'fuera',espera:6,vagones:3,on:false,t:0,v:0,largo:8};
-const PIEZA={loco:{ax:144.8,ay:211.6,largo:2.4},locoAtras:{ax:144.8,ay:211.6},tanque:{ax:64.8,ay:136.3,largo:1.4},chiepe:{ax:186.7,ay:172.5,largo:3.2}}, KT=.67;
+const PIEZA={loco:{ax:144.8,ay:211.6,largo:2.4},locoAtras:{ax:135.4,ay:185.5},tanque:{ax:64.8,ay:136.3,largo:1.4},refri:{ax:97.5,ay:125.3,largo:2.08},furgon:{ax:97.5,ay:125.4,largo:2.08},gondola:{ax:97.5,ay:124.9,largo:2.08},plataforma:{ax:97.5,ay:138.7,largo:2.08},tolva:{ax:91,ay:114.5,largo:1.95},cabus:{ax:73,ay:85.1,largo:1.56},chiepe:{ax:186.7,ay:172.5,largo:3.2}}, KT=.67;
 function tPara(){ const c=S&&S.eds&&S.eds.find(e=>e.t==='chepe'); return c?c.j+3.7:VIA_FIN+.8; }   // con la terminal, los vagones quedan junto al andén
 // llega de la sierra con la locomotora por delante, se detiene en la estación, carga y regresa con la locomotora de cola por delante
-function trenSalir(extra){ if(viaCortada()){ TREN.on=false; TREN.espera=20; return; } let ini=VIA_FIN; while(ini>0&&PROP[idx(VIA_I,ini-1)]) ini--; TREN.ini=Math.max(0,ini-3); TREN.vagones=2+Math.floor(Math.random()*3)+(extra||0); TREN.s=TREN.ini-1; TREN.on=true; TREN.fase='llega'; TREN.v=1.3; }
+// el tren se arma con lo que produce el pueblo: tolvas de grano, plataformas con madera o tractores, góndolas de mineral, refrigerados, tanques y furgones; el cabús va al final
+function armarTren(n){ const cu=t=>S.eds.filter(e=>e.t===t&&!e.dano).length;
+  const P={tolva:cu('parcela')*.6+cu('bodega')*3+cu('agro')*3, plataforma:cu('aserradero')*3+cu('carpinteria')*2+cu('fabrica')*2+cu('agro'),
+    gondola:cu('mina')*3+cu('minaind')*5, tanque:1.5+cu('fabrica'), refri:(cu('engorda')+cu('rastro')+cu('muelle')+cu('granja')+cu('lecheria')+cu('empacadora'))*2+cu('congeladora')*3,
+    furgon:2+cu('empacadora')+S.eds.filter(e=>D0(e).cat==='comercio').length/5};
+  const tot=Object.values(P).reduce((a,b)=>a+b,0), out=[];
+  for(let k=0;k<n;k++){ let r=Math.random()*tot; for(const [t,v] of Object.entries(P)){ r-=v; if(r<=0){ out.push(t); break; } } if(out.length<=k) out.push('furgon'); }
+  out.push('cabus'); return out; }
+function trenSalir(extra){ if(viaCortada()){ TREN.on=false; TREN.espera=20; return; } let ini=VIA_FIN; while(ini>0&&PROP[idx(VIA_I,ini-1)]) ini--; TREN.ini=Math.max(0,ini-3); TREN.vagones=2+Math.floor(Math.random()*3)+(extra||0); TREN.comp=armarTren(Math.min(TREN.vagones,9)); TREN.s=TREN.ini-1; TREN.on=true; TREN.fase='llega'; TREN.v=1.3; }
 function piezasTren(){ const l=[]; if(!TREN.on) return l; const c0=TREN.s-1.2;
   l.push({k:'tren',p:'loco',wx:VIA_I+.5,wy:c0,largo:2.4,dj:1});
   const pas=S&&S.mision&&S.mision.id==='ahome';   // en Ahome jala vagones de pasajeros de El Chiepe
   const V=pas?{p:'chiepe',L:3.2,pri:2.9,sig:3.3,fin:2.9,max:3}:{p:'tanque',L:1.4,pri:2.03,sig:1.45,fin:2.03,max:9};
-  let c=c0; for(let n=0;n<Math.min(TREN.vagones,V.max);n++){ c=n?c-V.sig:c0-V.pri; l.push({k:'tren',p:V.p,wx:VIA_I+.5,wy:c,largo:V.L,dj:1}); }
-  c-=V.fin; l.push({k:'tren',p:'loco',wx:VIA_I+.5,wy:c,largo:2.4,dj:-1});
+  let c=c0;
+  if(pas){ for(let n=0;n<Math.min(TREN.vagones,V.max);n++){ c=n?c-V.sig:c0-V.pri; l.push({k:'tren',p:V.p,wx:VIA_I+.5,wy:c,largo:V.L,dj:1}); } c-=V.fin; }
+  else { if(!TREN.comp) TREN.comp=armarTren(Math.min(TREN.vagones,9)); let ant=2.4;
+    for(const p of TREN.comp){ const L=(PIEZA[p]&&IMG['tren-'+p])?PIEZA[p].largo:1.4, q=IMG['tren-'+p]?p:'tanque'; c-=ant/2+L/2+(ant===2.4?.13:.05); l.push({k:'tren',p:q,wx:VIA_I+.5,wy:c,largo:L,dj:1}); ant=L; }
+    c-=ant/2+1.2+.13; }
+  l.push({k:'tren',p:'loco',wx:VIA_I+.5,wy:c,largo:2.4,dj:-1});
   TREN.largo=TREN.s-(c-1.2);
   const pz=puenteNegro(); if(pz){ const lado=ladoPuente(pz);   // sobre el puente: encima de la cubierta y debajo de la armadura de enfrente
     for(const p of l) p.caja=[lado>0?pz.i+2.02:pz.i-.42,p.wy-p.largo/2,.4,p.largo];
@@ -1741,7 +1753,7 @@ function dibujarVagon(a){
   // la locomotora que se aleja de la cámara se dibuja de espaldas, con la punta hacia donde avanza (sprite tren-loco-atras: punta arriba a la derecha)
   const imA=a.p==='loco'&&IMG['tren-loco-atras'];
   if(imA){ const [x0,y0]=proj(a.wx,a.wy), [x1,y1]=proj(a.wx,a.wy+a.dj);
-    if(y1<y0){ const PA=PIEZA.locoAtras; if(x1<x0){ g.scale(-1,1); } g.drawImage(imA,-PA.ax*k,-PA.ay*k,imA.width*k,imA.height*k); g.restore(); g.globalAlpha=1; return; } }
+    if(y1<y0){ const PA=PIEZA.locoAtras, iF=x1<x0&&IMG['tren-loco-atras-f']; if(iF) g.drawImage(iF,-(iF.width-PA.ax)*k,-PA.ay*k,iF.width*k,iF.height*k); else { if(x1<x0) g.scale(-1,1); g.drawImage(imA,-PA.ax*k,-PA.ay*k,imA.width*k,imA.height*k); } g.restore(); g.globalAlpha=1; return; } }
   if(imF) g.drawImage(imF,-(im.width-P.ax)*k,-P.ay*k,w,h); else { if(espejo) g.scale(-1,1); g.drawImage(im,-P.ax*k,-P.ay*k,w,h); }
   g.restore(); g.globalAlpha=1;
 }
@@ -4790,7 +4802,7 @@ function iniciar(nueva){
 }
 function cargarSprites(){
   const FLIP=['departamentos','vecindad','unidad','estetica','taller','herreria','carpinteria','lecheria','muebles','gym','spa','papeleria','carniceria','panaderia','palacio','iglesia','escuela','empacadora','congeladora','bodega','aserradero','hotel','palapa','comandancia','estadio','presa','muelle','kiosco','engorda','agro','panteon','veterinaria','sushi','cafe','clinica','granja','mercado','rastro','minisuper','agua','prision','tacos','tortugas','cruz'];
-  const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-loco-atras','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.values(DEF).filter(d=>d.pinta).flatMap(d=>[d.spr.replace(/-a$/,'-m'),d.spr.replace(/-a$/,'-fm')]),Object.keys(CULT).map(k=>'cult-'+k)))];
+  const nombres=[...new Set(Object.values(DEF).flatMap(d=>[d.spr,d.trasera,...(d.variantes||[])]).filter(Boolean).concat(Object.keys(MINERAL).map(k=>'edif-mina-'+k),Object.keys(RUBRO).flatMap(k=>[`edif-fabrica-${k}-a`,`edif-fabrica-${k}-f`]),['veh-camaronero-a','veh-barco-carga-a','veh-gn','veh-marina','veh-mana-1','veh-mana-2','veh-mana-3','gente','tren-loco','tren-loco-f','tren-loco-atras','tren-loco-atras-f','tren-refri','tren-refri-f','tren-furgon','tren-furgon-f','tren-tolva','tren-tolva-f','tren-gondola','tren-plataforma','tren-cabus','tren-tanque','tren-chiepe','carro-sol','carro-sol-f','carro-luna','carro-luna-f','carro-estrellas','carro-estrellas-f','edif-puentenegro-frente','monte-verde','monte-desierto','monte-sierra'],FLIP.map(n=>`edif-${n}-f`),Object.values(DEF).filter(d=>d.pinta).flatMap(d=>[d.spr.replace(/-a$/,'-m'),d.spr.replace(/-a$/,'-fm')]),Object.keys(CULT).map(k=>'cult-'+k)))];
   let listos=0;
   return Promise.all(nombres.map(n=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[n]=im;listos++;$('cargaTxt').textContent=`Cargando piezas… ${listos} de ${nombres.length}`;res();};im.onerror=()=>{listos++;res();};im.src=`sprites/${n}.png`;})));
 }
