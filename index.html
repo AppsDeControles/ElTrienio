@@ -516,7 +516,13 @@ const DEF={
  fabrica:{nom:'Fábrica',cat:'industria',spr:'edif-fabrica-alimentos-a',A:4,B:4,costo:700,mant:6,empleos:35,ingreso:30,fabrica:true,tec:'fabrica',contamina:3,lote:'ind',desc:'Elige el rubro. Necesita egresados de la universidad.'},
  minaind:{nom:'Mina industrial',cat:'produccion',spr:'edif-minaind-a',A:4,B:4,costo:950,mant:7,empleos:30,mina:true,ind:true,tec:'minaind',lote:'roca',contamina:3,desc:'Va sobre el monte (4 × 4). Paga casi el triple que una mina.'},
  ecoturismo:{nom:'Cabañas de ecoturismo',cat:'comercio',spr:'edif-ecoturismo-a',A:3,B:3,costo:320,mant:2.5,empleos:9,ingreso:16,turismo:true,bosque:true,lote:'tierra',desc:'Cabañas en el bosque: rinden según el monte que quede alrededor. Si el aserradero tala, pierden turistas.'},
- palacio:{nom:'H. Ayuntamiento',cat:null,spr:'edif-palacio-a',A:3,B:3,costo:0,mant:15,empleos:10,lote:'plaza'}
+ lamina:{nom:'Casa de lámina',cat:'vivienda',spr:'edif-lamina-a',A:1,B:1,costo:10,casas:5,predial:.3,lote:'tierra',desc:'La casa más barata: paredes y techo de lámina. Sirve para poblar rápido.'},
+ cabana:{nom:'Cabaña de troncos',cat:'comercio',spr:'edif-cabana-a',A:1,B:1,costo:60,mant:.5,empleos:1,ingreso:4,turismo:true,monteOk:true,lote:'tierra',desc:'Cabaña para turistas. Rinde 30% más junto al agua o al monte.'},
+ embarcadero:{nom:'Embarcadero de pesca',cat:'comercio',spr:'edif-embarcadero-a',A:2,B:2,costo:140,mant:1,empleos:4,ingreso:7,turismo:true,suelo:'orilla',desc:'Muelle de madera con lanchas para la pesca deportiva. Va en la orilla del río, de la presa o del mar.'},
+ papalote:{nom:'Papalote y pozo',cat:'produccion',spr:'edif-papalote-a',A:1,B:1,costo:40,mant:.2,monteOk:true,lote:'tierra',desc:'Agua de pozo para las parcelas a 5 casillas o menos: rinden 10% más y aguantan la sequía y la helada.'},
+ acopio:{nom:'Centro de acopio',cat:'produccion',spr:'edif-acopio-a',A:3,B:3,costo:260,mant:2,empleos:6,ingreso:2,almacen:150,lote:'ind',desc:'Bodega y dos silos: el maíz y el sorgo del municipio rinden 15% más. En Guasave guarda hasta $150 mil de grano.'},
+ silos:{nom:'Silos de granos',cat:'produccion',spr:'edif-silos-a',A:3,B:3,costo:480,mant:3,empleos:8,ingreso:3,almacen:450,lote:'ind',desc:'Ocho silos con bandas: el maíz y el sorgo del municipio rinden 15% más. En Guasave guardan hasta $450 mil de grano.'},
+ palacio:{nom:'H. Ayuntamiento',cat:'publica',solo:'jjrios',spr:'edif-palacio-a',A:3,B:3,costo:300,mant:15,empleos:10,lote:'plaza',desc:'La sede del gobierno municipal: sin él no se cobra predial.'}
 };
 const CULT={
  maiz:{cnom:'Maíz',costo:45,empleos:3,ingreso:7,mant:.5,riego:false,temp:[6,7,8,9,10,11],alta:1.5,baja:.6,info:'Aguanta el temporal. Cosecha de junio a noviembre.'},
@@ -631,7 +637,7 @@ function calcRutas(){ for(const r of S.rutas) r._c=trazar(r.paradas); }
 function calidad(r){return r._c? Math.min(1, r.buses*2/r.paradas.length):0;}
 function cubreRuta(r,c){return r.paradas.some(p=>dist([p[0]+.5,p[1]+.5],c)<=5);}
 const RECURSOS=[['agri','Agricultura'],['gana','Ganadería'],['mar','Pesca y mar'],['tur','Turismo'],['com','Comercio local'],['mad','Madera'],['min','Minería'],['ind','Industria'],['otro','Otros negocios']];
-function recursoDe(e){const t=e.t; if(t==='mina'||t==='minaind') return 'min'; if(t==='fabrica') return 'ind'; if(['parcela','agro','bodega','empacadora','presa'].includes(t)) return 'agri'; if(['engorda','rastro','veterinaria'].includes(t)) return 'gana';
+function recursoDe(e){const t=e.t; if(['acopio','silos','papalote'].includes(t)) return 'agri'; if(t==='cabana'||t==='embarcadero') return 'tur'; if(t==='mina'||t==='minaind') return 'min'; if(t==='fabrica') return 'ind'; if(['parcela','agro','bodega','empacadora','presa'].includes(t)) return 'agri'; if(['engorda','rastro','veterinaria'].includes(t)) return 'gana';
   if(['muelle','congeladora','granja'].includes(t)) return 'mar'; if(['hotel','palapa','malecon'].includes(t)) return 'tur'; if(['minisuper','cafe','sushi','mercado','estetica','taller','herreria','carpinteria','lecheria','muebles','gym','papeleria','carniceria','panaderia'].includes(t)) return 'com'; if(t==='spa') return 'tur'; if(t==='aserradero') return 'mad'; return 'otro';}
 const SERV_NOM={salud:'Salud',educacion:'Escuela',seguridad:'Seguridad',diversion:'Diversión',abasto:'Abasto',deporte:'Deporte',agua:'Agua potable',limpieza:'Recolección de basura'};
 
@@ -816,6 +822,7 @@ function puede(tipo,i,j,flip){
   if(tipo==='chepe'&&(flip||i!==CHIEPE[0]||j!==CHIEPE[1])) return 'La terminal va en la estación del tren, sobre la vía (marcada)';
   if(tipo==='puentenegro'&&S.mision&&S.mision.id==='culiacan'&&(flip||i!==CLN_PUENTE[0]||j!==CLN_PUENTE[1])) return 'El Puente Negro va donde la vía cruza el río Culiacán (marcado)';
   if(d.tec && !tieneTec(d.tec)) return 'Primero investiga: '+tecPor(d.tec).nom;
+  if(tipo==='palacio'&&cuantos('palacio')>=1) return 'Ya tienes H. Ayuntamiento';
   if(d.presa){ if(S.eds.filter(e=>e.t==='presa').length>=MAX_PRESAS) return `Máximo ${MAX_PRESAS} presas`;
     if(flip||!(S.embalses||[]).some(e=>e.i===i&&e.j===j)) return 'La presa va en el embalse marcado'; }
   if(d.unico && cuantos(tipo)>=maxUnico()) return maxUnico()>1?`Máximo ${maxUnico()}: uno por cada región de tu municipio`:'Solo uno por región: compra más terreno para poner otro';
@@ -833,6 +840,7 @@ function puede(tipo,i,j,flip){
     if(t==='mar') mar++; else if(t==='playa') playa++; else {tierra++; if(t==='monte') monte++;}
   }
   const tot=A*B;
+  if(monte&&S.mision&&S.mision.id==='choix'&&!d.monteOk&&!d.mina&&!d.monte&&!d.bosque) return 'En la sierra de Choix no se construye sobre el monte (solo cabañas, papalotes, aserraderos y minas)';
   for(let a=-1;a<=A;a++)for(let b=-1;b<=B;b++){ if((a===-1||a===A)&&(b===-1||b===B)) continue; if(a>=0&&a<A&&b>=0&&b<B) continue;
     const x=i+a,y=j+b; if(!dentro(x,y)) continue; const o=occ[idx(x,y)]; if(!o) continue; const t2=(S.eds.find(z=>z.id===o)||{}).t;
     if(tipo==='malecon'&&t2!=='malecon') return 'Junto al malecón no puede haber edificios: deja el cuadro libre o pon una calle';
@@ -841,6 +849,7 @@ function puede(tipo,i,j,flip){
   const suelo=d.suelo||'tierra';
   if(suelo==='malecon'){ if(playa||mar) return 'El malecón va en tierra firme, no sobre la arena'; if(!vecinos.includes('playa')&&!vecinos.includes('rio')&&!vecinos.includes('mar')) return 'El malecón va frente al mar o a la orilla del río'; return ''; }
   if(suelo==='mar'){ if(mar<tot) return 'Va sobre el mar'; if(!vecinos.includes('playa')) return 'Debe tocar la playa'; return ''; }
+  if(suelo==='orilla'&&!vecinos.some(v=>v==='rio'||v==='mar'||v==='playa')) return 'Va en la orilla: debe tocar el río, la presa o el mar';
   if(mar) return 'No se puede construir en el mar';
   if(suelo==='playa'){ if(playa<tot) return 'Va sobre la arena de la playa'; return ''; }
   if(suelo==='costa'){ let cerca=false; for(let a=-3;a<A+3&&!cerca;a++)for(let b=-3;b<B+3;b++) if(dentro(i+a,j+b)&&S.ter[idx(i+a,j+b)]==='playa'){cerca=true;break;} if(!playa && !cerca) return 'Debe estar en la costa'; }
@@ -947,11 +956,11 @@ function recalcular(){
   olor/=nc;
   // dinero
   const ing=[], gas=[];
-  const part=(30+.6*S.pob)*S.mods.part*(perk(9)?1.08:1)*(1+.02*atr('fed')); ing.push(['Participaciones federales',part]);
-  const pred=casas.reduce((s,e)=>s+D(e).predial*e._lujo,0)*fImp('predial'); if(pred>0) ing.push(['Predial',pred]);
+  const part=(30+.6*S.pob)*S.mods.part*(perk(9)?1.08:1)*(1+.02*atr('fed')); ing.push(['Participaciones federales',part*factorPart()]);
+  const pred=casas.reduce((s,e)=>s+D(e).predial*e._lujo,0)*fImp('predial')*(S.eds.some(e=>e.t==='palacio')?1:0); if(pred>0) ing.push(['Predial',pred]);
   const ef=t=>S.efectos.some(x=>x.tipo===t);
   const gruposColor=contarGruposColor();
-  let neg=0; const porRec={}; for(const e of S.eds) e._ing=0;
+  let neg=0; const porRec={}; for(const e of S.eds) e._ing=0; GRANO.mes=0;
   // universidades: bono por enfoque y egresados para las fábricas
   const unis=S.eds.filter(e=>e.t==='universidad'), nEnf=k=>unis.filter(u=>(u.enf||'inv')===k).length;
   const bonoU={}; for(const r of ['agri','gana','mar','min']) bonoU[r]=1+Math.min(.3,.1*nEnf('basica'));
@@ -972,12 +981,12 @@ function recalcular(){
     if(!d.ingreso) continue; let f=llenado*factorDe(e)[0]*S.mods.negocios*(1+.1*trans);
     if(d.turismo) f*=S.mods.turismo*factorCarnaval()*(1+.05*gruposColor);
     f*=tecF(e,d,recursoDe(e)); if(d.fabrica) f*=fEgr;
-    if((d.campo||d.agri||d.agroind)&&ef('inundacion')) f*=prog('seguro')?.8:.6; if((d.campo||d.agri||d.agroind)&&ef('sequia')) f*=prog('seguro')?.75:.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=prog('seguro')?.8:.6; if(sinLuz(e)) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
+    if((d.campo||d.agri||d.agroind)&&ef('inundacion')) f*=prog('seguro')?.8:.6; if((d.campo||d.agri||d.agroind)&&ef('sequia')&&!papaloteCerca(e)) f*=prog('seguro')?.75:.5; if((d.campo||d.agri||d.agroind)&&ef('plaga')) f*=prog('seguro')?.8:.6; if(sinLuz(e)) f*=.7; if(ef('desclic')&&recursoDe(e)==='com') f*=.95;
     if(ef('clausura')&&e.t==='granja') f=0;
     if(ef('huracan')&&(d.turismo||e.t==='muelle'||e.t==='congeladora'||e.t==='granja')) f=0;
     if(e.bono&&e.bono.mes===S.mes) f*=1+e.bono.pct;
     if(e.t==='dogos'&&S.eds.some(x=>x.t==='chepe'&&dist(centro(x),centro(e))<=8)) f*=1.3;     // bono del minijuego (riego o corral) de este mes
-    e._ing=d.ingreso*f; neg+=e._ing; const r=recursoDe(e); porRec[r]=(porRec[r]||0)+e._ing;}
+    f=bonoNorte(e,d,f); e._ing=d.ingreso*f; neg+=e._ing; const r=recursoDe(e); porRec[r]=(porRec[r]||0)+e._ing;}
   // comercio: la parte que va por tren o barco no entra este mes; se junta y se cobra después (y mejor pagada)
   let trenMes=0, marMes=0; const hayMuelle=S.eds.some(e=>e.t==='muelle');
   for(const e of S.eds){ if(!e._ing) continue; const b=bienDe(e); if(!b) continue; const p=repartoDe(b.k,hayMuelle); if(p.tierra>=100) continue;
@@ -1352,7 +1361,7 @@ function ordenar(lista){
 function dibujar(){
   pendiente=false; if(!S) return;
   g.setTransform(DPR,0,0,DPR,0,0);
-  g.fillStyle='#123A5C'; g.fillRect(0,0,VW,VH);
+  g.fillStyle=S&&S.mision&&S.mision.id==='choix'?'#2B2418':'#123A5C'; g.fillRect(0,0,VW,VH);
   g.imageSmoothingEnabled=cam.z<.98; g.imageSmoothingQuality='high';
   const [a0,a1,b0,b1]=rangoVisible(); const z=cam.z;
   for(let s=a0+b0;s<=a1+b1;s++) for(let a=a0;a<=a1;a++){const b=s-a; if(b<b0||b>b1) continue;
@@ -2145,11 +2154,11 @@ function requisitos(k,d){ const r=[];
   if(d.agri) r.push('Tierra de cultivo'); if(d.agroind) r.push('Tierra de riego'); if(d.necesita) r.push('Necesita '+DEF[d.necesita].nom.toLowerCase());
   if(d.fabrica) r.push('Necesita egresados'); if(d.unico) r.push(S&&maxUnico()>1?`Hasta ${maxUnico()}`:'Uno por región');
   return r.join(' · '); }
-const ORDEN={vivienda:['humilde','media','buena','buenab','departamentos','vecindad','unidad','residencial','lujo'],
- publica:['calle','autobus','comandancia','panteon','basura','agua','subestacion','presa','prision'],
+const ORDEN={vivienda:['lamina','humilde','media','buena','buenab','departamentos','vecindad','unidad','residencial','lujo'],
+ publica:['palacio','calle','autobus','comandancia','panteon','basura','agua','subestacion','presa','prision'],
  social:['canchas','kiosco','escuela','clinica','iglesia','universidad','estadio'],
- produccion:['parcela','aserradero','mina','muelle','engorda','granja','veterinaria','bodega','agro','minaind'],
- comercio:['tacos','panaderia','papeleria','carniceria','gym','minisuper','muebles','spa','malecon','palapa','cafe','sushi','mercado','herreria','estetica','carpinteria','taller','lecheria','ecoturismo','hotel','hoteltorre','hotelflamingo'],
+ produccion:['parcela','papalote','acopio','silos','aserradero','mina','muelle','engorda','granja','veterinaria','bodega','agro','minaind'],
+ comercio:['tacos','panaderia','papeleria','carniceria','gym','minisuper','muebles','spa','malecon','palapa','cafe','sushi','mercado','herreria','estetica','carpinteria','taller','lecheria','cabana','embarcadero','ecoturismo','hotel','hoteltorre','hotelflamingo'],
  industria:['empacadora','rastro','congeladora','fabrica']};
 function lista(){
   const O=ORDEN[cat]||[], pos=k=>{const n=O.indexOf(k); return n<0?100+(DEF[k].costo||0)/1000:n;};
@@ -3564,6 +3573,7 @@ $('pasar').onclick=async()=>{
   for(const ev of r.eventos) await resolverReto(ev);
   if(S.mes<=36&&calI(S.mes)===0&&S.ramosAnio!==Math.floor((S.mes-1+(S.ofs||0))/12)+1) await gobierno('fondo',true);
   if(S.mision&&S.mision.id==='mazatlan'&&S.mes<=36&&calI(S.mes)===1) await decidirCarnaval();
+  if(S.mision&&S.mision.id==='choix'&&S.mes<=36&&calI(S.mes)===MES_TORNEO) await decidirTorneo();
   if(S.mes===30&&!S.campana) await iniciarCampana();
   if(S.mes<=36&&Math.random()<probCatastrofe()){ await jugarCarta(CATAS[Math.floor(Math.random()*CATAS.length)],{titulo:'¡CATÁSTROFE!'}); reponerAgentes(); }
   if(S.mes<=36) await jugarCarta(sacarCarta());
@@ -4546,7 +4556,69 @@ function panelCarnaval(){ const m=S.mision, falta=mesesCarnaval(), meta=CARNAVAL
    <span>Apartas cada mes</span><span class="pc"><button class="btn mini2" data-ap="-25" aria-label="Menos">−</button><b>${dinero(m.aporteC||0)}</b><button class="btn mini2" data-ap="25" aria-label="Más">+</button></span>
    <span>${falta?`Al llegar febrero (en ${falta} mes${falta>1?'es':''})`:'Este mes es el carnaval'}</span><span style="color:${proy>=meta?'var(--bien)':'var(--mal)'}">${dinero(proy)}${proy>=meta?' · alcanza para el grande':proy>=CARNAVAL.austero.costo?' · alcanza para el austero':' · no alcanza'}</span></div>`; }
 function carnavalHoy(){ const m=S&&S.mision; return m&&m.id==='mazatlan'&&m.carn&&m.carn.mes===S.mes?m.carn.nivel:null; }
-function factorCarnaval(){ const n=carnavalHoy(); return n?CARNAVAL[n].tur:1; }
+function factorCarnaval(){ const n=carnavalHoy(); return n?CARNAVAL[n].tur:factorTorneo(); }
+// ---------- misiones del norte ----------
+// Juan José Ríos: las 6 instituciones que traen las participaciones completas
+const INST_JJ=[['palacio','H. Ayuntamiento'],['comandancia','Comandancia'],['panteon','Panteón'],['agua','Junta de Agua'],['basura','Relleno sanitario'],['clinica','Centro de salud']];
+const tieneInst=t=>S.eds.some(e=>e.t===t&&!e.dano);
+function instJJ(){ return INST_JJ.filter(([t])=>tieneInst(t)).length; }
+function factorPart(){ return S&&S.mision&&S.mision.id==='jjrios'?.5+.5*instJJ()/6:1; }
+function panelJJ(){ return `<div class="cuenta"><span class="t">Instituciones · participaciones al ${Math.round(factorPart()*100)}%</span>${INST_JJ.map(([t,n])=>`<span>${tieneInst(t)?'✓':'○'} ${n}</span><span style="color:${tieneInst(t)?'var(--bien)':'var(--mal)'}">${tieneInst(t)?'Lista':dinero(DEF[t].costo)}</span>`).join('')}</div>`; }
+// Guasave: precio del grano por mes y almacén
+const GRANO={mes:0}, PRECIO_GRANO=[1.1,1.2,1.3,1.4,1.4,1.3,1.1,1,.9,.8,.7,.8];
+const esGrano=e=>e.t==='parcela'&&(e.cult==='maiz'||e.cult==='sorgo');
+function precioGrano(){ return PRECIO_GRANO[calI(S.mes)]; }
+function capAlmacen(){ return S.eds.reduce((s,e)=>s+(!e.dano&&D(e).almacen||0),0); }
+function papaloteCerca(e){ const d=D(e); if(!d.agri&&!d.campo) return false; const c=centro(e); return S.eds.some(p=>p.t==='papalote'&&!p.dano&&dist(centro(p),c)<=5); }
+function bonoNorte(e,d,f){
+  if(d.agri&&papaloteCerca(e)) f*=1.1;
+  if(esGrano(e)&&S.eds.some(x=>(x.t==='acopio'||x.t==='silos')&&!x.dano)) f*=1.15;
+  if(e.t==='cabana'&&contarCerca(centro(e),3,t=>t==='rio'||t==='mar'||t==='monte'?1:0)>=3) f*=1.3;
+  if(S.mision&&S.mision.id==='guasave'&&esGrano(e)&&f>0){ const m=S.mision;
+    if(m.guardar){ const v=d.ingreso*f; if((m.alm||0)+GRANO.mes+v<=capAlmacen()){ GRANO.mes+=v; return 0; } }
+    f*=precioGrano(); }
+  return f; }
+function partAgri(){ const c=S.calc||recalcular(); let t=0; for(const e of S.eds) if(recursoDe(e)==='agri') t+=e._ing||0; const m=S.mision||{};
+  const ex=GRANO.mes+(m.ventaMes&&m.ventaMes.mes===S.mes?m.ventaMes.v:0); return c.tIngBase+ex>0?(t+ex)/(c.tIngBase+ex):0; }
+function panelGrano(){ const m=S.mision, cap=capAlmacen(), p=precioGrano(), col=p>=1.2?'var(--bien)':p<1?'var(--mal)':'var(--sol)';
+  return `<div class="cuenta"><span class="t">Almacén de grano</span>
+   <span>Precio del maíz y sorgo este mes</span><span><b style="color:${col}">×${p.toFixed(1)}</b></span>
+   <span>Guardado</span><span>${dinero(Math.round(m.alm||0))} de ${dinero(cap)}</span>
+   <span>Si lo vendes hoy</span><span><b>${dinero(Math.round((m.alm||0)*p))}</b></span>
+   <span>La cosecha de este mes</span><span class="pc"><button class="btn mini2" data-acc="guardar" style="width:auto;padding:0 10px">${m.guardar?'Se guarda':'Se vende'}</button></span>
+   <span>${cap?'':'Construye un Centro de acopio o Silos para poder guardar'}</span><span class="pc"><button class="btn mini2" data-acc="vender" style="width:auto;padding:0 10px" ${m.alm>0?'':'disabled'}>Vender todo</button></span></div>
+   <p style="font-size:13px">${PRECIO_GRANO.map((x,k)=>`${MESES[k].slice(0,3)} ×${x}`).join(' · ')}</p>`; }
+function accionGrano(a){ const m=S.mision;
+  if(a==='guardar'){ if(!m.guardar&&!capAlmacen()){ aviso('Primero construye un Centro de acopio o Silos de granos'); return; } m.guardar=!m.guardar; aviso(m.guardar?'La cosecha de maíz y sorgo se guarda en el almacén':'La cosecha se vende al precio del mes'); }
+  if(a==='vender'&&m.alm>0){ const p=precioGrano(), v=Math.round(m.alm*p); S.dinero+=v; m.vendido=(m.vendido||0)+v; if(p>=1.4) m.topVenta=true;
+    m.ventaMes={mes:S.mes,v:(m.ventaMes&&m.ventaMes.mes===S.mes?m.ventaMes.v:0)+v}; m.alm=0; aviso(`Vendiste el grano guardado en ${dinero(v)} (precio ×${p.toFixed(1)})`,3600); } }
+// Choix: torneo de pesca en la presa Huites, cada marzo
+const TORNEO={
+ grande:{nom:'Torneo en grande',costo:300,apr:3,tur:1.5,txt:'Premios fuertes, lanchas de toda la región y transmisión en la radio. Las cabañas se llenan.'},
+ sencillo:{nom:'Torneo sencillo',costo:120,apr:1,tur:1.2,txt:'Un torneo de pescadores de la región con premio modesto.'},
+ nada:{nom:'Sin torneo',costo:0,apr:-4,tur:.9,txt:'Te ahorras el dinero, pero pescadores y restauranteros se quejan.'}};
+const MES_TORNEO=2;   // marzo
+function torneoHoy(){ const m=S&&S.mision; return m&&m.id==='choix'&&m.torneo&&m.torneo.mes===S.mes?m.torneo.nivel:null; }
+function contaminaLago(){ return S.eds.some(e=>e.t==='engorda'&&!e.dano&&contarCerca(centro(e),8,t=>t==='rio'?1:0)>0); }
+function factorTorneo(){ const n=torneoHoy(); if(!n) return 1; const T=TORNEO[n]; if(n==='nada') return T.tur;
+  let f=T.tur+.05*Math.min(4,S.eds.filter(e=>e.t==='cabana').length)+(S.eds.some(e=>e.t==='embarcadero')?.15:0); if(contaminaLago()) f*=.8; return f; }
+function decidirTorneo(){ return new Promise(fin=>{ const anio=Math.floor((S.mes-1)/12)+1, m=S.mision;
+  const op=k=>{ const c=TORNEO[k], no=c.costo>S.dinero;
+    return `<button class="btn opc2" data-tor="${k}" ${no?'disabled':''}><b>${c.nom}</b><span>${c.costo?'Cuesta '+dinero(c.costo):'Sin costo'} · aprobación ${c.apr>0?'+':''}${c.apr}</span><span style="font-weight:400">${c.txt}${no?' No te alcanza la caja.':''}</span></button>`; };
+  const cab=S.eds.filter(e=>e.t==='cabana').length, emb=S.eds.some(e=>e.t==='embarcadero');
+  modal(`<h2>TORNEO DE PESCA EN HUITES · AÑO ${anio}</h2><p>Llegó marzo y la presa Huites espera su torneo de lobina. ${emb?'Tu embarcadero recibe a los pescadores':'Sin embarcadero llegan menos pescadores'}${cab?` y tienes ${cab} cabaña${cab>1?'s':''} para hospedarlos`:''}.${contaminaLago()?' Ojo: el corral de engorda junto al lago ensucia el agua.':''} ¿Qué tan grande lo haces?</p><div class="opcs" style="width:100%">${['grande','sencillo','nada'].map(op).join('')}</div>`);
+  $('modal').querySelectorAll('[data-tor]').forEach(b=>b.onclick=()=>{ const k=b.dataset.tor, c=TORNEO[k];
+    S.dinero-=c.costo; S.apr=clamp(S.apr+c.apr,1,99); m.torneo={mes:S.mes,nivel:k}; if(k!=='nada') m.torneos=(m.torneos||0)+1; if(k==='grande') m.grandes=(m.grandes||0)+1;
+    cerrarModal(); recalcular(); hud(); guardarPronto();
+    aviso(k==='nada'?'Este año no hubo torneo: aprobación −4':`${c.nom}: lanchas en la presa todo marzo`,4200); fin(); }); }); }
+// el mar se vuelve el lago de la presa y la sierra se llena de monte
+function mapaChoix(){ const nM=ruido2(41), rio=[...(S.rio||[])];
+  for(let k=0;k<N*N;k++){ const i=k%N, j=(k/N)|0, t=S.ter[k];
+    const orilla=PLAYA_J-2+Math.round(2*Math.sin(i/5)+1.5*Math.sin(i/13+1));
+    if(t==='mar'||((t==='playa'||j>=orilla)&&!occ[k]&&t!=='calle')){ S.ter[k]='rio'; rio.push(k); }
+    else if(t==='playa') S.ter[k]='temporal';
+    else if((t==='temporal'||t==='riego'||t==='tierra')&&!occ[k]&&!(i>=OX&&i<OX+40&&j>=OY)&&nM(i/7,j/7)>-.05) S.ter[k]='monte'; }
+  S.rio=[...new Set(rio)]; marcarRio(); }
 function decidirCarnaval(){ return new Promise(fin=>{ const anio=Math.floor((S.mes-1)/12)+1, m=S.mision;
   const fondo=m.fondoC||0;
   const op=k=>{ const c=CARNAVAL[k], no=c.costo>S.dinero+fondo;
@@ -4704,10 +4776,41 @@ const MISIONES=[
   logrado:v=>S.pob>=300&&(v==null||v>=65),
   pinta:()=>{ if(!puenteNegro()) for(let a=0;a<2;a++)for(let b=0;b<4;b++) romboPantalla(CLN_PUENTE[0]+a,CLN_PUENTE[1]+b,modo==='construir'&&sel==='puentenegro'?'rgba(242,178,51,.25)':null,'rgba(242,178,51,.9)'); },
   estrellasOk:v=>{ const c=S.calc||recalcular(); return [S.eds.some(e=>e.t==='puentenegro'), c.cob.salud>=.8, S.deli<25]; }},
- {id:'jjrios',mun:'Juan José Ríos',reg:'Norte',lema:'Un municipio nuevo que hay que armar desde cero'},
+ // ---------- Juan José Ríos ----------
+ {id:'jjrios',mun:'Juan José Ríos',reg:'Norte',jugable:true,lema:'Un municipio nuevo que hay que armar desde cero',
+  intro:'Juan José Ríos es el municipio más joven de Sinaloa: se separó de Guasave y todavía no tiene ayuntamiento. Las colonias crecieron con casas de lámina y la gente espera que el primer gobierno levante las instituciones desde cero.',
+  regla:'Empiezas sin H. Ayuntamiento: mientras no lo construyas (Servicios públicos, $300 mil) no se cobra predial. La Federación te manda la mitad de las participaciones y completa el resto conforme levantas las 6 instituciones: Ayuntamiento, Comandancia, Panteón, Junta de Agua, Relleno sanitario y Centro de salud (la Junta de Agua y el relleno ya vienen investigados). Las casas de lámina son baratas para poblar rápido.',
+  objetivo:{txt:'Levanta las 6 instituciones y gana la elección',meta:6},
+  estrellas:[{txt:'Las 6 instituciones en el primer año'},{txt:'Llegar a 400 habitantes'},{txt:'Ganar sin pedir crédito'}],
+  inicio:()=>{ S.eds=S.eds.filter(e=>e.t!=='palacio'); for(const e of S.eds) if(e.t==='humilde') e.t='lamina'; reconstruirOcc();
+    for(const t of ['agua','basura']) if(!S.tec.hechas.includes(t)) S.tec.hechas.push(t); },
+  mes:c=>{ const m=S.mision; if((S.creditos||[]).length) m.credito=true; const n=instJJ(); m.cuenta=n; if(n>=6&&S.mes<=12) m.primerAnio=true; m.maxPob=Math.max(m.maxPob||0,S.pob);
+    const out=[]; if(!tieneInst('palacio')) out.push(['mal','Sin H. Ayuntamiento no se cobra predial']); if(n<6) out.push(['',`Participaciones al ${Math.round(factorPart()*100)}%: ${n} de 6 instituciones`]); return out; },
+  avance:()=>`Instituciones: ${instJJ()} de 6 · participaciones al ${Math.round(factorPart()*100)}%`,
+  hud:()=>`${instJJ()}/6`,
+  panel:()=>panelJJ(),
+  logrado:()=>instJJ()>=6,
+  estrellasOk:v=>[!!S.mision.primerAnio, Math.max(S.mision.maxPob||0,S.pob)>=400, !S.mision.credito]},
  {id:'salvador',mun:'Salvador Alvarado',reg:'Centro-norte',lema:'Guamúchil, cruce de carreteras'},
  {id:'sinaloa',mun:'Sinaloa',reg:'Centro-norte',lema:'Una de las villas más antiguas del estado'},
- {id:'guasave',mun:'Guasave',reg:'Norte',lema:'El valle de los granos'},
+ // ---------- Guasave ----------
+ {id:'guasave',mun:'Guasave',reg:'Norte',jugable:true,lema:'El granero de México',
+  intro:'Guasave es el corazón agrícola de Sinaloa: maíz y sorgo hasta donde alcanza la vista. Pero los coyotes compran la cosecha barata en otoño y la revenden cara en primavera. Si el municipio tiene dónde guardar el grano, la ganancia se queda aquí.',
+  regla:'El maíz y el sorgo se venden al precio del mes: en otoño baja hasta ×0.7 y en primavera sube hasta ×1.4. Con un Centro de acopio (guarda $150 mil) o Silos de granos ($450 mil) puedes guardar la cosecha y venderla cuando suba: toca 🎯. Una vez en el trienio cae una helada; los papalotes protegen las parcelas cercanas.',
+  objetivo:{txt:'Que la agricultura dé al menos 40% del ingreso y ganar la elección',meta:40},
+  estrellas:[{txt:'Vender grano guardado al precio más alto (×1.4)'},{txt:'Tener 15 parcelas'},{txt:'Un hotel o palapa en la playa Las Glorias'}],
+  inicio:()=>{ const m=S.mision; m.guardar=false; m.alm=0; m.heladaMes=[12,13,24,25][Math.floor(Math.random()*4)]; },
+  mes:c=>{ const m=S.mision, out=[], cap=capAlmacen();
+    if(m.guardar&&GRANO.mes>0){ const v=Math.min(GRANO.mes,Math.max(0,cap-(m.alm||0))); m.alm=(m.alm||0)+v; out.push(['bien',`Guardaste grano por ${dinero(Math.round(v))} · almacén ${dinero(Math.round(m.alm))} de ${dinero(cap)}`]); }
+    m.cuenta=Math.round(partAgri()*100);
+    if(S.mes===m.heladaMes){ S.efectos.push({tipo:'sequia',nom:'Helada',meses:2}); out.push(['mal','¡Helada en el valle! Las parcelas rinden la mitad 2 meses, salvo las que tienen un papalote cerca']); }
+    out.push([precioGrano()>=1.2?'bien':precioGrano()<1?'mal':'',`Precio del grano: ×${precioGrano().toFixed(1)}${m.alm>0?` · tienes ${dinero(Math.round(m.alm))} guardado`:''}`]); return out; },
+  avance:()=>`Agricultura: ${Math.round(partAgri()*100)}% del ingreso (meta 40%) · parcelas: ${S.eds.filter(e=>e.t==='parcela').length}`,
+  hud:()=>`${Math.round(partAgri()*100)}% · ×${precioGrano().toFixed(1)}`,
+  panel:()=>panelGrano(),
+  accion:a=>accionGrano(a),
+  logrado:()=>partAgri()>=.4,
+  estrellasOk:v=>[!!S.mision.topVenta, S.eds.filter(e=>e.t==='parcela').length>=15, S.eds.some(e=>['hotel','hoteltorre','hotelflamingo','palapa'].includes(e.t))]},
  {id:'navolato',mun:'Navolato',reg:'Centro',lema:'El ingenio que está por cerrar'},
  {id:'eldorado',mun:'Eldorado',reg:'Centro',lema:'Nuevo municipio con deudas heredadas'},
  {id:'angostura',mun:'Angostura',reg:'Centro-norte',lema:'La veda del camarón'},
@@ -4716,7 +4819,19 @@ const MISIONES=[
  {id:'rosario',mun:'Rosario',reg:'Sur',lema:'El pueblo minero que se hunde'},
  {id:'concordia',mun:'Concordia',reg:'Sur',lema:'Muebles de madera sin acabar el monte'},
  {id:'sanignacio',mun:'San Ignacio',reg:'Sur',lema:'Pinturas rupestres y alfarería'},
- {id:'choix',mun:'Choix',reg:'Norte',lema:'La sierra y la presa Huites'},
+ // ---------- Choix ----------
+ {id:'choix',mun:'Choix',reg:'Norte',jugable:true,lema:'La sierra y la presa Huites',
+  intro:'Choix es la puerta de la sierra: cerros, arroyos y la presa Huites, famosa por sus lobinas. Aquí no hay mar ni un valle grande; la oportunidad está en el turismo de pesca, si el pueblo sabe recibir a los visitantes.',
+  regla:'En lugar del mar está el lago de la presa Huites y hay mucho más monte: ahí solo van cabañas, papalotes, aserraderos y minas. El Embarcadero de pesca (Comercio) va en la orilla del lago o del río. Cada marzo decides el Torneo de pesca: en grande cuesta $300 mil y el turismo sube más si tienes embarcadero y cabañas; un corral de engorda cerca del lago lo ensucia y espanta a los pescadores.',
+  objetivo:{txt:'Organiza 3 torneos de pesca y gana la elección',meta:3},
+  estrellas:[{txt:'Un torneo en grande'},{txt:'4 cabañas de troncos'},{txt:'Ganar con 60% de los votos'}],
+  inicio:()=>mapaChoix(),
+  mes:c=>{ const m=S.mision; m.cuenta=m.torneos||0; const out=[], n=torneoHoy();
+    if(n) out.push([n==='nada'?'mal':'bien',n==='nada'?'Marzo sin torneo: menos turistas':`${TORNEO[n].nom}: turismo ×${factorTorneo().toFixed(2)} este mes`]);
+    if(contaminaLago()) out.push(['mal','El corral de engorda ensucia el lago: los pescadores lo notan']); return out; },
+  avance:()=>`Torneos de pesca: ${Math.min(S.mision.torneos||0,3)} de 3 · cabañas: ${S.eds.filter(e=>e.t==='cabana').length}`,
+  logrado:()=>(S.mision.torneos||0)>=3,
+  estrellasOk:v=>[(S.mision.grandes||0)>=1, S.eds.filter(e=>e.t==='cabana').length>=4, v>=60]},
  {id:'badiraguato',mun:'Badiraguato',reg:'Centro',lema:'Conectar los pueblos de la sierra'},
  {id:'cosala',mun:'Cosalá',reg:'Centro',lema:'La misión final de la campaña'}];
 const misionDe=id=>MISIONES.find(m=>m.id===id);
@@ -4771,7 +4886,8 @@ function verMision(inicio){ return new Promise(fin=>{ const m=misionDe(S.mision.
    <div class="cuenta"><span class="t">Estrellas (se revisan en la elección)</span>${m.estrellas.map(e=>`<span>★ ${esc(e.txt)}</span><span></span>`).join('')}</div>
    <div id="misPanel">${m.panel?m.panel():''}</div>
    <div class="fila"><button class="btn-sol btn" id="mOkM">${inicio?'A gobernar':'Listo'}</button></div>`);
-  const atar=()=>$('modal').querySelectorAll('[data-ap]').forEach(b=>b.onclick=()=>{ S.mision.aporteC=clamp((S.mision.aporteC||0)+(+b.dataset.ap),0,500); $('misPanel').innerHTML=m.panel(); atar(); guardarPronto(); }); atar();
+  const atar=()=>{ $('modal').querySelectorAll('[data-ap]').forEach(b=>b.onclick=()=>{ S.mision.aporteC=clamp((S.mision.aporteC||0)+(+b.dataset.ap),0,500); $('misPanel').innerHTML=m.panel(); atar(); guardarPronto(); });
+    $('modal').querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{ if(m.accion) m.accion(b.dataset.acc); recalcular(); hud(); $('misPanel').innerHTML=m.panel(); atar(); guardarPronto(); }); }; atar();
   $('mOkM').onclick=()=>{cerrarModal(); fin();}; }); }
 function hudMision(){ const b=$('tMision'); if(!b) return; b.hidden=!(S&&S.mision); if(S&&S.mision){ const m=misionDe(S.mision.id); b.innerHTML='🎯 '+(m.hud?m.hud():`${Math.min(S.mision.cuenta||0,m.objetivo.meta)}/${m.objetivo.meta}`); } }
 function finMision(v,gana){
@@ -4820,7 +4936,7 @@ Promise.all([cargarSprites(),new Promise(r=>setTimeout(r,3000))]).then(()=>{
   refrescarPortada();
   if(!perfil) crearPerfil(true);
 });
-window.__t={selEd:e=>{elegido=e; ficha();},reconstruirOcc:()=>reconstruirOcc(),elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
+window.__t={selEd:e=>{elegido=e; ficha();},reconstruirOcc:()=>reconstruirOcc(),elegirTipo:t=>elegirTipo(t),setDJ:v=>{DJ_MAL=v},PIEZA,setDX:v=>{DX_CHIEPE=v},PUENTE_N,PUENTE_S,decidirCarnaval:()=>decidirCarnaval(),decidirTorneo:()=>decidirTorneo(),verMision:()=>verMision(),get PROP(){return PROP},pasarMes:()=>pasarMes(),finMision:(v,g)=>finMision(v,g),misionDe:id=>misionDe(id),pesosCartas:()=>pesosCartas(),jugarMJ:e=>jugarMJ(e),reto:()=>retoRelampago(),nuevosConflictos:c=>nuevosConflictos(c),atenderConflictos:()=>atenderConflictos(),piedraPapel:o=>piedraPapel(o),jugarCarta:c=>jugarCarta(c),porId:id=>porId(id)||CARTAS.find(x=>x.id===id),get CATAS(){return CATAS},jugarCarta:(...x)=>jugarCarta(...x),exito:()=>exito(),TREN,trenSalir,get S(){return S},agregar,reponerAgentes,centrarEn,recalcular,cam,girarMapa,get rot(){return rot},agentes,IMG,puede,aPant:(i,j)=>aPantalla(...centroW(i,j))};
 let pidaInstalar=null;
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pidaInstalar=e; $('pInstalar').hidden=false; });
 window.addEventListener('appinstalled',()=>{ $('pInstalar').hidden=true; aviso('¡Listo! El Trienio quedó instalado',3200); });
