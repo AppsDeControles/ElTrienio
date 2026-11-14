@@ -518,7 +518,7 @@ const DEF={
  ecoturismo:{nom:'Cabañas de ecoturismo',cat:'comercio',spr:'edif-ecoturismo-a',A:3,B:3,costo:320,mant:2.5,empleos:9,ingreso:16,turismo:true,bosque:true,lote:'tierra',desc:'Cabañas en el bosque: rinden según el monte que quede alrededor. Si el aserradero tala, pierden turistas.'},
  lamina:{nom:'Casa de lámina',cat:'vivienda',spr:'edif-lamina-a',A:1,B:1,costo:10,casas:5,predial:.3,lote:'tierra',desc:'La casa más barata: paredes y techo de lámina. Sirve para poblar rápido.'},
  cabana:{nom:'Cabaña de troncos',cat:'comercio',spr:'edif-cabana-a',A:1,B:1,costo:60,mant:.5,empleos:1,ingreso:4,turismo:true,monteOk:true,lote:'tierra',desc:'Cabaña para turistas. Rinde 30% más junto al agua o al monte.'},
- embarcadero:{nom:'Embarcadero de pesca',cat:'comercio',spr:'edif-embarcadero-a',A:2,B:2,costo:140,mant:1,empleos:4,ingreso:7,turismo:true,suelo:'orilla',desc:'Muelle de madera con lanchas para la pesca deportiva. Va en la orilla del río, de la presa o del mar.'},
+ embarcadero:{nom:'Embarcadero de pesca',cat:'comercio',spr:'edif-embarcadero-a',A:2,B:2,costo:140,mant:1,empleos:4,ingreso:7,turismo:true,suelo:'orilla',desc:'Muelle de madera con lanchas para la pesca deportiva. Va sobre el agua, pegado a la orilla del río, la presa o el mar, con una calle en tierra junto a él.'},
  papalote:{nom:'Papalote y pozo',cat:'produccion',spr:'edif-papalote-a',A:1,B:1,costo:40,mant:.2,monteOk:true,lote:'tierra',desc:'Agua de pozo para las parcelas a 5 casillas o menos: rinden 10% más y aguantan la sequía y la helada.'},
  acopio:{nom:'Centro de acopio',cat:'produccion',spr:'edif-acopio-a',A:3,B:3,costo:260,mant:2,empleos:6,ingreso:2,almacen:150,lote:'ind',desc:'Bodega y dos silos: el maíz y el sorgo del municipio rinden 15% más. En Guasave guarda hasta $150 mil de grano.'},
  silos:{nom:'Silos de granos',cat:'produccion',spr:'edif-silos-a',A:3,B:3,costo:480,mant:3,empleos:8,ingreso:3,almacen:450,lote:'ind',desc:'Ocho silos con bandas: el maíz y el sorgo del municipio rinden 15% más. En Guasave guardan hasta $450 mil de grano.'},
@@ -836,7 +836,7 @@ function puede(tipo,i,j,flip){
     if(t==='calle') return 'Hay una calle encima';
     if(VIA[idx(x,y)]&&!d.puente&&!d.estacion) return 'Ahí pasa la vía del tren';
     if(EST[idx(x,y)]) return 'Ahí está la estación del tren';
-    if(t==='rio'){ if(!d.presa&&!d.puente) return 'Ahí pasa el río'; rio++; continue; }
+    if(t==='rio'){ if(!d.presa&&!d.puente&&d.suelo!=='orilla') return 'Ahí pasa el río'; rio++; continue; }
     if(t==='mar') mar++; else if(t==='playa') playa++; else {tierra++; if(t==='monte') monte++;}
   }
   const tot=A*B;
@@ -849,7 +849,7 @@ function puede(tipo,i,j,flip){
   const suelo=d.suelo||'tierra';
   if(suelo==='malecon'){ if(playa||mar) return 'El malecón va en tierra firme, no sobre la arena'; if(!vecinos.includes('playa')&&!vecinos.includes('rio')&&!vecinos.includes('mar')) return 'El malecón va frente al mar o a la orilla del río'; return ''; }
   if(suelo==='mar'){ if(mar<tot) return 'Va sobre el mar'; if(!vecinos.includes('playa')) return 'Debe tocar la playa'; return ''; }
-  if(suelo==='orilla'&&!vecinos.some(v=>v==='rio'||v==='mar'||v==='playa')) return 'Va en la orilla: debe tocar el río, la presa o el mar';
+  if(suelo==='orilla'){ if(rio+mar<tot) return 'Va sobre el agua, a la orilla del río, la presa o el mar'; if(!vecinos.some(v=>v!=='rio'&&v!=='mar')) return 'Debe tocar la orilla: ponlo pegado a tierra firme'; if(!vecinos.includes('calle')) return 'Necesita una calle en la orilla, pegada al embarcadero'; return ''; }
   if(mar) return 'No se puede construir en el mar';
   if(suelo==='playa'){ if(playa<tot) return 'Va sobre la arena de la playa'; return ''; }
   if(suelo==='costa'){ let cerca=false; for(let a=-3;a<A+3&&!cerca;a++)for(let b=-3;b<B+3;b++) if(dentro(i+a,j+b)&&S.ter[idx(i+a,j+b)]==='playa'){cerca=true;break;} if(!playa && !cerca) return 'Debe estar en la costa'; }
@@ -4603,7 +4603,7 @@ function contaminaLago(){ return S.eds.some(e=>e.t==='engorda'&&!e.dano&&contarC
 function factorTorneo(){ const n=torneoHoy(); if(!n) return 1; const T=TORNEO[n]; if(n==='nada') return T.tur;
   let f=T.tur+.05*Math.min(4,S.eds.filter(e=>e.t==='cabana').length)+(S.eds.some(e=>e.t==='embarcadero')?.15:0); if(contaminaLago()) f*=.8; return f; }
 function decidirTorneo(){ return new Promise(fin=>{ const anio=Math.floor((S.mes-1)/12)+1, m=S.mision;
-  const op=k=>{ const c=TORNEO[k], no=c.costo>S.dinero;
+  const op=k=>{ const c=TORNEO[k], no=c.costo>0&&c.costo>S.dinero;
     return `<button class="btn opc2" data-tor="${k}" ${no?'disabled':''}><b>${c.nom}</b><span>${c.costo?'Cuesta '+dinero(c.costo):'Sin costo'} · aprobación ${c.apr>0?'+':''}${c.apr}</span><span style="font-weight:400">${c.txt}${no?' No te alcanza la caja.':''}</span></button>`; };
   const cab=S.eds.filter(e=>e.t==='cabana').length, emb=S.eds.some(e=>e.t==='embarcadero');
   modal(`<h2>TORNEO DE PESCA EN HUITES · AÑO ${anio}</h2><p>Llegó marzo y la presa Huites espera su torneo de lobina. ${emb?'Tu embarcadero recibe a los pescadores':'Sin embarcadero llegan menos pescadores'}${cab?` y tienes ${cab} cabaña${cab>1?'s':''} para hospedarlos`:''}.${contaminaLago()?' Ojo: el corral de engorda junto al lago ensucia el agua.':''} ¿Qué tan grande lo haces?</p><div class="opcs" style="width:100%">${['grande','sencillo','nada'].map(op).join('')}</div>`);
@@ -4621,7 +4621,7 @@ function mapaChoix(){ const nM=ruido2(41), rio=[...(S.rio||[])];
   S.rio=[...new Set(rio)]; marcarRio(); }
 function decidirCarnaval(){ return new Promise(fin=>{ const anio=Math.floor((S.mes-1)/12)+1, m=S.mision;
   const fondo=m.fondoC||0;
-  const op=k=>{ const c=CARNAVAL[k], no=c.costo>S.dinero+fondo;
+  const op=k=>{ const c=CARNAVAL[k], no=c.costo>0&&c.costo>S.dinero+fondo;
     return `<button class="btn opc2" data-carn="${k}" ${no?'disabled':''}><b>${c.nom}</b><span>${c.costo?'Cuesta '+dinero(c.costo)+(fondo?` (${dinero(Math.min(fondo,c.costo))} del fondo)`:''):'Sin costo'} · aprobación ${c.apr>0?'+':''}${c.apr}</span><span style="font-weight:400">${c.txt}${no?' No te alcanza la caja.':''}</span></button>`; };
   modal(`<h2>CARNAVAL DE MAZATLÁN · AÑO ${anio}</h2><p>Llegó febrero y el puerto espera su carnaval. En el Fondo del Carnaval tienes <b>${dinero(fondo)}</b>; lo que falte sale de la caja y lo que sobre se queda para el próximo año. ¿Cuánto le dedicas?</p><div class="opcs" style="width:100%">${['grande','austero','nada'].map(op).join('')}</div>`);
   $('modal').querySelectorAll('[data-carn]').forEach(b=>b.onclick=()=>{ const k=b.dataset.carn, c=CARNAVAL[k];
@@ -4822,7 +4822,7 @@ const MISIONES=[
  // ---------- Choix ----------
  {id:'choix',mun:'Choix',reg:'Norte',jugable:true,lema:'La sierra y la presa Huites',
   intro:'Choix es la puerta de la sierra: cerros, arroyos y la presa Huites, famosa por sus lobinas. Aquí no hay mar ni un valle grande; la oportunidad está en el turismo de pesca, si el pueblo sabe recibir a los visitantes.',
-  regla:'En lugar del mar está el lago de la presa Huites y hay mucho más monte: ahí solo van cabañas, papalotes, aserraderos y minas. El Embarcadero de pesca (Comercio) va en la orilla del lago o del río. Cada marzo decides el Torneo de pesca: en grande cuesta $300 mil y el turismo sube más si tienes embarcadero y cabañas; un corral de engorda cerca del lago lo ensucia y espanta a los pescadores.',
+  regla:'En lugar del mar está el lago de la presa Huites y hay mucho más monte: ahí solo van cabañas, papalotes, aserraderos y minas. El Embarcadero de pesca (Comercio) va sobre el agua, pegado a la orilla, con una calle junto a él. Cada marzo decides el Torneo de pesca: en grande cuesta $300 mil y el turismo sube más si tienes embarcadero y cabañas; un corral de engorda cerca del lago lo ensucia y espanta a los pescadores.',
   objetivo:{txt:'Organiza 3 torneos de pesca y gana la elección',meta:3},
   estrellas:[{txt:'Un torneo en grande'},{txt:'4 cabañas de troncos'},{txt:'Ganar con 60% de los votos'}],
   inicio:()=>mapaChoix(),
